@@ -509,7 +509,7 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	//currentRoom = rooms["soggyPath"];
+	currentRoom = rooms["crumblingWall"];
 	//objects["boat"].location = currentRoom.rid;
 	//objects["batteries"].location = currentRoom.rid;
 	//objects["statue"].locked = true;

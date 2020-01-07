@@ -74,25 +74,42 @@ const rooms = {
 			"s": "sideOfHouse"
 		}
 	},
-	entranceToKitchen: {
-		"name": "Entrance to Kitchen",
+	"entranceToKitchen": {
+		"name": "Entrance to the Kitchen",
+		"description": "The kitchen entrance must have also served as a dining area at one time. There is a table in the middle of the space and the floor is riddled with broken dishes.",
 		"exits": {
 			"s": "backOfHallway",
 			"e": "kitchen"
+		},
+		"scenery":{
+			"table":"The surface is scarred with knife marks and reddish brown stains, as though a large carcass was butchered here.",
+			"dishes": "They crunch under your feet.",
+			"stains":"Blood? Let's hope it's just ketchup. Unless they were preparing hotdogs, because only a monster would put ketchup on a hotdog."
 		}
 	},
-	kitchen: {
+	"kitchen": {
 		"name": "Kitchen and Grimy Cooker",
+		"description": "A grimy iron cooker fills most of the space of the kitchen. A few pots lie scattered about but most of the cookware and cutlery has long since been looted.",
 		"exits": {
 			"w": "entranceToKitchen",
 			"e": "sculleryDoor"
+		},
+		"scenery": {
+			"cooker": "It is unusable. Covered in grime and rust from years of neglect.",
+			"pots": "They are rusty and covered in muck.",
+			"grime": "Yuck!",
+			"muck": "Gross!"
 		}
 	},
-	sculleryDoor: {
+	"sculleryDoor": {
 		"name": "Scullery Door",
+		"description": "A dented old washbasin is all that remains here in the scullery. To the north an exit leads outside to the back of the house.",
 		"exits": {
 			"n": "yard",
 			"w": "kitchen"
+		},
+		"scenery": {
+			"washbasin": "You doubt it can still hold water."
 		}
 	},
 	dustyRoom: {
@@ -124,23 +141,23 @@ const rooms = {
 			"w": "clearing"
 		}
 	},
-	sideOfHouse: {
+	"sideOfHouse": {
 		"name": "Side of House",
 		"exits": {
-			"n": "sideOfHouse",
+			"n": "cornerOfHouse",
 			"s": "crumblingWall"
 		}
 	},
-	backOfHallway: {
+	"backOfHallway": {
 		"name": "Back Hallway",
-		"description": "The hallway appears to be coming to an end here. There is a portrait hanging on the wall.",
+		"description": "The hallway appears to be coming to an end here. There is a portrait hanging on the wall. The cased opening to the north leads to the kitchen.",
 		"exits": {
 			"n": "entranceToKitchen",
 			"s": "gloomyPassage"
 		},
 		"scenery": {
-			"portrait": "It depicts a sad elderly woman in a black dress. She stands aside an old tree.",
-			"painting": "It depicts a sad elderly woman in a black dress. She stands aside an old tree.",
+			"portrait": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
+			"tapestry": "It depicts an elderly woman in a black dress. She stands aside an old tree.",
 			"woman": "I think her eyes just moved!",
 			"eyes": "They seem to follow you around the room.",
 			"tree": "The tree is barren and looks like there is a rope tied to one of the branches.",

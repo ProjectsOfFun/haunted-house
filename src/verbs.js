@@ -19,9 +19,11 @@ var verbs = {
 			if (noun === "verbs") {
 				let verblist = "";
 				for (let verb in verbs) {
-					verblist += verb + ", ";
+					if (verb.length > 1) {
+						verblist += verb + ", ";
+					}
 				}
-				message = `<b>Words I know:</b><br> ${verblist.substring(0,verblist.length - 2)}`;
+				message = `<b>Words I know:</b>  ${verblist.substring(0,verblist.length - 2)}`;
 				return;
 			}
 
@@ -444,6 +446,11 @@ var verbs = {
 
 			if (noun === "aerosol" && isCarrying("aerosol")) {
 				message = `An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.`;
+				return;
+			}
+
+			if ((noun === "cooker" || noun === "stove") && currentRoom.rid === "kitchen") {
+				message = `The cooker is in no state to be lit.`;
 				return;
 			}
 
