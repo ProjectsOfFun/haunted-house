@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Haunted House</title>
+<style>
+body {
+	background-color:#333;
+}
+#hh-container {
+	font-size:16px;
+	font-family:"Print Char 21","Courier New", Courier, monospace;
+	margin:1em auto;
+	width:42em;
+	padding:1em;
+	background-color:#000;
+}
+#hh-container a {
+	color:#0f0;
+}
+#hh-display {
+	height: 24em;
+	width: 40em;
+	background-color:#030;
+	color:#0F0;
+	padding:1em;
+	border-radius:.5em;
+}
+#hh-input {
+	font-weight:normal;	
+}
+#hh-userInput { 
+	border:none;
+	background-color:transparent;
+	text-transform:uppercase;
+	color:#0f0;
+	font-family:"Courier New", Courier, monospace;
+	font-size:100%;
+	outline:none;
+}
+#hh-help {
+	font-size:16px;
+	font-family:"Courier New", Courier, monospace;
+	margin:1em 0;
+	color:#0F0;
+	text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div id="hh-container">
+	<div id="hh-display">
+		<div id="hh-output"></div>
+		<div id="hh-input">
+			<form>
+				<label>WHAT WILL YOU DO NOW:</label><input type="text" name="userInput" id="hh-userInput" autocomplete="off"/>
+			</form>
+		</div>
+	</div>
+	<div id="hh-help">
+		<small>Type 'HELP' for a list of verbs. Download <a href="http://www.kreativekorp.com/software/fonts/apple2.shtml" target="_blank">Print Char 21</a> Apple II Font.</small>
+	</div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js" type="text/javascript"></script>
+<script src="Haunted-House-v1.00.js"></script>
+</body>
+</html>

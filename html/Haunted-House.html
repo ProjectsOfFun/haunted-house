@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Haunted House - Vanilla JS Version</title>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;display=swap" rel="stylesheet"/>
+    <link href="css/hh-screen.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div id="hh-container">
+      <div id="hh-display">
+        <div id="hh-output"></div>
+        <div id="hh-input">
+          <form id="hh-input-form" onSubmit="return false">
+            <label>What will you do now:</label><br/><span class="prompt">&gt;</span>
+            <input id="hh-userInput" type="text" name="userInput" autocomplete="off" placeholder="Type your command here..."/>
+          </form>
+        </div>
+        <button class="is-hidden" id="hh-reload">[ Click to Restart ]</button>
+      </div>
+      <div id="hh-help">Type 'HELP' for instuctions.
+        <div id="hh-screensize">
+          <button id="btnBigger" href="bigger">[ Screen + ]</button>&nbsp;
+          <button id="btnSmaller" href="bigger">[ Screen - ]</button>
+        </div>
+      </div>
+    </div>
+    <script src="js/Haunted-House-dist.js"></script>
+  </body>
+</html>
