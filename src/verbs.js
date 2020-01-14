@@ -1,6 +1,6 @@
 // Define your game verbs here.
 
-var verbs = {
+const verbs = {
 	"help": {
 		"default": `"God helps those who help themselves."`,
 		"action": function(noun,obj){
@@ -378,10 +378,6 @@ var verbs = {
 				message = "You swung it. Yee haw, cowboy!";
 				return;
 			}
-			if (obj.id === "axe" && isCarrying("axe") && !isRoom("study")) {
-				message = "Whoosh!!!";
-				return;
-			}
 			if (obj.id === "axe" && isCarrying("axe") && isRoom("study") && !flags.studyWallBroken) {
 				message = "You broke the thin wall.";
 				flags.studyWallBroken = true;
@@ -391,6 +387,14 @@ var verbs = {
 				currentRoom.scenery.hole = "The hole is much bigger now.";
 				currentRoom.scenery.wall = "The wall is no more. A secret room lies to the north.";
 				currentRoom.scenery.passage ="It leads north to a secret room.";
+				return;
+			}
+			if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
+				message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
+				return;
+			}
+			if (obj.id === "axe" && isCarrying("axe")) {
+				message = "Whoosh!!!";
 				return;
 			}
 		}
@@ -451,6 +455,11 @@ var verbs = {
 
 			if ((noun === "cooker" || noun === "stove") && currentRoom.rid === "kitchen") {
 				message = `The cooker is in no state to be lit.`;
+				return;
+			}
+
+			if (noun === "rubbish" && currentRoom.rid === "yard") {
+				message = `It's too damp to light.`;
 				return;
 			}
 
@@ -587,9 +596,49 @@ var verbs = {
 			}
 		}
 	},
+	"wear": {
+		"action": function(noun,obj) {
+			message = `You can't wear that.`;
+			if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+				message = `You put on the coat. Stylish.`;
+				if (objects["key"].location === "coat") {
+					message += ` Wait, there is something in the pocket!`;
+				}
+				flags.wearingCoat = true;
+				return;
+			}
+			if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+				message = `You are already wearing it.`;
+				return;
+			}
+			if (noun === "coat" && !isCarrying("coat")) {
+				message = `You don't have a coat.`;
+				return;
+			}
+		}
+	},
+	"remove": {
+		"action": function(noun,obj) {
+			if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+				message = `You remove the coat`;
+				flags.wearingCoat = false;
+				return;
+			}
+			if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+				message = `You are not wearing it.`;
+				return;
+			}
+		}
+	},
 	"score": {
 		"action": function(noun,obj) {
 			message = `Your score is ${checkScore()}/${getMaxScore()}.`;
+			if (checkScore() === 0) {
+				message += " You need to find some treasure!"
+			}
+			if (checkScore() === getMaxScore()) {
+				message += " That's everything. Hurry, find your way back to the front gate to escape.";
+			}
 		},
 		"singleWord": true
 	}

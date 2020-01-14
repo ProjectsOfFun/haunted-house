@@ -80,6 +80,8 @@ const objects = {
 		"portable": true
 	},
 	"axe": {
+		"name": "an axe",
+		"description": "Although a bit rusty, the blade is sharp. Looks like one <em>swing</em> could do some serious damage.",
 		"location": "byWoodpile",
 		"portable": true
 	},
@@ -239,6 +241,7 @@ const objects = {
 				const coat = objects['coat'];
 				if (objects["key"].location == "coat" && (coat.location == "player" || currentRoom.rid == coat.location)) {
 					message = "As you search through the old coat you find a key in the pocket.";
+					sndKey.play();
 					objects["key"].location = currentRoom.rid;
 				} else {
 					verbs["look"].action("coat", coat);	
@@ -246,9 +249,18 @@ const objects = {
 			}
 		}
 	},
+	"pocket": {
+		"synonym": "coat"
+	},
 	"rubbish": {
 		"location": "yard",
-		"description": "That's very disgusting!"	
+		"description": "The garbage has decomposed into a heap of goo. That's very disgusting!"	
+	},
+	"message": {
+		"location": "sideOfHouse",
+		"description": "It's written in blood!",
+		"readable": true,
+		"readableText": `It says, "Seek the word to dispell the barrier."`
 	},
 	"coffin": {
 		"location": "deepCellar",

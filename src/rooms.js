@@ -1,55 +1,92 @@
 // Define your rooms here
 
 const rooms = {
-	darkCorner: {
+	"darkCorner": {
 		"name": "Dark Corner",
+		"description": "The far corner of the yard is covered in dark shadow. The property continues to the south around the west side of the mansion.",
 		"exits": {
 			"e": "overgrownGarden",
 			"s": "cornerOfHouse"
+		},
+		"onEnter": function() {
+			const rnd = Math.random();
+			if (rnd > .5) {
+				message = "You hear an owl hooting off in the distance.";
+				sndOwl.play();
+			}
 		}
 	},
-	overgrownGarden: {
+	"overgrownGarden": {
 		"name": "Overgrown Garden",
+		"description": "This once was a fertile garden full of vegetables and herbs. Now it has been choked and overtaken by prickly weeds.",
 		"exits": {
 			"w": "darkCorner",
 			"e": "byWoodpile"
+		},
+		"scenery": {
+			"weeds": "They have grown almost to waist level and are covered in sharp thorns.",
+			"thorns": "Best not touch get close."
 		}
 	},
-	byWoodpile: {
+	"byWoodpile": {
 		"name": "Large Wood Pile",
+		"description": "A large stack of wood is haphazardly piled against the side of the mansion.",
 		"exits": {
 			"w": "overgrownGarden",
 			"e": "yard"
+		},
+		"scenery": {
+			"pile": "The wood is stacked about a meter high.",
+			"wood": "It's damp, mossy, and probably no longer useful."
 		}
 	},
-	yard: {
+	"yard": {
 		"name": "Yard by Rubbish",
+		"description": "Despite being years since anyone lived here, the rubbish bins still emit a sour stench. The back entrance to the house lies to the south.",
 		"exits": {
 			"w": "byWoodpile",
 			"e": "weedPatch",
 			"s": "sculleryDoor"
+		},
+		"scenery": {
+			"bins": "They are filled with rubbish. Small bones are scattered around their base.",
+			"bones": "Racoons perhaps?"
 		}
 	},
-	weedPatch: {
+	"weedPatch": {
 		"name": "Weed Patch",
+		"description": "This area doesn't look like it has ever been anything but the overgrown weed patch you see before you.",
 		"exits": {
 			"w": "yard",
 			"e": "forest"
+		},
+		"scenery": {
+			"weeds": "They look itchy.",
+			"patch": "It would take an industrial grade mower to clear this area.",
+			"weed patch": "It would take an industrial grade mower to clear this area."
 		}
 	},
-	forest: {
+	"forest": {
 		"name": "Forest",
+		"description": "This area of sparse forest grows right up to the north side of the house. Most of the trees' branches are bereft of leaves.",
 		"exits": {
 			"w": "weedPatch",
 			"e": "thickForest"
+		},
+		"scenery": {
+			"trees": "They are tall and baren."
 		}
 	},
-	thickForest: {
+	"thickForest": {
 		"name": "Thick Forest",
+		"description": "Here your progress is slowed considerably by the dense trees in this area of the forest.",
 		"exits": {
-			"w": "weedPatch",
+			"w": "forest",
 			"e": "blastedTree",
 			"s": "clearing"
+		},
+		"scenery": {
+			"trees": "They are tall, baren, and growing very close to each other."
 		}
 	},
 	"blastedTree": {
@@ -67,8 +104,9 @@ const rooms = {
 			"branches": "The branches are devoid of leaves."
 		}
 	},
-	cornerOfHouse: {
+	"cornerOfHouse": {
 		"name": "Corner of the House",
+		"description": "The moonlight is obscured by the mansion to the east as you make your way around the back corner of the house.",
 		"exits": {
 			"n": "darkCorner",
 			"s": "sideOfHouse"
@@ -143,9 +181,13 @@ const rooms = {
 	},
 	"sideOfHouse": {
 		"name": "Side of House",
+		"description": "As you make your way down the side of the house, you notice a message hastily scrawed on the siding here.",
 		"exits": {
 			"n": "cornerOfHouse",
 			"s": "crumblingWall"
+		},
+		"scenery": {
+			"siding": "There's a message scrawled on it."
 		}
 	},
 	"backOfHallway": {
@@ -213,10 +255,14 @@ const rooms = {
 			"s": "cliffPath"
 		}
 	},
-	crumblingWall: {
+	"crumblingWall": {
 		"name": "Crumbling Wall",
+		"description": "Here, further progress is blocked by a crumbling wall.",
 		"exits": {
 			"n": "sideOfHouse"
+		},
+		"scenery":{
+			"wall": "You dare not approach it for fear of being hit by a falling piece of masonry."
 		}
 	},
 	gloomyPassage: {
@@ -360,6 +406,7 @@ const rooms = {
 		onEnter: function() {
 			if (flags.frontDoorOpen) {
 				message = "With a tremendous &quot;BANG!&quot; the door slams shut behind you.";
+				sndDoor.play();
 				flags.frontDoorOpen = false;
 				delete rooms["frontPorch"].exits.n;
 			}

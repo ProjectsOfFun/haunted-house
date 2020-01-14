@@ -52,7 +52,8 @@ const flags = {
 	ropeTiedToTree: true,
 	studyWallBroken: false,
 	inBoat: false,
-	sinking: 0
+	sinking: 0,
+	wearingCoat: false
 }
 
 //flags[2] = 1; // RING
@@ -489,6 +490,31 @@ $restartBtn.addEventListener('click', function(evt){
 	evt.preventDefault();
 });
 
+// SOUNDS
+
+function sound(src) {
+	this.sound = document.createElement("audio");
+	this.sound.src = src;
+	this.sound.setAttribute("preload", "auto");
+	this.sound.setAttribute("controls", "none");
+	this.sound.style.display = "none";
+	document.body.appendChild(this.sound);
+	this.play = function(){
+		this.sound.play();
+	}
+	this.stop = function(){
+		this.sound.pause();
+	}
+}
+const sndOwl = new sound("audio/owl.mp3");
+const sndDoor = new sound("audio/door.mp3");
+const sndKey = new sound("audio/key.mp3");
+
+
+/**
+ * Console Log shortcut
+ * @param {string} msg String to display in console
+ */
 function cl(msg) {
 	if (msg) {
 		console.log(msg);
@@ -499,6 +525,7 @@ function cl(msg) {
 
 function debugInfo() {
 	if (!debug) return;
+	console.clear();
 	//console.log(currentRoom);
 	cl("lightLevel: " + lightLevel);
 	cl("score: " + totalScore);
@@ -509,7 +536,7 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	currentRoom = rooms["crumblingWall"];
+	currentRoom = rooms["darkCorner"];
 	//objects["boat"].location = currentRoom.rid;
 	//objects["batteries"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
