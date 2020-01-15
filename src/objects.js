@@ -72,12 +72,12 @@ const objects = {
 		"location": "gloomyPassage",
 		"portable": true,
 		"insertBatteries": function() {
-			objects["vacuum"].description = `It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more! It is fully powered and ready to <em>use</em>.`;
-			objects["vacuum"].name = "a fully powered vacuum";
-			objects["batteries"].location = null;
-			message += `<br>The batteries are a perfect match for the vacuum. The vacuum is now powered.`;
-			flags.vacuumHasPower = true;
-			return;
+			this.description = `It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more! It is fully powered and ready to <em>use</em>.`;
+			this.name = "a fully powered vacuum";
+		},
+		"captureGhosts": function() {
+			this.name = "a tiny vacuum filled with ghosts";
+			this.description = `It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!`;
 		}
 	},
 	"batteries": {
@@ -210,10 +210,12 @@ const objects = {
 	},
 
 	"bats": {},
+
 	"ghosts": {
-		"description": "",
+		"description": "The ghosts whirl about the room like so many clouds of dust!",
 		"location": "upperGallery"
 	},
+
 	"barrier": {
 		"name": "the magical barrier",
 		"description": "It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",

@@ -525,24 +525,16 @@ const rooms = {
 	},
 	"upperGallery": {
 		"name": "Upper Gallery",
-		"description": "The relative calm of this room feels wrong.",
+		"description": "The upper gallery is filled with artifacts from many travels abroad. You shudder with fear as flurry of ghosts encircles you, blocking your movement to the west.",
 		"exits": {
 			"n": "cobwebbyRoom",
 			"w": "slopingCorridor"
 		},
-		onEnter:  function() {
-			if (flags.ghostsAttacking) {
-				this.description = "You shudder with fear as flurry of ghosts circles you, blocking your movement.";
-			} else {
-				this.description = "The relative calm of this room feels wrong.";
-			}
+		"scenery": {
+			"artifacts": "Odd items from around the globe but nothing of any particular value."
 		},
-		onExit:  function() {
-			if (flags.ghostsAttacking) {
-				this.description = "You shudder with fear as flurry of ghosts circles you, blocking your movement.";
-			} else {
-				this.description = "The relative calm of this room feels wrong.";
-			}
+		"ghostsDispelled": function() {
+			this.description = "The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling.";
 		}
 	},
 	"marshByWall": {

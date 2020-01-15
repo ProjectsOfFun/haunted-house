@@ -41,7 +41,7 @@ for (let key in objects) {
 const flags = {
 	frontDoorOpen: true, // flags[23]
 	candleLit: false, // flags[0]
-	ghostsAttacking: false, // flags[27]
+	ghostsAttacking: true, // flags[27]
 	vacuumSwitchedOn: false, // flags[24]
 	vacuumHasPower: false,
 	batsAttacking: false, // flags[26]
@@ -241,11 +241,6 @@ function parseInput(myInput) {
 	// if (flags[26] == 1 && room==13 && Math.random()*3 <= 2 && vb != 20) {
 	// 	message = "BATS ATTACKING!";
 	// }
-
-	// may trigger ghosts in upper gallery
-	if (isRoom("cobwebbyRoom") && Math.random() < .5 && !flags.vacuumSwitchedOn) {
-		flags.ghostsAttacking = true;
-	}
 	
 	// Candle slowly bruns down if lit
 	if (flags.candleLit) {
@@ -266,11 +261,6 @@ function parseInput(myInput) {
 		flags.candleLit = false;
 		lightLevel = 0;
 		objects["candle"].location = null;
-	}
-
-	if (flags.vacuumHasPower && flags.vacuumSwitchedOn && isRoom("upperGallery") && flags.ghostsAttacking) {
-		message += `<br>You've sucked up all the ghosts!`;
-		flags.ghostsAttacking = false;
 	}
 
 	if (flags.batsAttacking) {
@@ -554,9 +544,9 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	//currentRoom = rooms["coldChamber"];
-	//wobjects["magic spells"].location = currentRoom.rid;
-	//objects["batteries"].location = currentRoom.rid;
+	currentRoom = rooms["upperGallery"];
+	objects["vacuum"].location = currentRoom.rid;
+	objects["batteries"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
 	//objects["statue"].key = "key";
 	//flags.batsAttacking = true
