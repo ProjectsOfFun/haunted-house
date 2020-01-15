@@ -25,7 +25,7 @@ const rooms = {
 		},
 		"scenery": {
 			"weeds": "They have grown almost to waist level and are covered in sharp thorns.",
-			"thorns": "Best not touch get close."
+			"thorns": "They're very sharp. Best not get too close."
 		}
 	},
 	"byWoodpile": {
@@ -257,7 +257,7 @@ const rooms = {
 	},
 	"crumblingWall": {
 		"name": "Crumbling Wall",
-		"description": "Here, further progress is blocked by a crumbling wall.",
+		"description": "Here further progress is blocked by a crumbling wall.",
 		"exits": {
 			"n": "sideOfHouse"
 		},
@@ -428,13 +428,13 @@ const rooms = {
 		"exits": {
 			"w": "library"
 		},
-		"description": "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
+		"description": "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
 		"scenery": {
 			"wall" : "I seems brittle. You may be able to chop your way through.",
 			"hole" : "There's something beyond..."	
 		}
 	},
-	cobwebbyRoom: {
+	"cobwebbyRoom": {
 		"name": "Weird Cobwebby Room",
 		"exits": {
 			"n": "steepMarbleStairs",
@@ -442,17 +442,39 @@ const rooms = {
 			"s": "upperGallery"
 		}
 	},
-	coldChamber: {
+	"coldChamber": {
 		"name": "Very Cold Chamber",
+		"description": "The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.",
 		"exits": {
 			"w": "cobwebbyRoom",
 			"e": "spookyRoom"
+		},
+		"scenery": {
+			"frost": "Ice here? There are unnatural forces at work.",
+			"walls": "The walls are stone and are coated in a thin sheen of frost."
+		},
+		"dispellBarrier": function() {
+			this.description = "The air in this room is bitingly cold. An icy frost covers the walls. The exit to the east is now clear.";
+			objects["barrier"].location = null;
+		},
+		"createBarrier": function() {
+			this.description = "The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.";
+			objects["barrier"].location = this.rid;
 		}
 	},
-	spookyRoom: {
+	"spookyRoom": {
 		"name": "Spooky Room",
+		"description": "The walls of this room are covered in cryptic drawings. As you look down you see that floor is littered with burnt remnants of clothing. A chill wafts through the doorway to the west. ",
 		"exits": {
 			"w": "coldChamber"
+		},
+		"scenery": {
+			"floor": "It's covered in pieces of what appears to be burnt clothing",
+			"wall": "Drawings fill the bottom half of the walls.",
+			"walls": "Drawings fill the bottom half of the walls.",
+			"drawings": "They are child-like representations of tiny figures, each surrounded by menacing dark shapes.",
+			"shapes": "They are monstrous shadows with tentacles and teeth.",
+			"clothing": "Barely recognizable, but it's clear that these garments were made for a child."
 		}
 	},
 	"cliffPathByMarsh": {

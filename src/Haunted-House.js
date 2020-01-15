@@ -11,14 +11,13 @@ const $userInput = document.getElementById('hh-userInput');
 const $inputForm = document.getElementById('hh-input-form');
 const $restartBtn = document.getElementById('hh-reload');
 
-//var carrying = new Array(18);
 let totalScore = 0;
 let winner = false;
 let lightLevel = 60; // LL
 let currentRoom = rooms["pathThroughIronGate"]; // RM 57
-//let currentRoom = rooms["study"];
 let previousRoom = null;
 let message = "OK"; // M$
+let previousObj = null;
 
 
 // Set the machine name of all the rooms to .rid for easy reference
@@ -38,13 +37,13 @@ for (let key in objects) {
 }
 
 
-//const flags = new Array(objects.length);
-
+// Set the game flags object
 const flags = {
 	frontDoorOpen: true, // flags[23]
 	candleLit: false, // flags[0]
 	ghostsAttacking: false, // flags[27]
 	vacuumSwitchedOn: false, // flags[24]
+	vacuumHasPower: false,
 	batsAttacking: false, // flags[26]
 	magicalBarrier: true, //flags[34]
 	hallDoorLocked: true,
@@ -214,6 +213,12 @@ function parseInput(myInput) {
 		ob = getNoun(noun);
 	}
 
+	// Save keystrokes by reusing object from last parse
+	if (noun === "it" && previousObj) {
+		ob = previousObj;
+		noun = ob.id;
+	}
+
 	let error = false;
 
 	if (noun && !ob) {
@@ -253,7 +258,7 @@ function parseInput(myInput) {
 	}
 
 	// POST VERB MESSAGES
-	if (lightLevel > 1 && lightLevel < 11) {
+	if (flags.candleLit && lightLevel > 1 && lightLevel < 11) {
 		message += `<br>Your candle is waning!`;
 	}
 	if (lightLevel == 1) {
@@ -262,10 +267,12 @@ function parseInput(myInput) {
 		lightLevel = 0;
 		objects["candle"].location = null;
 	}
-	if (isCarrying("vacuum") && isCarrying("batteries") && flags.vacuumSwitchedOn && isRoom("upperGallery") && flags.ghostsAttacking) {
+
+	if (flags.vacuumHasPower && flags.vacuumSwitchedOn && isRoom("upperGallery") && flags.ghostsAttacking) {
 		message += `<br>You've sucked up all the ghosts!`;
 		flags.ghostsAttacking = false;
 	}
+
 	if (flags.batsAttacking) {
 		message += `<br>Bats attacking!`;
 	}
@@ -280,6 +287,7 @@ function parseInput(myInput) {
 		}
 	}
 
+	previousObj = ob;
 	display();
 }
 
@@ -434,11 +442,14 @@ function objectInRange(obj) {
 
 /**
  * Detects if the player is carrying an object
- * @param {string} objectName The name of the object
+ * @param {object|string} objectName The name of the object
  * @returns boolean
  */
-function isCarrying(objectName) {
-	if (objects[objectName].location === "player") {
+function isCarrying(obj) {
+	if (typeof obj === "string") {
+		obj = getObject(obj);
+	}
+	if (obj.location === "player") {
 		return true;
 	}
 	return false;
@@ -492,23 +503,30 @@ $restartBtn.addEventListener('click', function(evt){
 
 // SOUNDS
 
-function sound(src) {
-	this.sound = document.createElement("audio");
-	this.sound.src = src;
-	this.sound.setAttribute("preload", "auto");
-	this.sound.setAttribute("controls", "none");
-	this.sound.style.display = "none";
-	document.body.appendChild(this.sound);
-	this.play = function(){
+class Sound {
+	constructor(src) {
+		this.sound = document.createElement("audio");
+		this.sound.src = src;
+		this.sound.setAttribute("preload", "auto");
+		this.sound.setAttribute("controls", "none");
+		this.sound.style.display = "none";
+		document.body.appendChild(this.sound);
+	}
+
+	play() {
 		this.sound.play();
 	}
-	this.stop = function(){
+
+	stop() {
 		this.sound.pause();
 	}
 }
-const sndOwl = new sound("audio/owl.mp3");
-const sndDoor = new sound("audio/door.mp3");
-const sndKey = new sound("audio/key.mp3");
+const sndOwl = new Sound("audio/owl.mp3");
+const sndDoor = new Sound("audio/door.mp3");
+const sndKey = new Sound("audio/key.mp3");
+const sndPickup = new Sound("audio/treasure_pickup.mp3");
+const sndShock = new Sound("audio/shock.mp3");
+const sndSplash = new Sound("audio/splash.mp3");
 
 
 /**
@@ -525,7 +543,7 @@ function cl(msg) {
 
 function debugInfo() {
 	if (!debug) return;
-	console.clear();
+	//console.clear();
 	//console.log(currentRoom);
 	cl("lightLevel: " + lightLevel);
 	cl("score: " + totalScore);
@@ -536,8 +554,8 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	currentRoom = rooms["darkCorner"];
-	//objects["boat"].location = currentRoom.rid;
+	//currentRoom = rooms["coldChamber"];
+	//wobjects["magic spells"].location = currentRoom.rid;
 	//objects["batteries"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
 	//objects["statue"].key = "key";

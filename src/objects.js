@@ -48,26 +48,37 @@ const objects = {
 	},
 	"statue": {
 		"name": "an ebony statue",
-		"description": "It looks African and origin and is most likely very valuable.",
+		"description": "It looks African in origin and is most likely very valuable.",
 		"location": "hallWithLockedDoor",
 		"portable": true,
 		"score": 1
 	},
 	"candlestick": {
+		"name": "a golden candlestick",
+		"description": "It is ornamented with gold and various jewels. And it can also hold a candle, literally!",
 		"location": "library",
 		"portable": true,
 		"score": 1
 	},
 	"matches": {
+		"name": "a box of matches",
 		"location": "kitchen",
-		//"location": "player",
+		"description": "The matches rattle around in the box.",
 		"portable": true
 	},
 	"vacuum": {
 		"name": "a tiny vacuum",
-		"description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing  dust and much more!",
+		"description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",
 		"location": "gloomyPassage",
-		"portable": true
+		"portable": true,
+		"insertBatteries": function() {
+			objects["vacuum"].description = `It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more! It is fully powered and ready to <em>use</em>.`;
+			objects["vacuum"].name = "a fully powered vacuum";
+			objects["batteries"].location = null;
+			message += `<br>The batteries are a perfect match for the vacuum. The vacuum is now powered.`;
+			flags.vacuumHasPower = true;
+			return;
+		}
 	},
 	"batteries": {
 		"location": "poolOfLight",
@@ -199,7 +210,18 @@ const objects = {
 	},
 
 	"bats": {},
-	"ghosts": {},
+	"ghosts": {
+		"description": "",
+		"location": "upperGallery"
+	},
+	"barrier": {
+		"name": "the magical barrier",
+		"description": "It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",
+		"location": "coldChamber"
+	},
+	"magical barrier": {
+		"synonym": "barrier"
+	},
 	"drawer": {
 		"location": "study",
 		"description": "It's a small side drawer. It's closed.",

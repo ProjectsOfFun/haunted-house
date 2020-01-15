@@ -113,8 +113,9 @@ const verbs = {
 				return;
 			}
 
-			if (isRoom("coldChamber") && flags.magicalBarrier && direction === "w") {
+			if (isRoom("coldChamber") && flags.magicalBarrier && direction === "e") {
 				message = `A magical barrier is blocking your way to the west.`;
+				sndShock.play();
 				return;
 			}
 
@@ -253,6 +254,11 @@ const verbs = {
 				if (obj.location === currentRoom.rid) {
 					message = "Taken.";
 					obj.location = "player";
+					if (obj.score > 0) {
+						message = "You've found treasure!";
+						sndPickup.play();
+					}
+					verbs["get"].combineObjects(noun,obj);
 					return;
 				}
 				if (obj.location === "player") {
@@ -265,6 +271,20 @@ const verbs = {
 					message = "You don't need to take that.";
 					return;
 				}
+			}
+		},
+		"combineObjects": function(noun,obj) {
+
+			// Candle
+			if ( (isCarrying("candlestick") && isCarrying("candle")) && (obj.id === "candlestick" || obj.id === "candle") ) {
+				message += `<br>You place the candle in the candlestick.`;
+				return;
+			}
+
+			// Vacuum
+			if ( (isCarrying("batteries") && isCarrying("vacuum")) && (obj.id === "batteries" || obj.id === "vacuum") ) {
+				objects["vacuum"].insertBatteries();
+				return;
 			}
 		}
 	},
@@ -322,9 +342,11 @@ const verbs = {
 				if (isRoom("coldChamber") && flags.magicalBarrier) {
 					message += "<br><br>The air sizzles with energy and the magic field dissipates into nothingness.";
 					flags.magicalBarrier = false;
+					rooms["coldChamber"].dispellBarrier();
 				} else if (isRoom("coldChamber")) {
 					message += "<br><br>The magical field re-materializes!";
 					flags.magicalBarrier = true;
+					rooms["coldChamber"].createBarrier();
 				} else {
 					message += "<br><br>*Magic Occurs*"
 				}
@@ -405,7 +427,7 @@ const verbs = {
 			if (isCarrying("axe")) {
 				verbSubroutine("swing","axe",verbs["swing"],objects["axe"]);
 			} else {
-				message = "Not with your bare hands. You're karate skills aren't what they used to be.";
+				message = "Not with your bare hands. Your karate skills aren't what they used to be.";
 			}
 		}
 	},
@@ -506,13 +528,13 @@ const verbs = {
 				return;	
 			}
 
-			if (obj.id === "vacuum" && isCarrying("vacuum") && isCarrying("batteries") && !flags.vacuumSwitchedOn) {
+			if (obj.id === "vacuum" && flags.vacuumHasPower && !flags.vacuumSwitchedOn) {
 				message = `The vacuum is switched on.`;
 				flags.vacuumSwitchedOn = true;
 				return;
 			}
 
-			if (obj.id === "vacuum" && isCarrying("vacuum") && isCarrying("batteries") && flags.vacuumSwitchedOn) {
+			if (obj.id === "vacuum" && flags.vacuumHasPower && flags.vacuumSwitchedOn) {
 				message = `The vacuum is switched off.`;
 				flags.vacuumSwitchedOn = false;
 				return;
@@ -542,16 +564,25 @@ const verbs = {
 	},
 	"drop": {
 		"action": function(noun,obj) {
+			// Don't allow treasure to be dropped
+			if (obj.score > 0 && isCarrying(obj)) {
+				message = `The ${noun} is too valuable to drop.`;
+				return;
+			}
+
+			// Default behavior
 			if (obj.location === "player") {
 				obj.location = currentRoom.rid;
 				message = "Dropped.";
 				return;
 			}
 
+			// Weird boat syntax
 			if (noun === "boat" && flags.inBoat) {
 				message = `You jump out of the boat.`;
 				if (currentRoom.water) {
 					message += ` SPLASH!<br>`;
+					sndSplash.play();
 				}
 				flags.inBoat = false;
 				return;
@@ -599,6 +630,7 @@ const verbs = {
 	"wear": {
 		"action": function(noun,obj) {
 			message = `You can't wear that.`;
+
 			if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
 				message = `You put on the coat. Stylish.`;
 				if (objects["key"].location === "coat") {
