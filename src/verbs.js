@@ -684,5 +684,8 @@ const verbs = {
 	},
 	"west": {
 		"synonym": "w"
+	},
+	"x": {
+		"synonym": "look"
 	}
 };

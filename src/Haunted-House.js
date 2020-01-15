@@ -544,9 +544,9 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	currentRoom = rooms["upperGallery"];
-	objects["vacuum"].location = currentRoom.rid;
-	objects["batteries"].location = currentRoom.rid;
+	//currentRoom = rooms["upperGallery"];
+	//objects["vacuum"].location = currentRoom.rid;
+	//objects["batteries"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
 	//objects["statue"].key = "key";
 	//flags.batsAttacking = true
