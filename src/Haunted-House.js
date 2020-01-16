@@ -537,8 +537,8 @@ function debugInfo() {
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	//currentRoom = rooms["mustyRoom"];
-	//objects["aerosol"].location = currentRoom.rid;
+	currentRoom = rooms["hallWithLockedDoor"];
+	objects["key"].location = currentRoom.rid;
 	//objects["aerosol"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
 	//objects["statue"].key = "key";

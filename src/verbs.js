@@ -53,31 +53,34 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = "You can't close that.";
 
-			if (obj.id === "drawer" && currentRoom.rid === obj.location) {
-
-				if (obj.isOpen && objects["candle"].location === "study") {
-					message = "You slide the drawer closed.";
-					objects["candle"].location = "drawer";
-					obj.drawerClose();
-					return;
-				}
-
-				if (obj.isOpen) {
-					message = "You slide the drawer closed.";
-					obj.drawerClose();
-					return;
-				}
-
-				message = "It's already closed.";
+			// Drawer exception to put candle away if drawer closed
+			if (obj.id === "drawer" && objectInRange(obj) && obj.isOpen && objects["candle"].location === "study") {
+				message = obj.closeMessage;
+				objects["candle"].location = "drawer";
+				obj.closeAction();
 				return;
 			}
 
-			if (obj.id === "coffin" && obj.isOpen && currentRoom.rid === obj.location) {
+			// Coffin exception to play sound
+			if (obj.id === "coffin" && obj.isOpen && objectInRange(obj)) {
 				message = `You slam the coffin shut.`;
-				obj.isOpen = false;
-				obj.closeCoffin();
+				obj.closeAction();
 				sndDoor.play();
 				return
+			}
+
+			if (obj.isOpen === false && objectInRange(obj)) {
+				message = `It's already closed.`;
+				return;
+			}
+
+			if (obj.isOpen && objectInRange(obj)) {
+				message = obj.closeMessage ? obj.closeMessage : `You close it.`;
+				if (obj.closeAction) { obj.closeAction(); }
+				if (obj.id === "door") {
+					sndDoor.play();
+				}
+				return;
 			}
 
 		}
@@ -519,40 +522,44 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = "You can't open that.";
 
-			if (obj.id === "drawer" && currentRoom.rid === obj.location) {
-				if (!obj.isOpen && objects["candle"].location === "drawer") {
-					message = "You slide the drawer open, revealing a candle.";
-					objects["candle"].location = "study";
-					obj.drawerOpen();
-					return;
-				}
-
-				if (!obj.isOpen) {
-					message = "You slide open the drawer.";
-					obj.drawerOpen();
-					return;
-				}
-
-				message = "It's already open.";
+			if (obj.id === "drawer" && objectInRange(obj) && !obj.isOpen && objects["candle"].location === "drawer") {
+				message = "You slide the drawer open, revealing a candle.";
+				objects["candle"].location = "study";
+				obj.openAction();
 				return;
 			}
 
 			if(obj.id === "coffin" && objectInRange(obj)) {
-			
 				if (!obj.isOpen && objects["ring"].location === "coffin") {
 					message = `You slowly raise the lid revealing... a ring!`;
 					objects["ring"].location = obj.location;
 					obj.isOpen = true;
-					obj.openCoffin();
+					obj.openAction();
 					sndKey.play();
 					return;
 				}
 
 				if (!obj.isOpen) {
 					message = "That's creepy!";
-					obj.openCoffin();
+					obj.openAction();
 					return;
 				}
+			}
+
+			if (obj.locked && obj.isOpen === false && objectInRange(obj)) {
+				message = "It's locked!";
+				return;
+			}
+
+			if (obj.isOpen && objectInRange(obj)) {
+				message = "It's already open.";
+				return;
+			}
+
+			if (obj.isOpen === false && objectInRange(obj)) {
+				message = obj.openMessage ? obj.openMessage : "You've opened it.";
+				if (obj.openAction) { obj.openAction(); }
+				return;
 			}
 
 		}
@@ -725,17 +732,30 @@ const verbs = {
 		}
 	},
 	"unlock": {
-		"default": "You can't unlock that.",
 		"action": function(noun,obj){
-			message = verbs["unlock"].default;
+			message = "You can't unlock that.";
 
 			if (obj.locked && obj.key && objectInRange(obj) && isCarrying(obj.key)) {
-				message = `You've unlocked the ${noun}.`;
+				message = obj.unlockMessage ? obj.unlockMessage : `You've unlocked the ${noun}.`;
 				obj.locked = false;
-			} else if (obj.locked && obj.key && objectInRange(obj)) {
+
+				// Heavy door exception
+				if (obj.id === "door" && currentRoom.rid === obj.location) {
+					rooms["hallWithLockedDoor"].exits.s = "steepMarbleStairs";
+				}
+
+				if (obj.unlockAction) { obj.unlockAction();}
+				return;
+			}
+
+			if (obj.locked && obj.key && objectInRange(obj)) {
 				message = `You don't have a means to unlock that.`;
-			} else if (obj.locked && objectInRange(obj)) {
+				return;
+			}
+
+			if (obj.locked && objectInRange(obj)) {
 				`You've unlocked the ${noun}.`;
+				return;
 			}
 		}
 	},

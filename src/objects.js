@@ -73,11 +73,13 @@ const objects = {
 		"description": "The dark-stained pine box has tarnished brass hinges. The lid is closed.",
 		"location": "deepCellar",
 		"isOpen": false,
-		"openCoffin": function() {
+		"openAction": function() {
 			this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior.";
+			this.isOpen = true;
 		},
-		"closeCoffin": function() {
+		"closeAction": function() {
 			this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
+			this.isOpen = false;
 		}
 	},
 	"coins": {
@@ -97,33 +99,20 @@ const objects = {
 		"location": "hallWithLockedDoor",
 		"description": "It's made of a thick, unbreakable wood.",
 		"locked": true,
-		"open": false,
-		"overrides": {
-			"unlock": function() {
-				const thisDoor = objects["door"];
-
-				if (objectInRange(thisDoor)) {
-					if (isCarrying("key") && thisDoor.locked === true) {
-						message = "You slowly turn the key and unlock the door!";
-						rooms["hallWithLockedDoor"].exits.s = "steepMarbleStairs";
-						thisDoor.locked = false;
-						thisDoor.open = true;
-					} else if (thisDoor.locked === false) {
-						message = "It's already unlocked.";
-					} else {
-						message = "This door requires a key!";
-					}
-					return;
-				}
-
-			},
-			"open": function(){
-				if (objects["door"].locked) {
-					message = "It's locked!";
-				} else {
-					message = "It's already open.";
-				}
-			}
+		"key": "key",
+		"unlockMessage": "You slowly turn the key and unlock the door!",
+		"unlockAction": function() {
+			this.description = "It's made of a thick, unbreakable wood. It's open.";
+			this.isOpen = true;
+		},
+		"isOpen": false,
+		"closeAction": function() {
+			this.description = "It's made of a thick, unbreakable wood. It's closed.";
+			this.isOpen = false;
+		},
+		"openAction": function() {
+			this.description = "It's made of a thick, unbreakable wood. It's open.";
+			this.isOpen = true;
 		}
 	},
 	"down": {},
@@ -131,11 +120,13 @@ const objects = {
 		"location": "study",
 		"description": "It's a small side drawer. It's closed.",
 		"isOpen": false,
-		"drawerOpen": function() {
+		"openMessage": "You slide the drawer open.",
+		"openAction": function() {
 			this.description = "The small side drawer is open.";
 			this.isOpen = true;
 		},
-		"drawerClose": function() {
+		"closeMessage": "You slide the drawer closed.",
+		"closeAction": function() {
 			this.description = "It's a small side drawer. It's closed.";
 			this.isOpen = false;
 		}
