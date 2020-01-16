@@ -150,18 +150,28 @@ const rooms = {
 			"washbasin": "You doubt it can still hold water."
 		}
 	},
-	dustyRoom: {
-		"name": "Dusty Room",
-		"description": "Room with Inches of Dust",
+	"mustyRoom": {
+		"name": "Musty Room",
+		"description": "There is a nasty swarm of bats attacking you! Their fluttering wings stir up a putrid, musty stench.",
 		"exits": {
 			"s": "spiralStaircase",
 			"e": "rearTurretRoom"
+		},
+		"batsKilled": function(){
+			this.description = "This quiet corner room is filled with the musty stench of rabid, wild animals. The floor is covered with bat carcasses."
 		}
 	},
 	"rearTurretRoom": {
 		"name": "Rear Turret Room",
+		"description": "This round chamber's slim windows look out on to the dense forest to the north of the mansion. There is a strange bench in the middle of the room.",
 		"exits": {
-			"w": "dustyRoom"
+			"w": "mustyRoom"
+		},
+		"scenery": {
+			"bench": `Upon closer inspection, you realize that this is "bench" is actually a torture device complete with locks and chains.`,
+			"device": `It's what they called "The Rack" back in the dark ages.`,
+			"locks": "They hold a victim's arms and legs in place.",
+			"chains": "Heavy enough to bruise and cut flesh."
 		}
 	},
 	clearing: {
@@ -226,9 +236,9 @@ const rooms = {
 		"name": "Spiral Staircase",
 		"description": "Bottom of Spiral Staircase",
 		"exits": {
-			"n": "dustyRoom",
+			"n": "mustyRoom",
 			"w": "smallDarkRoom",
-			u: "dustyRoom",
+			u: "mustyRoom",
 			d: "smallDarkRoom"
 		}
 	},
@@ -510,14 +520,21 @@ const rooms = {
 			"carvings": "The carvings depict various sinister creatures."
 		}
 	},
-	frontTower: {
+	"frontTower": {
 		"name": "Front Tower",
+		"description": "This tower overlooks the front of the property. The windows have been barred and nailed shut.",
 		"exits": {
 			"e": "slopingCorridor"
+		},
+		"scenery": {
+			"windows": "It was rumored they heiress plunged to her death from here.",
+			"bars": "They look like they were meant to keep things in.",
+			"nails": "Bars AND nails. They needed to be sure no one was getting out."
 		}
 	},
 	"slopingCorridor": {
 		"name": "Sloping Corridor",
+		"description": "This corridor slopes upwards on its way towards the front tower.",
 		"exits": {
 			"w": "frontTower",
 			"e": "upperGallery"

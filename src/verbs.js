@@ -49,6 +49,39 @@ const verbs = {
 			}
 		}
 	},
+	"close": {
+		"action": function(noun,obj) {
+			message = "You can't close that.";
+
+			if (obj.id === "drawer" && currentRoom.rid === obj.location) {
+
+				if (obj.isOpen && objects["candle"].location === "study") {
+					message = "You slide the drawer closed.";
+					objects["candle"].location = "drawer";
+					obj.drawerClose();
+					return;
+				}
+
+				if (obj.isOpen) {
+					message = "You slide the drawer closed.";
+					obj.drawerClose();
+					return;
+				}
+
+				message = "It's already closed.";
+				return;
+			}
+
+			if (obj.id === "coffin" && obj.isOpen && currentRoom.rid === obj.location) {
+				message = `You slam the coffin shut.`;
+				obj.isOpen = false;
+				obj.closeCoffin();
+				sndDoor.play();
+				return
+			}
+
+		}
+	},
 	"d": {
 		"action": function(noun,obj) {
 			if (noun) return;
@@ -165,6 +198,8 @@ const verbs = {
 	"get": {
 		"action": function(noun,obj) {
 			message = `What "${noun.toUpperCase()}?"`;
+
+			// Check if noun is scenery
 			if (!obj && currentRoom.scenery) {
 				for (let key in currentRoom.scenery) {
 					if (key.toLowerCase() == noun.toLowerCase()) {
@@ -173,6 +208,21 @@ const verbs = {
 					}
 				}
 			}
+
+			if (obj.id === "boat" && objectInRange("boat")) {
+				if (!flags.inBoat) {
+					message = `It's too big to carry around. It will carry you if you board it.`;
+				} else {
+					message = `Um, you are sitting in the boat. Besides, it's too big to carry.`;
+				}
+				return;
+			}
+
+			if (obj.id === "bats" && !flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
+				message = `Ew! You don't want to touch the filthy bat carcasses!`;
+				return;
+			}
+
 			if (obj.portable && objectInRange(obj)) {
 				if (obj.location === currentRoom.rid) {
 					message = "Taken.";
@@ -189,12 +239,14 @@ const verbs = {
 					return;
 				}
 			}
+
 			if (!obj.portable && objectInRange(obj)) {
 				if (obj.location === currentRoom.rid) {
 					message = "You don't need to take that.";
 					return;
 				}
 			}
+
 		},
 		"combineObjects": function(noun,obj) {
 
@@ -256,8 +308,9 @@ const verbs = {
 				return;
 			}
 
-			if (flags.batsAttacking && isRoom("rearTurretRoom")) {
-				message = `The bats are preventing your movement.`;
+			// Bats attacking
+			if (flags.batsAttacking && isRoom("mustyRoom") && direction === "e") {
+				message = `The bats are blocking that direction.`;
 				return;
 			}
 
@@ -380,11 +433,10 @@ const verbs = {
 		"synonym": "drop"	
 	},
 	"light": {
-		"default": "You can't light that.",
 		"action": function(noun,obj) {
-			message = verbs["light"].default;
+			message = "You can't light that.";
 
-			if (objects['matches'].location !== 'player') {
+			if (!isCarrying("matches")) {
 				message = `You have nothing to light it with.`;
 				return;
 			}
@@ -408,9 +460,9 @@ const verbs = {
 				message = `An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.`;
 				return;
 			}
-
-			if ((noun === "cooker" || noun === "stove") && currentRoom.rid === "kitchen") {
-				message = `The cooker is in no state to be lit.`;
+			
+			if (nounCheck(noun,["cooker","stove"]) && currentRoom.rid === "kitchen") {
+				message = `The cooker rusted out and is in no state to be lit.`;
 				return;
 			}
 
@@ -422,12 +474,17 @@ const verbs = {
 		}
 	},
 	"look": {
-		"default": "You see nothing special.",
 		"action": function(noun,obj) {
-			if (!noun) {
-				message = "You look around.";
-				return;	
+			message = "You see nothing special.";
+
+			// Key in coat pocket
+			if (obj.id === "coat" && objectInRange(obj) && objects["key"].location === "coat") {
+				message = "As you search through the old coat you find a key in the pocket.";
+				objects["key"].location = currentRoom.rid;
+				sndKey.play();
 			}
+
+			// Default action if obj has a description
 			if (obj.description && objectInRange(obj)) {
 				message = obj.description;
 				return;
@@ -435,6 +492,8 @@ const verbs = {
 				message = "You do see that here.";
 				return;
 			}
+
+			// Default action if noun is scenery in room
 			if (currentRoom.scenery) {
 				for (let key in currentRoom.scenery) {
 					if (key.toLowerCase() == noun.toLowerCase()) {
@@ -443,7 +502,7 @@ const verbs = {
 					}
 				}	
 			}
-			message = "You see nothing special."
+
 		}
 	},
 	"n": {
@@ -459,6 +518,43 @@ const verbs = {
 	"open": {
 		"action": function(noun,obj) {
 			message = "You can't open that.";
+
+			if (obj.id === "drawer" && currentRoom.rid === obj.location) {
+				if (!obj.isOpen && objects["candle"].location === "drawer") {
+					message = "You slide the drawer open, revealing a candle.";
+					objects["candle"].location = "study";
+					obj.drawerOpen();
+					return;
+				}
+
+				if (!obj.isOpen) {
+					message = "You slide open the drawer.";
+					obj.drawerOpen();
+					return;
+				}
+
+				message = "It's already open.";
+				return;
+			}
+
+			if(obj.id === "coffin" && objectInRange(obj)) {
+			
+				if (!obj.isOpen && objects["ring"].location === "coffin") {
+					message = `You slowly raise the lid revealing... a ring!`;
+					objects["ring"].location = obj.location;
+					obj.isOpen = true;
+					obj.openCoffin();
+					sndKey.play();
+					return;
+				}
+
+				if (!obj.isOpen) {
+					message = "That's creepy!";
+					obj.openCoffin();
+					return;
+				}
+			}
+
 		}
 	},
 	"read": {
@@ -537,11 +633,15 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = verbs["spray"].default;	
 
-			if (obj.id === "aerosol" && isCarrying("aerosol") && flags.batsAttacking) {
+			if ((obj.id === "aerosol" || obj.id === "bats") && isCarrying("aerosol") && flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
 				flags.batsAttacking = false;
-				message = `Pfft! Got 'em!`;
+				message = `Pfft! Got 'em! The bats spiral to the ground in a smattering of thuds. They now lie motionless on the ground.`;
+				rooms["mustyRoom"].batsKilled();
+				objects["bats"].batsKilled();
+				flags.batsAttacking = false;
 				return;
 			}	
+
 			if (obj.id === "aerosol" && isCarrying("aerosol")) {
 				message = `Hisssss...`;
 				return;
@@ -583,6 +683,27 @@ const verbs = {
 	},
 	"take": {
 		synonym : "get"
+	},
+	"tie": {
+		"action": function(noun,obj) {
+			message = "You can't tie that.";
+
+			if (obj.id === "rope" && isCarrying("rope")) {
+
+				if (currentRoom.rid === "blastedTree") {
+					message = `You reattach the rope to the branch.`;
+					obj.tieToTree();
+					obj.location = "blastedTree";
+					flags.ropeTiedToTree = true;
+					return;
+				}
+
+				message = `There's no need to tie the rope to anything here.`;
+				return;
+
+			}
+
+		}
 	},
 	"u": {
 		"action": function(noun,obj) {

@@ -3,21 +3,10 @@
 const objects = {
 	"aerosol": {
 		"name": "a can of aerosol",
-		"description": `The can reads, 'For the highest hair. Warning: do not spray on small animals.'`,
+		"description": `The can reads, "For the highest hair. Warning: do not spray on small animals."`,
 		"location": "debris",
 		"portable": true,
-		"flamable": true,
-		"overrides": {
-			"light": function() {
-				if (objects['aerosol'].location == 'player' && objects['matches'].location == 'player') {
-					message = "An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.";
-				} else if (objects['aerosol'].location == 'player') {
-					message = "You have nothing to ignite the aerosol.";
-				} else {
-					message = "You are not holding any aerosol.";
-				}
-			}
-		}
+		"flamable": true
 	},
 	"air": {
 		"description": "It can't be seen.",
@@ -34,7 +23,13 @@ const objects = {
 		"description": "It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",
 		"location": "coldChamber"
 	},
-	"bats": {},
+	"bats": {
+		"location": "mustyRoom",
+		"description": "They are fluttering all around you. Occasionally, one will swoop down and attempt to take a bite!",
+		"batsKilled": function() {
+			this.description = "The bat carcasses lie motionless on the ground in tiny puddles of their own filth and blood.";
+		}
+	},
 	"batteries": {
 		"name": "some batteries",
 		"description": "They are heavy duty power cells. Perfect for small appliances.",
@@ -45,18 +40,6 @@ const objects = {
 		"name": "a boat",
 		"description": "It's rickety and old, but it should float.",
 		"location": "cliffPathByMarsh",
-		"overrides": {
-			"get": function() {
-				if (objectInRange("boat")) {
-					if (!flags.inBoat) {
-						message = `It's too big to carry around. It will carry you if you board it.`;
-					} else {
-						message = `Um, you are sitting in the boat. Besides, it's too big to carry.`;
-					}
-					return;
-				}
-			}
-		}
 	},
 	"books": {
 		"description": "They are demonic works.",
@@ -84,35 +67,17 @@ const objects = {
 		"name": "a dusty old coat",
 		"description": "It's a dusty old rancher's coat.",
 		"location": "cupboard",
-		"portable": true,
-		"overrides": {
-			"look": function() {
-				const coat = objects['coat'];
-				if (objects["key"].location === "coat" && (coat.location === "player" || currentRoom.rid === coat.location)) {
-					message = "As you search through the old coat you find a key in the pocket.";
-					sndKey.play();
-					objects["key"].location = currentRoom.rid;
-				} else {
-					verbs["look"].action("coat", coat);	
-				}
-			}
-		}
+		"portable": true
 	},
 	"coffin": {
+		"description": "The dark-stained pine box has tarnished brass hinges. The lid is closed.",
 		"location": "deepCellar",
-		"overrides": {
-			"open": function() {
-				const coffin = objects["coffin"];
-				if (currentRoom.rid === coffin.location) {
-					if (objects["ring"].location === "coffin") {
-						message = "You slowly raise the lid revealing... a ring!";
-						objects["ring"].location = coffin.location;
-					} else {
-						message = "That's creepy!";
-					}
-				}
-				//flags[2] = 0;	//???
-			}
+		"isOpen": false,
+		"openCoffin": function() {
+			this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior.";
+		},
+		"closeCoffin": function() {
+			this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
 		}
 	},
 	"coins": {
@@ -123,7 +88,7 @@ const objects = {
 	},
 	"desk": {
 		"location": "study",
-		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has an ornamented drawer."
+		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer."
 	},
 	"desks": {
 		"synonym": "desk"
@@ -166,24 +131,13 @@ const objects = {
 		"location": "study",
 		"description": "It's a small side drawer. It's closed.",
 		"isOpen": false,
-		"overrides": {
-			"open": function() {
-				const drawer = objects["drawer"];
-				if (currentRoom.rid === drawer.location) {
-					if (!drawer.isOpen && objects["candle"].location === "drawer") {
-						message = "You slide the drawer open revealing a candle.";
-						drawer.description = "The small side drawer is open and empty.";
-						objects["candle"].location = "study";
-						drawer.isOpen = true;
-					} else if (!drawer.isOpen) {
-						message = "You slide open the drawer.";
-						drawer.description = "The small side drawer is open and empty.";
-						drawer.isOpen = true;
-					} else {
-						message = "It's already open.";
-					}
-				}
-			}
+		"drawerOpen": function() {
+			this.description = "The small side drawer is open.";
+			this.isOpen = true;
+		},
+		"drawerClose": function() {
+			this.description = "It's a small side drawer. It's closed.";
+			this.isOpen = false;
 		}
 	},
 	"east": {},
@@ -192,7 +146,7 @@ const objects = {
 		"location": "upperGallery"
 	},
 	"goblet": {
-		"name": "a jewelled goblet",
+		"name": "a jeweled goblet",
 		"description": "It made of shiny metal and encrusted with sparkling jewels.",
 		"location": "frontTower",
 		"portable": true,
@@ -247,31 +201,42 @@ const objects = {
 	},
 	"rope": {
 		"name": "a rope tied to a tree",
+		"description": `It's a normal length of rope and it's currently tied to an upper branch of the tree.`,
 		"location": "blastedTree",
 		"portable": true,
 		"overrides": {
 			"get": function() {
+				const self = objects["rope"];
 				if (flags.ropeTiedToTree) {
-					verbs["get"].action("rope", objects["rope"]);
-					objects["rope"].name = "a length of rope";
+					verbs["get"].action("rope", self);
+					self.removeFromTree();
 					flags.ropeTiedToTree = false;
 				} else {
-					verbs["get"].action("rope",objects["rope"]);
+					verbs["get"].action("rope", self);
 				}
 			},
 			"climb": function() {
+				const self = objects["rope"];
 				if (flags.ropeTiedToTree && isRoom("blastedTree")) {
 					message = `You use the rope to climb the tree.`;
-					objects["rope"].omnipresence = true;
+					self.omnipresence = true;
 					currentRoom = rooms["inTheTree"];
 				} else if (flags.ropeTiedToTree && isRoom("inTheTree")) {
 					message = `You use the rope to climb down.`;
-					objects["rope"].omnipresence = false;
+					self.omnipresence = false;
 					currentRoom = rooms["blastedTree"];
 				} else {
 					message = `It isn't attached to anything!`;
 				}
 			}
+		},
+		"removeFromTree": function() {
+			this.name = "a length of rope";
+			this.description = `It's a normal length of rope.`;
+		},
+		"tieToTree": function() {
+			this.name = "a rope tied to a tree";
+			this.description = `It's a normal length of rope and it's currently tied to an upper branch of the tree.`;
 		}
 	},
 	"rubbish": {
@@ -282,7 +247,7 @@ const objects = {
 		"location": "rearTurretRoom",
 		"portable": true,
 		"readable": true,
-		"description": "The script is in an alien tongue.",
+		"description": "It is decorated with gold leaf and medieval illustrations. The text is written is in an alien tongue.",
 		"readableText": `It says "Klatu Borata Nickto."`,
 		"score": 1
 	},

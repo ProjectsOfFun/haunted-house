@@ -44,7 +44,7 @@ const flags = {
 	ghostsAttacking: true, // flags[27]
 	vacuumSwitchedOn: false, // flags[24]
 	vacuumHasPower: false,
-	batsAttacking: false, // flags[26]
+	batsAttacking: true, // flags[26]
 	magicalBarrier: true, //flags[34]
 	hallDoorLocked: true,
 	barsDug: false,
@@ -238,10 +238,6 @@ function parseInput(myInput) {
 		message = "You don't have '" + noun + "'";
 	}
 	
-	// if (flags[26] == 1 && room==13 && Math.random()*3 <= 2 && vb != 20) {
-	// 	message = "BATS ATTACKING!";
-	// }
-	
 	// Candle slowly bruns down if lit
 	if (flags.candleLit) {
 		lightLevel--;
@@ -263,9 +259,6 @@ function parseInput(myInput) {
 		objects["candle"].location = null;
 	}
 
-	if (flags.batsAttacking) {
-		message += `<br>Bats attacking!`;
-	}
 	if (currentRoom.water && !flags.inBoat) {
 		flags.sinking++;
 		message += `<br>You are sinking in the bog!`;
@@ -535,18 +528,18 @@ function debugInfo() {
 	if (!debug) return;
 	//console.clear();
 	//console.log(currentRoom);
-	cl("lightLevel: " + lightLevel);
-	cl("score: " + totalScore);
-	cl("sinking: " + flags.sinking);
+	// cl("lightLevel: " + lightLevel);
+	// cl("score: " + totalScore);
+	// cl("sinking: " + flags.sinking);
 }
 
 
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	//currentRoom = rooms["upperGallery"];
-	//objects["vacuum"].location = currentRoom.rid;
-	//objects["batteries"].location = currentRoom.rid;
+	//currentRoom = rooms["mustyRoom"];
+	//objects["aerosol"].location = currentRoom.rid;
+	//objects["aerosol"].location = currentRoom.rid;
 	//objects["statue"].locked = true;
 	//objects["statue"].key = "key";
 	//flags.batsAttacking = true
