@@ -115,7 +115,6 @@ const objects = {
 			this.isOpen = true;
 		}
 	},
-	"down": {},
 	"drawer": {
 		"location": "study",
 		"description": "It's a small side drawer. It's closed.",
@@ -131,7 +130,6 @@ const objects = {
 			this.isOpen = false;
 		}
 	},
-	"east": {},
 	"ghosts": {
 		"description": "The ghosts whirl about the room like so many clouds of dust!",
 		"location": "upperGallery"
@@ -173,7 +171,6 @@ const objects = {
 		"readable": true,
 		"readableText": `It says, "Seek the word to dispell the barrier."`
 	},
-	"north": {},
 	"painting": {
 		"name": "a beautiful painting",
 		"description": "It depicts a smiling, golden-haired child.",
@@ -195,32 +192,6 @@ const objects = {
 		"description": `It's a normal length of rope and it's currently tied to an upper branch of the tree.`,
 		"location": "blastedTree",
 		"portable": true,
-		"overrides": {
-			"get": function() {
-				const self = objects["rope"];
-				if (flags.ropeTiedToTree) {
-					verbs["get"].action("rope", self);
-					self.removeFromTree();
-					flags.ropeTiedToTree = false;
-				} else {
-					verbs["get"].action("rope", self);
-				}
-			},
-			"climb": function() {
-				const self = objects["rope"];
-				if (flags.ropeTiedToTree && isRoom("blastedTree")) {
-					message = `You use the rope to climb the tree.`;
-					self.omnipresence = true;
-					currentRoom = rooms["inTheTree"];
-				} else if (flags.ropeTiedToTree && isRoom("inTheTree")) {
-					message = `You use the rope to climb down.`;
-					self.omnipresence = false;
-					currentRoom = rooms["blastedTree"];
-				} else {
-					message = `It isn't attached to anything!`;
-				}
-			}
-		},
 		"removeFromTree": function() {
 			this.name = "a length of rope";
 			this.description = `It's a normal length of rope.`;
@@ -248,7 +219,6 @@ const objects = {
 		"location": "weedPatch",
 		"portable": true
 	},
-	"south": {},
 	"spells": {
 		"synonym": "magic spells"
 	},
@@ -262,7 +232,6 @@ const objects = {
 	"tome" : {
 		"synonym": "magic spells"
 	},
-	"up": {},
 	"vacuum": {
 		"name": "a tiny vacuum",
 		"description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",
@@ -277,7 +246,6 @@ const objects = {
 			this.description = `It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!`;
 		}
 	},
-	"west": {},
 	"xzanfar": {},
 
 };

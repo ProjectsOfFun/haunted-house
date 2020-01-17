@@ -5,19 +5,32 @@
 
 
 // Initialize DOM items as JS variables
+const $container = document.getElementById('hh-container');
 const $display = document.getElementById('hh-output');
 const $inputZone = document.getElementById('hh-input');
 const $userInput = document.getElementById('hh-userInput');
 const $inputForm = document.getElementById('hh-input-form');
 const $restartBtn = document.getElementById('hh-reload');
+const $displayOverlay = document.getElementById('hh-output-overlay');
+const $continueBtn = document.getElementById('hh-continue');
 
 let totalScore = 0;
+let turns = 0;
 let winner = false;
 let lightLevel = 60; // LL
+let encroachingDarkness = 0;
 let currentRoom = rooms["pathThroughIronGate"]; // RM 57
 let previousRoom = null;
 let message = "OK"; // M$
 let previousObj = null;
+
+
+// Set event for overlay close button
+$continueBtn.addEventListener('click', function(evt){
+	$container.classList.remove('overlay');
+	$userInput.focus();
+	$userInput.select();
+});
 
 
 // Set the machine name of all the rooms to .rid for easy reference
@@ -52,15 +65,9 @@ const flags = {
 	studyWallBroken: false,
 	inBoat: false,
 	sinking: 0,
-	wearingCoat: false
+	wearingCoat: false,
+	winner: false
 }
-
-//flags[2] = 1; // RING
-//flags[17] = 1; // Candle - Drawer open
-//flags[28] = 1; // ?????
-//flags[35] // Set to 1 if you can move
-//flags[14] // IN TREE
-
 
 
 /**
@@ -76,7 +83,9 @@ function display() {
 	prnt(`---------------------------------------------<br>`);
 	prnt(`<span class="room-name">${currentRoom.name}</span>`);
 
-	if (extraInfo && currentRoom.description) {
+	if (currentRoom.darkness && !flags.candleLit) {
+		prnt(`<br>It's pitch black and you can't see anything!`);
+	}	else if (extraInfo && currentRoom.description) {
 		prnt(`<br>${currentRoom.description} ${extraInfo}`);
 	} else if (extraInfo) {
 		prnt(`<br>${extraInfo}`);
@@ -84,21 +93,30 @@ function display() {
 		prnt(`<br>${currentRoom.description}`);
 	}
 
-	prnt(`<br><span class="exits">Exits:</span>${splitExits(currentRoom.exits)}`)
+	if ((currentRoom.darkness && flags.candleLit) || !currentRoom.darkness) {
+		prnt(`<br><span class="exits">Exits:</span>${splitExits(currentRoom.exits)}`)
+		if (roomItems) prnt(roomItems);
+	}
 
-	if (roomItems) prnt(roomItems);
 
-	prnt(`<br>---------------------------------------------<br>`);
-	prnt(`<span class="message">${message}</span>`);
+	prnt(`<br>---------------------------------------------`);
+	if (message.length > 0) {
+		prnt(`<br><span class="message">${message}</span>`);
+	}
 
-	// if (winner) {
-	// 	$inputZone.style.display = 'none';
-	// }
+	if (flags.winner) {
+		victory();
+	}
 
 	message = "What?";
 	debugInfo();
 }
 
+function displayOverlay(text) {
+	$displayOverlay.innerHTML = "";
+	$displayOverlay.innerHTML += `<span class="message">${text}</span>`;
+	$container.classList.add('overlay');
+}
 
 /**
  * Gets additional description text to be added based on flags.
@@ -229,26 +247,30 @@ function parseInput(myInput) {
 		error = true;
 	}
 	if (!vb && ob) {
-		message = "You can't &quot;" + myInput + ".&quot;"	;
+		message = `You can't "${myInput.toUpperCase()}."`;
 	}
 	if (!vb && !ob) {
 		message = "You don't make sense.";
 	}
 	if (vb && ob.portable && ob.location != "player") {
-		message = "You don't have '" + noun + "'";
+		message = `You don't have "${noun.toUpperCase()}."`;
 	}
 	
-	// Candle slowly bruns down if lit
-	if (flags.candleLit) {
-		lightLevel--;
-	}
-
+	
 	// RUN THE VERB SUBROUTINE
 	if (!error) {
+
+		// Candle slowly burns down if lit
+		if (flags.candleLit) {
+			lightLevel--;
+		}
+
 		verbSubroutine(verb,noun,vb,ob);
 	}
 
 	// POST VERB MESSAGES
+
+	// Candle power
 	if (flags.candleLit && lightLevel > 1 && lightLevel < 11) {
 		message += `<br>Your candle is waning!`;
 	}
@@ -259,6 +281,25 @@ function parseInput(myInput) {
 		objects["candle"].location = null;
 	}
 
+	// Darkness effects
+	if (currentRoom.darkness && !flags.candleLit) {
+		encroachingDarkness++
+		if (encroachingDarkness > 1 && encroachingDarkness < 4) {
+			message += `<br>You hear something in the darkness!`;
+		}
+		if (encroachingDarkness >= 4 && encroachingDarkness < 6) {
+			message += `<br>You hear a terrifying growl. There is definitely something in the room with you!`;
+		}
+		if (encroachingDarkness >= 6) {
+			death(`A slimy appendage grabs you from out of the darkness and wraps itself around your neck!<br><br>You are helpless and filled with a sense of unspeakable terror as the creature squeezes the life out of you.`);
+			return;
+		}
+	}
+	if (currentRoom.darkness && flags.candleLit) {
+		encroachingDarkness = 0;
+	}
+
+	// Water effects
 	if (currentRoom.water && !flags.inBoat) {
 		flags.sinking++;
 		message += `<br>You are sinking in the bog!`;
@@ -270,8 +311,16 @@ function parseInput(myInput) {
 		}
 	}
 
+	// Increment turns
+	turns++;
+	
+	if (getMaxScore() === checkScore()) {
+		triggerEndGame();
+	}
+
 	previousObj = ob;
 	display();
+
 }
 
 
@@ -317,7 +366,7 @@ function verbSubroutine(verb,noun,vb,ob) {
 	// Does the object contain unique actions?
 	if (ob.hasOwnProperty('overrides')) {
 		// Does the current verb match any of the overriddes?
-		if (objectInRange(ob) || ob.omnipresence) {
+		if (objectInRange(ob)) {
 			if (ob['overrides'].hasOwnProperty(verb)) {
 				ob.overrides[verb]();
 				return;
@@ -337,25 +386,11 @@ function verbSubroutine(verb,noun,vb,ob) {
  */
 function checkScore() {
 	let score = 0;
-	score = 0;
 	for (let key in objects) {
 		if (objects[key].location == "player" && objects[key].score) {
 			score += objects[key].score;
 		}
 	}
-	// carrying.map(function(obj,i){
-	// 	if (obj) {
-	// 		score++	
-	// 	}
-	// });
-	// if (score == 17 && room == 57) {
-	// 	score = score * 2;
-	// 	message = "DOUBLE YOUR SCORE FOR REACHING HERE\<br\>YOUR SCORE=" + score;
-	// 	if (score > 18) {
-	// 		message += "\<br\>WELL DONE,YOU FINISHED THE GAME!"	
-	// 	}
-	// 	winner = true;
-	// }
 	return score;
 }
 
@@ -372,6 +407,32 @@ function getMaxScore() {
 		}
 	}
 	return maxScore;
+}
+
+
+function triggerEndGame() {
+	rooms["pathThroughIronGate"].endingTrigger();
+}
+
+
+function victory() {
+	$inputZone.remove();
+	cls();
+	prnt(`HAUNTED HOUSE`);
+	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="message">Congratulations, you've won the game!</span><br>`);
+	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);
+	
+	const messages = [`Bask in the glory of your victory, you've earned it!`,`Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.`,`So many points! Don't spend them all in one place.`,`As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!`];
+	let rnd = Math.floor(Math.random() * messages.length);
+	prnt(`${messages[rnd]}`);
+	prnt(`<br>---------------------------------------------<br>`);
+	prnt(`You took <em>${turns}</em> turns to complete the adventure.<br>`);
+
+	prnt(`<span class="message">This "remastered" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
+	
+
+	$restartBtn.classList.remove('is-hidden');
 }
 
 
@@ -401,7 +462,8 @@ function death(message) {
 	prnt(`<span class="message">${message}</span>`);
 	prnt(`<br><span class="room-name">You Have Died!</span>`);
 	prnt(`<br>---------------------------------------------<br>`);
-	prnt(`Your final score is: ${score}.`);
+	prnt(`You took <em>${turns}</em> turns before meeting your demise.<br>`);
+	prnt(`Your final score is: <em>${checkScore()}/${getMaxScore() + 1}</em>`);
 
 	$restartBtn.classList.remove('is-hidden');
 }
@@ -466,14 +528,17 @@ function nounCheck(noun,nounArray) {
  * Parse user input event
  */
 $inputForm.addEventListener('submit', function(evt){
-	parseInput($userInput.value.toUpperCase());
+	evt.preventDefault();
+
+	if ($userInput.value.length > 0) {
+		parseInput($userInput.value.toUpperCase());
+	}
 
 	if (checkScore()>=17 && room == 57) {
 		parseInput("SCORE");	
 	}
 
 	$userInput.value = '';
-	evt.preventDefault();
 });
 
 /**
@@ -511,6 +576,10 @@ const sndPickup = new Sound("audio/treasure_pickup.mp3");
 const sndShock = new Sound("audio/shock.mp3");
 const sndSplash = new Sound("audio/splash.mp3");
 
+// const snd = {};
+// snd.owl = new Sound("audio/owl.mp3");
+// snd.owl.play();
+
 
 /**
  * Console Log shortcut
@@ -528,23 +597,27 @@ function debugInfo() {
 	if (!debug) return;
 	//console.clear();
 	//console.log(currentRoom);
+	cl("Turns: " + turns);
 	// cl("lightLevel: " + lightLevel);
-	// cl("score: " + totalScore);
+	cl("score: " + totalScore);
 	// cl("sinking: " + flags.sinking);
+	cl("Terror: " + encroachingDarkness);
 }
 
 
 // DEBUG STUFF
 let debug = true;
 if (debug) {
-	currentRoom = rooms["hallWithLockedDoor"];
-	objects["key"].location = currentRoom.rid;
-	//objects["aerosol"].location = currentRoom.rid;
-	//objects["statue"].locked = true;
-	//objects["statue"].key = "key";
-	//flags.batsAttacking = true
+	//currentRoom = rooms["darkAlcove"];
+	//objects["candle"].location = currentRoom.rid;w
+	// for (let obj in objects) {
+	// 	if (objects[obj].score) {
+	// 		objects[obj].location = "player";
+	// 	}
+	// }
 }
 
 // INITIALIZE GAME
 display();
 $userInput.focus();
+$userInput.select();

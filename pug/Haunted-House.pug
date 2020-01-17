@@ -18,6 +18,14 @@ html(lang="en")
 						span.prompt &gt;
 						input#hh-userInput(type="text", name="userInput", autocomplete="off", placeholder="Type your command here...")
 				button#hh-reload.is-hidden [ Click to Restart ]
+
+			#hh-display-overlay
+				| HAUNTED HOUSE<br>
+				| ---------------------------------------------<br><br>
+				#hh-output-overlay
+				br
+				button#hh-continue [ Click to Continue ]
+
 			#hh-help
 				| Type 'HELP' for instructions.
 				#hh-screensize

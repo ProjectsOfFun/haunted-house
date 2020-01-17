@@ -9,8 +9,7 @@ const rooms = {
 			"s": "cornerOfHouse"
 		},
 		"onEnter": function() {
-			const rnd = Math.random();
-			if (rnd > .5) {
+			if (Math.random() > .4) {
 				message = "You hear an owl hooting off in the distance.";
 				sndOwl.play();
 			}
@@ -406,16 +405,16 @@ const rooms = {
 			"opening": "I think you can squeeze through."
 		}
 	},
-	frontLobby: {
+	"frontLobby": {
 		"name": "Front Lobby",
 		"description": "The entrance to the old mansion is cold and your footsteps echo off the marbled floor. The door through which you entered is sealed shut.",
 		"exits": {
 			"n": "frontHall",
 			"w": "closet"
 		},
-		onEnter: function() {
+		"onEnter": function() {
 			if (flags.frontDoorOpen) {
-				message = "With a tremendous &quot;BANG!&quot; the door slams shut behind you.";
+				message = `With a tremendous "BANG!" the door slams shut behind you.`;
 				sndDoor.play();
 				flags.frontDoorOpen = false;
 				delete rooms["frontPorch"].exits.n;
@@ -440,7 +439,7 @@ const rooms = {
 		},
 		"description": "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
 		"scenery": {
-			"wall" : "I seems brittle. You may be able to chop your way through.",
+			"wall" : "It seems brittle. You may be able to chop your way through.",
 			"hole" : "There's something beyond..."	
 		}
 	},
@@ -460,16 +459,14 @@ const rooms = {
 			"e": "spookyRoom"
 		},
 		"scenery": {
-			"frost": "Ice here? There are unnatural forces at work.",
+			"frost": "Ice? There are unnatural forces at work.",
 			"walls": "The walls are stone and are coated in a thin sheen of frost."
 		},
-		"dispellBarrier": function() {
+		"dispelBarrier": function() {
 			this.description = "The air in this room is bitingly cold. An icy frost covers the walls. The exit to the east is now clear.";
-			objects["barrier"].location = null;
 		},
 		"createBarrier": function() {
 			this.description = "The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.";
-			objects["barrier"].location = this.rid;
 		}
 	},
 	"spookyRoom": {
@@ -620,6 +617,11 @@ const rooms = {
 		"onExit": function() {
 			message = "And so you begin your adventure...";
 			delete this.onExit;
+		},
+		"endingTrigger": function() {
+			this.exits.s = "exit";
+			this.description = `The old mansion looms ahead of you silhouetted against a full moon. Now's you chance to make your escape through the gate to the south!`;
+			this.scenery.gate = `Hurry, head south to win the game!`;
 		}
 	},
 
@@ -707,5 +709,8 @@ const rooms = {
 		"onEnter": function(){
 			message = `You use the rope to climb the tree.`;
 		}
+	},
+	"exit": {
+		"name": "The Winner's Circle"
 	}
 };

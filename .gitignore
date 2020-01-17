@@ -48,5 +48,6 @@ twbsconfig.yml
 node_modules
 js/coverage
 
+.prepros*
 prepros-6.config
 bootstrap/

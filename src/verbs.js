@@ -1,6 +1,12 @@
 // Define your game verbs here.
 
 const verbs = {
+	"about": {
+		"action": function(noun,obj) {
+			verbs["help"].action("about");
+		},
+		"singleWord": true
+	},
 	"board": {
 		"synonym": "enter"
 	},
@@ -36,15 +42,29 @@ const verbs = {
 		}
 	},
 	"climb": {
-		"default": "You can't climb that.",
 		"action": function(noun,obj) {
-			message = verbs["climb"].default;
-			if (noun === "tree" && flags.ropeTiedToTree && isRoom("blastedTree")) {
-				objects["rope"].overrides.climb();
+			message = "You can't climb that.";
+
+			if ((noun === "tree" || obj.id === "rope") && flags.ropeTiedToTree && isRoom("blastedTree")) {
+				message = `You use the rope to climb the tree.`;
+				objects["rope"].omnipresence = true;
+				currentRoom = rooms["inTheTree"];
 				return;
 			}
+
 			if (noun === "tree" && flags.ropeTiedToTree && isRoom("inTheTree")) {
 				verbs["go"].action("down");
+				return;
+			}
+
+			if (obj.id === "rope" && isRoom("inTheTree")) {
+				message = `You use the rope to climb down.`;
+				obj.omnipresence = false;
+				currentRoom = rooms["blastedTree"];
+			}
+
+			if (obj.id === "rope" && isCarrying("rope")) {
+				message = `It isn't attached to anything!`;
 				return;
 			}
 		}
@@ -221,8 +241,17 @@ const verbs = {
 				return;
 			}
 
+			// Dead bats
 			if (obj.id === "bats" && !flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
 				message = `Ew! You don't want to touch the filthy bat carcasses!`;
+				return;
+			}
+
+			if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
+				message = "You untie the rope from the tree.";
+				obj.location = "player";
+				obj.removeFromTree();
+				flags.ropeTiedToTree = false;
 				return;
 			}
 
@@ -233,6 +262,10 @@ const verbs = {
 					if (obj.score > 0) {
 						message = "You've found treasure!";
 						sndPickup.play();
+
+						if (checkScore() === getMaxScore()) {
+							message = `You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!`;
+						}
 					}
 					verbs["get"].combineObjects(noun,obj);
 					return;
@@ -325,7 +358,7 @@ const verbs = {
 
 			// Magical barrier
 			if (isRoom("coldChamber") && flags.magicalBarrier && direction === "e") {
-				message = `A magical barrier is blocking your way to the west.`;
+				message = `A magical barrier is blocking your way.`;
 				sndShock.play();
 				return;
 			}
@@ -372,6 +405,12 @@ const verbs = {
 					return;
 				}
 
+				if (currentRoom.rid === "exit") {
+					//winner();
+					flags.winner = true;
+					return;
+				}
+
 				// Trigger on exit events for last room.
 				if (previousRoom.onExit) {
 					previousRoom.onExit()
@@ -392,17 +431,35 @@ const verbs = {
 		
 	},
 	"help": {
-		"default": `"God helps those who help themselves."`,
 		"action": function(noun,obj){
-			message = `Haunted House is a text adventure. You perform actions by typing two word commands such as "TAKE RING" or "LOOK PAINTING". Explore the house and try to find the treasures within. For clues, be sure to "LOOK" at everything!<br><br>For more help type the following:<br>"HELP MOVEMENT" or "HELP COMMANDS"`;
+			message = `"God helps those who help themselves."`;
+			let myHelp;
+
+			if (!noun) {
+				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to win the game.<br><br>For more help type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
+				displayOverlay(myHelp);
+				message = '';
+				return;
+			}
 
 			if (noun === "movement") {
-				message = `You can move around the mansion by typing "GO NORTH", "GO WEST", "GO UP", etc. Save keystrokes by simply entering a single initial of the direction you want to move: "N","S","E","W","U" and "D".<br><br>Available exits are listed below the room description.`;
+				myHelp = `You can move around the mansion by typing <em>GO NORTH</em>, <em>GO WEST</em>, <em>GO UP</em>, etc. Save keystrokes by simply entering a single initial of the direction you want to move: <em>N</em>,<em>S</em>,<em>E</em>,<em>W</em>,<em>U</em> and <em>D</em>.<br><br>Available exits are listed below the room description.<br><br>Occasionally you will find that your path is blocked by various obstacles. Your job is to find the right object or action to get past these impediments. Explore everywhere!`;
+				displayOverlay(myHelp);
+				message = '';
 				return;
 			}
 
 			if (noun === "commands") {
-				message = `There are several special commands in the game. "INVENTORY" or "I" will list the objects you are carrying. "SCORE" will reveal your current score. Some of the most useful verbs are "LOOK", "TAKE", and "DROP".<br><br>For a complete list of all the verbs I know type "HELP VERBS". But wait until you a really stuck before resorting to that.`;
+				myHelp = `There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.`;
+				displayOverlay(myHelp);
+				message = '';
+				return;
+			}
+
+			if (noun === "about") {
+				myHelp = `<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>&copy;2020 Robert Wm. Gomez`;
+				displayOverlay(myHelp);
+				message = '';
 				return;
 			}
 
@@ -410,15 +467,12 @@ const verbs = {
 				let verblist = "";
 				for (let verb in verbs) {
 					if (verb.length > 1) {
-						verblist += verb + ", ";
+						verblist += verb.toUpperCase() + ", ";
 					}
 				}
-				message = `<b>Words I know:</b>  ${verblist.substring(0,verblist.length - 2)}`;
-				return;
-			}
-
-			if (noun) {
-				message = verbs["help"].default;
+				myHelp = `Tired of playing "Guess the verb?"<br><br><b>Verbs I know:</b>  ${verblist.substring(0,verblist.length - 2)}`;
+				displayOverlay(myHelp);
+				message = '';
 				return;
 			}
 		},
@@ -597,16 +651,18 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = "You say, &quot;" + noun.toUpperCase() + "!&quot;";
 
-			// Saying the magic word to dispell the field
-			if (noun === "xzanfar" && isCarrying("magic spells")) {
+			// Saying the magic word to dispel the field
+			if (obj.id === "xzanfar" && isCarrying("magic spells")) {
 				if (isRoom("coldChamber") && flags.magicalBarrier) {
 					message += "<br><br>The air sizzles with energy and the magic field dissipates into nothingness.";
 					flags.magicalBarrier = false;
-					rooms["coldChamber"].dispellBarrier();
+					rooms["coldChamber"].dispelBarrier();
+					objects["barrier"].location = null;
 				} else if (isRoom("coldChamber")) {
 					message += "<br><br>The magical field re-materializes!";
 					flags.magicalBarrier = true;
 					rooms["coldChamber"].createBarrier();
+					objects["barrier"].location = "coldChamber";
 				} else {
 					message += "<br><br>*Magic Occurs*"
 				}
@@ -622,12 +678,12 @@ const verbs = {
 	},
 	"score": {
 		"action": function(noun,obj) {
-			message = `Your score is ${checkScore()}/${getMaxScore()}.`;
+			message = `Your score is ${checkScore()}/${getMaxScore() + 1}.`;
 			if (checkScore() === 0) {
 				message += " You need to find some treasure!"
 			}
 			if (checkScore() === getMaxScore()) {
-				message += " That's everything. Hurry, find your way back to the front gate to escape.";
+				message += " That's all the treasure. Hurry, find your way back to the front gate to claim that final point!";
 			}
 		},
 		"singleWord": true
@@ -636,9 +692,8 @@ const verbs = {
 		"synonym": "s"
 	},
 	"spray": {
-		"default": `You can't spray that!`,
 		"action": function(noun,obj) {
-			message = verbs["spray"].default;	
+			message = `You can't spray that!`;	
 
 			if ((obj.id === "aerosol" || obj.id === "bats") && isCarrying("aerosol") && flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
 				flags.batsAttacking = false;
@@ -656,17 +711,19 @@ const verbs = {
 		}
 	},
 	"swing": {
-		"default": "There's no reason to be swinging that.",
 		"action": function(noun,obj) {
-			message = verbs["swing"].default;
+			message = "There's no reason to be swinging that.";
+
 			if (obj.id === "rope" && flags.ropeTiedToTree && isRoom("blastedTree")) {
 				message = `This is no time to be playing games.`;
 				return;
 			}
+
 			if (obj.id === "rope" && isCarrying(["rope"])) {
 				message = "You swung it. Yee haw, cowboy!";
 				return;
 			}
+
 			if (obj.id === "axe" && isCarrying("axe") && isRoom("study") && !flags.studyWallBroken) {
 				message = "You broke the thin wall.";
 				flags.studyWallBroken = true;
@@ -720,11 +777,10 @@ const verbs = {
 		"singleWord": true
 	},
 	"unlight": {
-		"default": `You can't do that.`,
 		"action": function(noun,obj) {
-			message = verbs["unlight"].default;
+			//message = `You can't do that.`;
 
-			if (noun === "candle" && flags.candleLit) {
+			if (obj.id === "candle" && flags.candleLit) {
 				message = `You blow out the candle.`;
 				flags.candleLit = false;
 				return;
@@ -789,6 +845,11 @@ const verbs = {
 
 			if (obj.id === "vacuum" && isCarrying("vacuum") && !isCarrying("batteries")) {
 				message = `This vacuum requires batteries.`;
+				return;
+			}
+
+			if (obj.id === "xzanfar") {
+				verbs["say"].action(noun,obj);
 				return;
 			}
 
