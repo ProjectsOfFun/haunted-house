@@ -90,12 +90,13 @@ const objects = {
 		"description": "It's a sack of Seventeenth Century Spanish doubloons.",
 		"location": "darkAlcove",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"takeMessage": "You pick up the sack of coins."
 	},
 	"desk": {
 		"location": "study",
 		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
-		"takeMessage": "Your job is finding treasure, not furniture!"
+		"takeMessage": "Your job is finding treasure, not moving furniture!"
 	},
 	"desks": {
 		"synonym": "desk"
@@ -148,7 +149,8 @@ const objects = {
 		"description": "It made of shiny metal and encrusted with sparkling jewels.",
 		"location": "frontTower",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"takeMessage": "What's an adventure without a goblet?"
 	},
 	"key": {
 		"name": "a key",
@@ -187,7 +189,8 @@ const objects = {
 		"description": "It depicts a smiling, golden-haired child.",
 		"location": "spookyRoom",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"takeMessage": "As you pick it up, you swear you hear the cries of a child from somewhere in the house."
 	},
 	"pocket": {
 		"synonym": "coat"
@@ -200,9 +203,11 @@ const objects = {
 	},
 	"ring": {
 		"name": "a golden ring",
+		"description": "The ring is marked with and engraved pentagram.",
 		"location": "coffin",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"isWorn": false
 	},
 	"rope": {
 		"name": "a rope tied to a tree",

@@ -125,12 +125,12 @@ const verbs = {
 				message = "Where do you want to dig?";
 				return;
 			}
-			if (isRoom("cellar") && nounCheck(noun,["bars","window","barred window","brickwork","bricks"])) {
+			if ((isRoom("cellar") || isRoom("cliffPathByWindow"))&& nounCheck(noun,["bars","window","barred window","brickwork","bricks"])) {
 				if (!flags.barsDug) {
 					message = "After several minutes of work, you manage to dig the bars out.";
 					flags.barsDug = true;
 					rooms["cellar"].digWindow();
-					rooms["cliffPath"].digWindow();
+					rooms["cliffPathByWindow"].digWindow();
 				} else {
 					message = "You've already cleared the bars away from the window.";
 				}
@@ -146,6 +146,20 @@ const verbs = {
 			// Don't allow treasure to be dropped
 			if (obj.score > 0 && isCarrying(obj)) {
 				message = `The ${noun} is too valuable to drop.`;
+				return;
+			}
+
+			if (obj.id === "candle" && flags.candleLit && currentRoom.darkness === true) {
+				message = `You drop the candle. It extinguishes itself as it rolls off into the darkness! That probably wasn't a good idea.`;
+				flags.candleLit = false;
+				obj.location = currentRoom.rid;
+				return;
+			}
+
+			if (obj.id === "candle" && flags.candleLit) {
+				message = `You drop the candle. It extinguishes itself as it falls to the ground.`;
+				flags.candleLit = false;
+				obj.location = currentRoom.rid;
 				return;
 			}
 
@@ -219,6 +233,11 @@ const verbs = {
 	"get": {
 		"action": function(noun,obj) {
 			message = `What "${noun.toUpperCase()}?"`;
+
+			if (!flags.candleLit && currentRoom.darkness === true) {
+				message = `You can't see anything!`;
+				return;
+			}
 
 			// Check if noun is scenery
 			if (!obj && currentRoom.scenery) {
@@ -517,7 +536,12 @@ const verbs = {
 				return;
 			}
 
-			if (noun === "candle" && isCarrying("candle") && isCarrying("candlestick")) {
+			if (obj.id === "matches" || noun === "match") {
+				message = `For a brief moment tha match casts a tiny amount of light then fizzles out.`;
+				return;
+			}
+
+			if (obj.id === "candle" && isCarrying("candle") && isCarrying("candlestick")) {
 				if (flags.candleLit) {
 					message = `It's already lit.`;
 				} else {
@@ -527,12 +551,12 @@ const verbs = {
 				return;
 			}
 
-			if (noun === "candle" && isCarrying("candle") && !isCarrying("candlestick")) {
+			if (obj.id === "candle" && isCarrying("candle") && !isCarrying("candlestick")) {
 				message = `It will burn your hands!`;
 				return;
 			}
 
-			if (noun === "aerosol" && isCarrying("aerosol")) {
+			if (obj.id === "aerosol" && isCarrying("aerosol")) {
 				message = `An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.`;
 				return;
 			}
@@ -655,6 +679,10 @@ const verbs = {
 			}
 			if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
 				message = `You are not wearing it.`;
+				return;
+			}
+			if (obj.id === "ring" && obj.isWorn) {
+				message = `You pull and twist, but the ring wont come off.`;
 				return;
 			}
 		}
@@ -816,7 +844,7 @@ const verbs = {
 
 				// Heavy door exception
 				if (obj.id === "door" && currentRoom.rid === obj.location) {
-					rooms["hallWithLockedDoor"].exits.s = "steepMarbleStairs";
+					rooms["hallWithLockedDoor"].doorUnlocked();
 				}
 
 				if (obj.unlockAction) { obj.unlockAction();}
@@ -885,7 +913,7 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = `You can't wear that.`;
 
-			if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+			if (obj.id === "coat" && isCarrying("coat") && !flags.wearingCoat) {
 				message = `You put on the coat. Stylish.`;
 				if (objects["key"].location === "coat") {
 					message += ` Wait, there is something in the pocket!`;
@@ -893,14 +921,21 @@ const verbs = {
 				flags.wearingCoat = true;
 				return;
 			}
-			if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+			if (obj.id === "coat" && isCarrying("coat") && flags.wearingCoat) {
 				message = `You are already wearing it.`;
 				return;
 			}
-			if (noun === "coat" && !isCarrying("coat")) {
+			if (obj.id === "coat" && !isCarrying("coat")) {
 				message = `You don't have a coat.`;
 				return;
 			}
+
+			if (obj.id === "ring" && isCarrying("ring") && !obj.isWorn) {
+				message = "As you slide the ring on you finger you can feel evil coursing through your body.";
+				obj.isWorn = true;
+				return;
+			}
+	
 		}
 	},
 	"west": {

@@ -182,12 +182,13 @@ var objects = {
     "description": "It's a sack of Seventeenth Century Spanish doubloons.",
     "location": "darkAlcove",
     "portable": true,
-    "score": 1
+    "score": 1,
+    "takeMessage": "You pick up the sack of coins."
   },
   "desk": {
     "location": "study",
     "description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
-    "takeMessage": "Your job is finding treasure, not furniture!"
+    "takeMessage": "Your job is finding treasure, not moving furniture!"
   },
   "desks": {
     "synonym": "desk"
@@ -240,7 +241,8 @@ var objects = {
     "description": "It made of shiny metal and encrusted with sparkling jewels.",
     "location": "frontTower",
     "portable": true,
-    "score": 1
+    "score": 1,
+    "takeMessage": "What's an adventure without a goblet?"
   },
   "key": {
     "name": "a key",
@@ -279,7 +281,8 @@ var objects = {
     "description": "It depicts a smiling, golden-haired child.",
     "location": "spookyRoom",
     "portable": true,
-    "score": 1
+    "score": 1,
+    "takeMessage": "As you pick it up, you swear you hear the cries of a child from somewhere in the house."
   },
   "pocket": {
     "synonym": "coat"
@@ -292,9 +295,11 @@ var objects = {
   },
   "ring": {
     "name": "a golden ring",
+    "description": "The ring is marked with and engraved pentagram.",
     "location": "coffin",
     "portable": true,
-    "score": 1
+    "score": 1,
+    "isWorn": false
   },
   "rope": {
     "name": "a rope tied to a tree",
@@ -532,19 +537,26 @@ var rooms = {
       "chains": "Heavy enough to bruise and cut flesh."
     }
   },
-  clearing: {
+  "clearing": {
     "name": "Clearing by House",
+    "description": "Next to house, the forest edge opens up into a large clearing.",
     "exits": {
       "n": "thickForest",
       "e": "path"
     }
   },
-  path: {
+  "path": {
     "name": "Path",
+    "description": "A path leads south along the clifftop. In the distance to the north you see the forboding outline of a large blasted tree.",
     "exits": {
       "n": "blastedTree",
       "s": "clifftop",
       "w": "clearing"
+    },
+    "scenery": {
+      "tree": "If you head north you can get a closer look.",
+      "path": "It's composed of loose gravel. Watch your step as you traverse along the edge of the cliff.",
+      "clifftop": "You are just high enough to cause some serious injury should you fall."
     }
   },
   "sideOfHouse": {
@@ -575,33 +587,41 @@ var rooms = {
       "dress": "It's a lacy number like they used to wear in the nineteenth century."
     }
   },
-  darkAlcove: {
+  "darkAlcove": {
     "name": "Dark Alcove",
+    "description": "You candle's light is just enough to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
     "exits": {
       "s": "poolOfLight",
       "e": "smallDarkRoom"
     },
-    darkness: true
+    "darkness": true
   },
-  smallDarkRoom: {
+  "smallDarkRoom": {
     "name": "Small Dark Room",
+    "description": "Shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
     "exits": {
       "w": "darkAlcove",
       "e": "spiralStaircase"
+    },
+    "darkness": true,
+    "scenery": {
+      "shelves": "A one time they were filled with tools. Now it's mostly empty jars and a few nails and bolts.",
+      "nails": "They are small, rusty and not very useful.",
+      "bolts": "They are small, rusty and not very useful.",
+      "jars": "Probably for organizing loose items."
     }
   },
-  spiralStaircase: {
+  "spiralStaircase": {
     "name": "Spiral Staircase",
-    "description": "Bottom of Spiral Staircase",
+    "description": "The spiral staircase winds its way up to the mansions rear turret room.",
     "exits": {
-      "n": "mustyRoom",
-      "w": "smallDarkRoom",
-      u: "mustyRoom",
-      d: "smallDarkRoom"
+      "u": "mustyRoom",
+      "d": "smallDarkRoom"
     }
   },
-  widePassage: {
+  "widePassage": {
     "name": "Wide Passage",
+    "description": "The corridor widens into large passage at the top of the cellar stairs to the east.",
     "exits": {
       "s": "trophyRoom",
       "e": "slipperySteps"
@@ -615,11 +635,15 @@ var rooms = {
       "d": "cellar"
     }
   },
-  clifftop: {
+  "clifftop": {
     "name": "Clifftop",
+    "description": "Here the path continues along the edge of a steep cliff.",
     "exits": {
       "n": "path",
       "s": "cliffPath"
+    },
+    "scenery": {
+      "cliff": "This is the highest point of the cliff. A fall will surely result in your demise."
     }
   },
   "crumblingWall": {
@@ -652,30 +676,50 @@ var rooms = {
       "darkness": "It can be none blacker."
     }
   },
-  vaultedHall: {
+  "vaultedHall": {
     "name": "Impressive Vaulted Hallway",
+    "description": "This hallway boasts an impressive vaulted ceiling.",
     "exits": {
-      "w": "darkAlcove",
+      "w": "poolOfLight",
       "e": "hallWithLockedDoor"
     },
-    darkness: true
+    "darkness": true,
+    "scenery": {
+      "ceiling": "Such craftsmanship is unheard of these days."
+    }
   },
   "hallWithLockedDoor": {
     "name": "Hall by Thick Wooden Door",
+    "description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south.",
     "exits": {
       "w": "vaultedHall",
       "e": "trophyRoom"
     },
-    "darkness": true
+    "darkness": true,
+    "doorUnlocked": function doorUnlocked() {
+      this.description = "The vaulted hall ends here with an archway to the east and a thick wooden door to the south. Behind which a staircase is leading up.";
+      this.exits.s = "steepMarbleStairs";
+    }
   },
-  trophyRoom: {
+  "trophyRoom": {
     "name": "Trophy Room",
+    "description": "As you hold your candle up you can see various hunting trophies adorning the walls.",
     "exits": {
       "n": "widePassage",
       "s": "diningRoom",
       "w": "hallWithLockedDoor"
     },
-    darkness: true
+    "darkness": true,
+    "scenery": {
+      "walls": "They are adorned with trophies.",
+      "trophies": "The mounted heads of a deer, a lioness and... a squirrel?",
+      "trophy": "The mounted heads of a deer, a lioness and... a squirrel?",
+      "deer": "A buck with a magnificent set of antlers.",
+      "antlers": "A twelve pointer!",
+      "lion": "Its mouth is frozen in a menacing snarl.",
+      "lioness": "It's mouth is frozen in a menacing snarl.",
+      "squirrel": "A terrifying beast if ever there was one."
+    }
   },
   "cellar": {
     "name": "Cellar With Barred Window",
@@ -691,16 +735,27 @@ var rooms = {
       "brickwork": "It isn't as rigid as it once was."
     },
     "digWindow": function digWindow() {
-      this.exits.e = "cliffPath";
+      this.exits.e = "cliffPathByWindow";
       this.name = "Cellar with Hole in the Wall";
       this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.";
     }
   },
-  cliffPathByWindow: {
+  "cliffPathByWindow": {
     "name": "Cliff Path by Window",
+    "description": "The cliff path runs north and south here. To the west you see a barred window that looks into the mansion's cellar. To the east, a precipitous cliff.",
     "exits": {
       "n": "clifftop",
       "s": "cliffPath"
+    },
+    "scenery": {
+      "window": "You can see the cellar through it.",
+      "bars": "With a tool you may be able to dig them out.",
+      "cliff": "It drops into nothingness."
+    },
+    "digWindow": function digWindow() {
+      this.exits.w = "cellar";
+      this.name = "Cliff Path by Opened Window";
+      this.description = "The cliff path runs north and south here. To the west you see a window that has been dug out and leads to the mansion's cellar.";
     }
   },
   "cupboard": {
@@ -761,7 +816,7 @@ var rooms = {
       "n": "trophyRoom"
     },
     "scenery": {
-      "table": "Inscribed below the remains is an encircled pentagram.",
+      "table": "Inscribed below the remains is the circled pentagram of satan.",
       "pentagram": "The symbol of evil. Horrible rites must have taken place here.",
       "chairs": "They seat six. An appropriate number."
     }
@@ -778,12 +833,10 @@ var rooms = {
   },
   "cliffPath": {
     "name": "Cliff Path",
+    "description": "To the south, the path decends towards a marsh. North leads up the clifftop towards the back of the mansion.",
     "exits": {
       "n": "cliffPathByWindow",
       "s": "cliffPathByMarsh"
-    },
-    "digWindow": function digWindow() {
-      this.exits.w = "cellar";
     }
   },
   "closet": {
@@ -1246,12 +1299,12 @@ var verbs = {
         return;
       }
 
-      if (isRoom("cellar") && nounCheck(noun, ["bars", "window", "barred window", "brickwork", "bricks"])) {
+      if ((isRoom("cellar") || isRoom("cliffPathByWindow")) && nounCheck(noun, ["bars", "window", "barred window", "brickwork", "bricks"])) {
         if (!flags.barsDug) {
           message = "After several minutes of work, you manage to dig the bars out.";
           flags.barsDug = true;
           rooms["cellar"].digWindow();
-          rooms["cliffPath"].digWindow();
+          rooms["cliffPathByWindow"].digWindow();
         } else {
           message = "You've already cleared the bars away from the window.";
         }
@@ -1268,6 +1321,20 @@ var verbs = {
       // Don't allow treasure to be dropped
       if (obj.score > 0 && isCarrying(obj)) {
         message = "The ".concat(noun, " is too valuable to drop.");
+        return;
+      }
+
+      if (obj.id === "candle" && flags.candleLit && currentRoom.darkness === true) {
+        message = "You drop the candle. It extinguishes itself as it rolls off into the darkness! That probably wasn't a good idea.";
+        flags.candleLit = false;
+        obj.location = currentRoom.rid;
+        return;
+      }
+
+      if (obj.id === "candle" && flags.candleLit) {
+        message = "You drop the candle. It extinguishes itself as it falls to the ground.";
+        flags.candleLit = false;
+        obj.location = currentRoom.rid;
         return;
       } // Default behavior
 
@@ -1342,7 +1409,13 @@ var verbs = {
   },
   "get": {
     "action": function action(noun, obj) {
-      message = "What \"".concat(noun.toUpperCase(), "?\""); // Check if noun is scenery
+      message = "What \"".concat(noun.toUpperCase(), "?\"");
+
+      if (!flags.candleLit && currentRoom.darkness === true) {
+        message = "You can't see anything!";
+        return;
+      } // Check if noun is scenery
+
 
       if (!obj && currentRoom.scenery) {
         for (var key in currentRoom.scenery) {
@@ -1643,7 +1716,12 @@ var verbs = {
         return;
       }
 
-      if (noun === "candle" && isCarrying("candle") && isCarrying("candlestick")) {
+      if (obj.id === "matches" || noun === "match") {
+        message = "For a brief moment tha match casts a tiny amount of light then fizzles out.";
+        return;
+      }
+
+      if (obj.id === "candle" && isCarrying("candle") && isCarrying("candlestick")) {
         if (flags.candleLit) {
           message = "It's already lit.";
         } else {
@@ -1654,12 +1732,12 @@ var verbs = {
         return;
       }
 
-      if (noun === "candle" && isCarrying("candle") && !isCarrying("candlestick")) {
+      if (obj.id === "candle" && isCarrying("candle") && !isCarrying("candlestick")) {
         message = "It will burn your hands!";
         return;
       }
 
-      if (noun === "aerosol" && isCarrying("aerosol")) {
+      if (obj.id === "aerosol" && isCarrying("aerosol")) {
         message = "An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.";
         return;
       }
@@ -1784,6 +1862,11 @@ var verbs = {
 
       if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
         message = "You are not wearing it.";
+        return;
+      }
+
+      if (obj.id === "ring" && obj.isWorn) {
+        message = "You pull and twist, but the ring wont come off.";
         return;
       }
     }
@@ -1944,7 +2027,7 @@ var verbs = {
         obj.locked = false; // Heavy door exception
 
         if (obj.id === "door" && currentRoom.rid === obj.location) {
-          rooms["hallWithLockedDoor"].exits.s = "steepMarbleStairs";
+          rooms["hallWithLockedDoor"].doorUnlocked();
         }
 
         if (obj.unlockAction) {
@@ -2014,7 +2097,7 @@ var verbs = {
     "action": function action(noun, obj) {
       message = "You can't wear that.";
 
-      if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+      if (obj.id === "coat" && isCarrying("coat") && !flags.wearingCoat) {
         message = "You put on the coat. Stylish.";
 
         if (objects["key"].location === "coat") {
@@ -2025,13 +2108,19 @@ var verbs = {
         return;
       }
 
-      if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+      if (obj.id === "coat" && isCarrying("coat") && flags.wearingCoat) {
         message = "You are already wearing it.";
         return;
       }
 
-      if (noun === "coat" && !isCarrying("coat")) {
+      if (obj.id === "coat" && !isCarrying("coat")) {
         message = "You don't have a coat.";
+        return;
+      }
+
+      if (obj.id === "ring" && isCarrying("ring") && !obj.isWorn) {
+        message = "As you slide the ring on you finger you can feel evil coursing through your body.";
+        obj.isWorn = true;
         return;
       }
     }
@@ -2639,21 +2728,21 @@ function cl(msg) {
 function debugInfo() {
   if (!debug) return; //console.clear();
   //console.log(currentRoom);
-
-  cl("Turns: " + turns); // cl("flags.lightLevel: " + flags.lightLevel);
-
-  cl("score: " + totalScore); // cl("sinking: " + flags.sinking);
-
-  cl("Terror: " + flags.encroachingDarkness);
+  //cl("Turns: " + turns);
+  // cl("flags.lightLevel: " + flags.lightLevel);
+  //cl("score: " + totalScore);
+  // cl("sinking: " + flags.sinking);
+  //cl("Terror: " + flags.encroachingDarkness);
 }
 /**
  * Initialize the game
  * @param {string} startRoom Starting room id
  * @param {array} carrying List of strings of objects player is carrying
+ * @param {array} inRoom Objects to be placed in the starting room
  */
 
 
-function init(startRoom, carrying) {
+function init(startRoom, carrying, inRoom) {
   // Initialize game data objects
   // Set the machine name of all the rooms to .rid for easy reference
   for (var room in rooms) {
@@ -2680,15 +2769,21 @@ function init(startRoom, carrying) {
     }
   }
 
+  if (inRoom) {
+    for (var _index in inRoom) {
+      objects[inRoom[_index]].location = startRoom;
+    }
+  }
+
   display();
   $userInput.focus();
   $userInput.select();
 } // INITIALIZE GAME
 
 
-var debug = true; //init("pathThroughIronGate",[]);
+var debug = false;
+init("pathThroughIronGate", [], []); //init("hallWithLockedDoor",["candle","candlestick","matches"],["key"]);
 
-init("deepCellar", []);
 /**
  * This file contains scripts that enhance the layout display.
  * This code does not affect the game play.

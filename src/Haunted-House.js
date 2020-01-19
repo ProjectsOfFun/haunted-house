@@ -589,19 +589,20 @@ function debugInfo() {
 	if (!debug) return;
 	//console.clear();
 	//console.log(currentRoom);
-	cl("Turns: " + turns);
+	//cl("Turns: " + turns);
 	// cl("flags.lightLevel: " + flags.lightLevel);
-	cl("score: " + totalScore);
+	//cl("score: " + totalScore);
 	// cl("sinking: " + flags.sinking);
-	cl("Terror: " + flags.encroachingDarkness);
+	//cl("Terror: " + flags.encroachingDarkness);
 }
 
 /**
  * Initialize the game
  * @param {string} startRoom Starting room id
  * @param {array} carrying List of strings of objects player is carrying
+ * @param {array} inRoom Objects to be placed in the starting room
  */
-function init(startRoom,carrying) {
+function init(startRoom,carrying,inRoom) {
 
 	// Initialize game data objects
 	// Set the machine name of all the rooms to .rid for easy reference
@@ -628,6 +629,12 @@ function init(startRoom,carrying) {
 		}
 	}
 
+	if (inRoom) {
+		for (let index in inRoom) {
+			objects[inRoom[index]].location = startRoom;
+		}
+	}
+
 	display();
 	$userInput.focus();
 	$userInput.select();
@@ -635,6 +642,6 @@ function init(startRoom,carrying) {
 }
 
 // INITIALIZE GAME
-let debug = true;
-//init("pathThroughIronGate",[]);
-init("deepCellar",[]);
+let debug = false;
+init("pathThroughIronGate",[],[]);
+//init("hallWithLockedDoor",["candle","candlestick","matches"],["key"]);

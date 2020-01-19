@@ -173,19 +173,26 @@ const rooms = {
 			"chains": "Heavy enough to bruise and cut flesh."
 		}
 	},
-	clearing: {
+	"clearing": {
 		"name": "Clearing by House",
+		"description": "Next to house, the forest edge opens up into a large clearing.",
 		"exits": {
 			"n": "thickForest",
 			"e": "path"
 		}
 	},
-	path: {
+	"path": {
 		"name": "Path",
+		"description": "A path leads south along the clifftop. In the distance to the north you see the forboding outline of a large blasted tree.",
 		"exits": {
 			"n": "blastedTree",
 			"s": "clifftop",
 			"w": "clearing"
+		},
+		"scenery": {
+			"tree": "If you head north you can get a closer look.",
+			"path": "It's composed of loose gravel. Watch your step as you traverse along the edge of the cliff.",
+			"clifftop": "You are just high enough to cause some serious injury should you fall."
 		}
 	},
 	"sideOfHouse": {
@@ -216,33 +223,41 @@ const rooms = {
 			"dress": "It's a lacy number like they used to wear in the nineteenth century."
 		}
 	},
-	darkAlcove: {
+	"darkAlcove": {
 		"name": "Dark Alcove",
+		"description": "You candle's light is just enough to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
 		"exits": {
 			"s": "poolOfLight",
 			"e": "smallDarkRoom"
 		},
-		darkness : true
+		"darkness" : true
 	},
-	smallDarkRoom: {
+	"smallDarkRoom": {
 		"name": "Small Dark Room",
+		"description": "Shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
 		"exits": {
 			"w": "darkAlcove",
 			"e": "spiralStaircase"
+		},
+		"darkness" : true,
+		"scenery": {
+			"shelves": "A one time they were filled with tools. Now it's mostly empty jars and a few nails and bolts.",
+			"nails": "They are small, rusty and not very useful.",
+			"bolts": "They are small, rusty and not very useful.",
+			"jars": "Probably for organizing loose items."
 		}
 	},
-	spiralStaircase: {
+	"spiralStaircase": {
 		"name": "Spiral Staircase",
-		"description": "Bottom of Spiral Staircase",
+		"description": "The spiral staircase winds its way up to the mansions rear turret room.",
 		"exits": {
-			"n": "mustyRoom",
-			"w": "smallDarkRoom",
-			u: "mustyRoom",
-			d: "smallDarkRoom"
+			"u": "mustyRoom",
+			"d": "smallDarkRoom"
 		}
 	},
-	widePassage: {
+	"widePassage": {
 		"name": "Wide Passage",
+		"description": "The corridor widens into large passage at the top of the cellar stairs to the east.",
 		"exits": {
 			"s": "trophyRoom",
 			"e": "slipperySteps"
@@ -256,11 +271,15 @@ const rooms = {
 			"d": "cellar"
 		}
 	},
-	clifftop: {
+	"clifftop": {
 		"name": "Clifftop",
+		"description": "Here the path continues along the edge of a steep cliff.",
 		"exits": {
 			"n": "path",
 			"s": "cliffPath"
+		},
+		"scenery": {
+			"cliff": "This is the highest point of the cliff. A fall will surely result in your demise."
 		}
 	},
 	"crumblingWall": {
@@ -293,30 +312,50 @@ const rooms = {
 			"darkness": "It can be none blacker."
 		}
 	},
-	vaultedHall: {
+	"vaultedHall": {
 		"name": "Impressive Vaulted Hallway",
+		"description": "This hallway boasts an impressive vaulted ceiling.",
 		"exits": {
-			"w": "darkAlcove",
+			"w": "poolOfLight",
 			"e": "hallWithLockedDoor"	
 		},
-		darkness : true
+		"darkness" : true,
+		"scenery": {
+			"ceiling": "Such craftsmanship is unheard of these days."
+		}
 	},
 	"hallWithLockedDoor": {
 		"name": "Hall by Thick Wooden Door",
+		"description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south.",
 		"exits": {
 			"w": "vaultedHall",
 			"e": "trophyRoom"
 		},
-		"darkness" : true
+		"darkness": true,
+		"doorUnlocked": function() {
+			this.description = `The vaulted hall ends here with an archway to the east and a thick wooden door to the south. Behind which a staircase is leading up.`;
+			this.exits.s = "steepMarbleStairs";
+		}
 	},
-	trophyRoom: {
+	"trophyRoom": {
 		"name": "Trophy Room",
+		"description": "As you hold your candle up you can see various hunting trophies adorning the walls.",
 		"exits": {
 			"n": "widePassage",
 			"s": "diningRoom",
 			"w": "hallWithLockedDoor"
 		},
-		darkness : true
+		"darkness" : true,
+		"scenery": {
+			"walls": "They are adorned with trophies.",
+			"trophies": "The mounted heads of a deer, a lioness and... a squirrel?",
+			"trophy": "The mounted heads of a deer, a lioness and... a squirrel?",
+			"deer": "A buck with a magnificent set of antlers.",
+			"antlers": "A twelve pointer!",
+			"lion": "Its mouth is frozen in a menacing snarl.",
+			"lioness": "It's mouth is frozen in a menacing snarl.",
+			"squirrel": "A terrifying beast if ever there was one."
+		}
 	},
 	"cellar": {
 		"name": "Cellar With Barred Window",
@@ -332,16 +371,27 @@ const rooms = {
 			"brickwork": "It isn't as rigid as it once was."
 		},
 		"digWindow": function() {
-			this.exits.e = "cliffPath";
+			this.exits.e = "cliffPathByWindow";
 			this.name = "Cellar with Hole in the Wall";
 			this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through."
 		}
 	},
-	cliffPathByWindow: {
+	"cliffPathByWindow": {
 		"name": "Cliff Path by Window",
+		"description": "The cliff path runs north and south here. To the west you see a barred window that looks into the mansion's cellar. To the east, a precipitous cliff.",
 		"exits": {
 			"n": "clifftop",
 			"s": "cliffPath"
+		},
+		"scenery": {
+			"window": "You can see the cellar through it.",
+			"bars": "With a tool you may be able to dig them out.",
+			"cliff": "It drops into nothingness."
+		},
+		"digWindow": function() {
+			this.exits.w = "cellar";
+			this.name = "Cliff Path by Opened Window";
+			this.description = "The cliff path runs north and south here. To the west you see a window that has been dug out and leads to the mansion's cellar.";
 		}
 	},
 	"cupboard": {
@@ -402,7 +452,7 @@ const rooms = {
 			"n": "trophyRoom"
 		},
 		"scenery": {
-			"table": "Inscribed below the remains is an encircled pentagram.",
+			"table": "Inscribed below the remains is the circled pentagram of satan.",
 			"pentagram": "The symbol of evil. Horrible rites must have taken place here.",
 			"chairs": "They seat six. An appropriate number."
 		}
@@ -419,12 +469,10 @@ const rooms = {
 	},
 	"cliffPath": {
 		"name": "Cliff Path",
+		"description": "To the south, the path decends towards a marsh. North leads up the clifftop towards the back of the mansion.",
 		"exits": {
 			"n": "cliffPathByWindow",
 			"s": "cliffPathByMarsh"
-		},
-		"digWindow": function() {
-			this.exits.w = "cellar";
 		}
 	},
 	"closet": {
