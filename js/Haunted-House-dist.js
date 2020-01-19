@@ -1,2 +1,2782 @@
-"use strict";function _classCallCheck(e,o){if(!(e instanceof o))throw new TypeError("Cannot call a class as a function")}function _defineProperties(e,o){for(var t=0;t<o.length;t++){var a=o[t];a.enumerable=a.enumerable||!1,a.configurable=!0,"value"in a&&(a.writable=!0),Object.defineProperty(e,a.key,a)}}function _createClass(e,o,t){return o&&_defineProperties(e.prototype,o),t&&_defineProperties(e,t),e}var objects={aerosol:{name:"a can of aerosol",description:'The can reads, "For the highest hair. Warning: do not spray on small animals."',location:"debris",portable:!0,flamable:!0},air:{description:"It can't be seen.",omnipresence:!0},axe:{name:"an axe",description:"Although a bit rusty, the blade is sharp. Looks like one <em>swing</em> could do some serious damage.",location:"byWoodpile",portable:!0},barrier:{name:"the magical barrier",description:"It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",location:"coldChamber"},bats:{location:"mustyRoom",description:"They are fluttering all around you. Occasionally, one will swoop down and attempt to take a bite!",batsKilled:function(){this.description="The bat carcasses lie motionless on the ground in tiny puddles of their own filth and blood."}},batteries:{name:"some batteries",description:"They are heavy duty power cells. Perfect for small appliances.",location:"smallDarkRoom",portable:!0},boat:{name:"a boat",description:"It's rickety and old, but it should float.",location:"cliffPathByMarsh"},books:{description:"They are demonic works.",readable:!0,readableText:"You are unable to make sense of the ancient writings.",location:"library"},can:{synonym:"aerosol"},candle:{name:"a candle",description:"It's a normal wax candle.",location:"drawer",portable:!0},candlestick:{name:"a golden candlestick",description:"It is ornamented with gold and various jewels. And it can also hold a candle, literally!",location:"library",portable:!0,score:1},coat:{name:"a dusty old coat",description:"It's a dusty old rancher's coat.",location:"cupboard",portable:!0},coffin:{description:"The dark-stained pine box has tarnished brass hinges. The lid is closed.",location:"deepCellar",isOpen:!1,openAction:function(){this.description="The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior.",this.isOpen=!0},closeAction:function(){this.description="The dark-stained pine box has tarnished brass hinges. The lid is closed.",this.isOpen=!1}},coins:{description:"It's a sack of Seventeenth Century Spanish doubloons.",location:"darkAlcove",portable:!0,score:1},desk:{location:"study",description:"Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer."},desks:{synonym:"desk"},door:{location:"hallWithLockedDoor",description:"It's made of a thick, unbreakable wood.",locked:!0,key:"key",unlockMessage:"You slowly turn the key and unlock the door!",unlockAction:function(){this.description="It's made of a thick, unbreakable wood. It's open.",this.isOpen=!0},isOpen:!1,closeAction:function(){this.description="It's made of a thick, unbreakable wood. It's closed.",this.isOpen=!1},openAction:function(){this.description="It's made of a thick, unbreakable wood. It's open.",this.isOpen=!0}},drawer:{location:"study",description:"It's a small side drawer. It's closed.",isOpen:!1,openMessage:"You slide the drawer open.",openAction:function(){this.description="The small side drawer is open.",this.isOpen=!0},closeMessage:"You slide the drawer closed.",closeAction:function(){this.description="It's a small side drawer. It's closed.",this.isOpen=!1}},ghosts:{description:"The ghosts whirl about the room like so many clouds of dust!",location:"upperGallery"},goblet:{name:"a jeweled goblet",description:"It made of shiny metal and encrusted with sparkling jewels.",location:"frontTower",portable:!0,score:1},key:{name:"a key",description:"It's made of brass and it probably unlocks something, right?",location:"coat",portable:!0},"magic spells":{name:"a tome of magic spells",description:"There is something written on it.",readableText:"The text reads: Use this word with care, 'Xzanfar'.",location:"secretRoom",readable:!0,portable:!0,score:1},"magical barrier":{synonym:"barrier"},matches:{name:"a box of matches",location:"kitchen",description:"The matches rattle around in the box.",portable:!0},message:{location:"sideOfHouse",description:"It's written in blood!",readable:!0,readableText:'It says, "Seek the word to dispell the barrier."'},painting:{name:"a beautiful painting",description:"It depicts a smiling, golden-haired child.",location:"spookyRoom",portable:!0,score:1},pocket:{synonym:"coat"},ring:{name:"a golden ring",location:"coffin",portable:!0,score:1},rope:{name:"a rope tied to a tree",description:"It's a normal length of rope and it's currently tied to an upper branch of the tree.",location:"blastedTree",portable:!0,removeFromTree:function(){this.name="a length of rope",this.description="It's a normal length of rope."},tieToTree:function(){this.name="a rope tied to a tree",this.description="It's a normal length of rope and it's currently tied to an upper branch of the tree."}},rubbish:{location:"yard",description:"The garbage has decomposed into a heap of goo. That's very disgusting!"},scroll:{location:"rearTurretRoom",portable:!0,readable:!0,description:"It is decorated with gold leaf and medieval illustrations. The text is written is in an alien tongue.",readableText:'It says "Klatu Borata Nickto."',score:1},shovel:{name:"a shovel",description:"It's a small garden shovel. Perfect for digging!",location:"weedPatch",portable:!0},spells:{synonym:"magic spells"},statue:{name:"an ebony statue",description:"It looks African in origin and is most likely very valuable.",location:"hallWithLockedDoor",portable:!0,score:1},tome:{synonym:"magic spells"},vacuum:{name:"a tiny vacuum",description:"It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",location:"gloomyPassage",portable:!0,insertBatteries:function(){this.description="It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more! It is fully powered and ready to <em>use</em>.",this.name="a fully powered vacuum"},captureGhosts:function(){this.name="a tiny vacuum filled with ghosts",this.description="It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!"}},xzanfar:{}},rooms={darkCorner:{name:"Dark Corner",description:"The far corner of the yard is covered in dark shadow. The property continues to the south around the west side of the mansion.",exits:{e:"overgrownGarden",s:"cornerOfHouse"},onEnter:function(){Math.random()>.4&&(message="You hear an owl hooting off in the distance.",sndOwl.play())}},overgrownGarden:{name:"Overgrown Garden",description:"This once was a fertile garden full of vegetables and herbs. Now it has been choked and overtaken by prickly weeds.",exits:{w:"darkCorner",e:"byWoodpile"},scenery:{weeds:"They have grown almost to waist level and are covered in sharp thorns.",thorns:"They're very sharp. Best not get too close."}},byWoodpile:{name:"Large Wood Pile",description:"A large stack of wood is haphazardly piled against the side of the mansion.",exits:{w:"overgrownGarden",e:"yard"},scenery:{pile:"The wood is stacked about a meter high.",wood:"It's damp, mossy, and probably no longer useful."}},yard:{name:"Yard by Rubbish",description:"Despite being years since anyone lived here, the rubbish bins still emit a sour stench. The back entrance to the house lies to the south.",exits:{w:"byWoodpile",e:"weedPatch",s:"sculleryDoor"},scenery:{bins:"They are filled with rubbish. Small bones are scattered around their base.",bones:"Racoons perhaps?"}},weedPatch:{name:"Weed Patch",description:"This area doesn't look like it has ever been anything but the overgrown weed patch you see before you.",exits:{w:"yard",e:"forest"},scenery:{weeds:"They look itchy.",patch:"It would take an industrial grade mower to clear this area.","weed patch":"It would take an industrial grade mower to clear this area."}},forest:{name:"Forest",description:"This area of sparse forest grows right up to the north side of the house. Most of the trees' branches are bereft of leaves.",exits:{w:"weedPatch",e:"thickForest"},scenery:{trees:"They are tall and baren."}},thickForest:{name:"Thick Forest",description:"Here your progress is slowed considerably by the dense trees in this area of the forest.",exits:{w:"forest",e:"blastedTree",s:"clearing"},scenery:{trees:"They are tall, baren, and growing very close to each other."}},blastedTree:{name:"Blasted Tree",description:"This corner of the property is eerily dim. Looming above is an ominous tree. It's leafless branches crackle in the breeze.",exits:{w:"thickForest",s:"path"},onEnter:function(){objects.rope.omnipresence=!1},scenery:{tree:"The tree is devoid of leaves and has an almost demon-like appearance.",branches:"The branches are devoid of leaves."}},cornerOfHouse:{name:"Corner of the House",description:"The moonlight is obscured by the mansion to the east as you make your way around the back corner of the house.",exits:{n:"darkCorner",s:"sideOfHouse"}},entranceToKitchen:{name:"Entrance to the Kitchen",description:"The kitchen entrance must have also served as a dining area at one time. There is a table in the middle of the space and the floor is riddled with broken dishes.",exits:{s:"backOfHallway",e:"kitchen"},scenery:{table:"The surface is scarred with knife marks and reddish brown stains, as though a large carcass was butchered here.",dishes:"They crunch under your feet.",stains:"Blood? Let's hope it's just ketchup. Unless they were preparing hotdogs, because only a monster would put ketchup on a hotdog."}},kitchen:{name:"Kitchen and Grimy Cooker",description:"A grimy iron cooker fills most of the space of the kitchen. A few pots lie scattered about but most of the cookware and cutlery has long since been looted.",exits:{w:"entranceToKitchen",e:"sculleryDoor"},scenery:{cooker:"It is unusable. Covered in grime and rust from years of neglect.",pots:"They are rusty and covered in muck.",grime:"Yuck!",muck:"Gross!"}},sculleryDoor:{name:"Scullery Door",description:"A dented old washbasin is all that remains here in the scullery. To the north an exit leads outside to the back of the house.",exits:{n:"yard",w:"kitchen"},scenery:{washbasin:"You doubt it can still hold water."}},mustyRoom:{name:"Musty Room",description:"There is a nasty swarm of bats attacking you! Their fluttering wings stir up a putrid, musty stench.",exits:{s:"spiralStaircase",e:"rearTurretRoom"},batsKilled:function(){this.description="This quiet corner room is filled with the musty stench of rabid, wild animals. The floor is covered with bat carcasses."}},rearTurretRoom:{name:"Rear Turret Room",description:"This round chamber's slim windows look out on to the dense forest to the north of the mansion. There is a strange bench in the middle of the room.",exits:{w:"mustyRoom"},scenery:{bench:'Upon closer inspection, you realize that this is "bench" is actually a torture device complete with locks and chains.',device:'It\'s what they called "The Rack" back in the dark ages.',locks:"They hold a victim's arms and legs in place.",chains:"Heavy enough to bruise and cut flesh."}},clearing:{name:"Clearing by House",exits:{n:"thickForest",e:"path"}},path:{name:"Path",exits:{n:"blastedTree",s:"clifftop",w:"clearing"}},sideOfHouse:{name:"Side of House",description:"As you make your way down the side of the house, you notice a message hastily scrawed on the siding here.",exits:{n:"cornerOfHouse",s:"crumblingWall"},scenery:{siding:"There's a message scrawled on it."}},backOfHallway:{name:"Back Hallway",description:"The hallway appears to be coming to an end here. There is a portrait hanging on the wall. The cased opening to the north leads to the kitchen.",exits:{n:"entranceToKitchen",s:"gloomyPassage"},scenery:{portrait:"The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",tapestry:"It depicts an elderly woman in a black dress. She stands aside an old tree.",woman:"I think her eyes just moved!",eyes:"They seem to follow you around the room.",tree:"The tree is barren and looks like there is a rope tied to one of the branches.",rope:"Maybe it's just a vine? The artist was not that keen on details.",dress:"It's a lacy number like they used to wear in the nineteenth century."}},darkAlcove:{name:"Dark Alcove",exits:{s:"poolOfLight",e:"smallDarkRoom"},darkness:!0},smallDarkRoom:{name:"Small Dark Room",exits:{w:"darkAlcove",e:"spiralStaircase"}},spiralStaircase:{name:"Spiral Staircase",description:"Bottom of Spiral Staircase",exits:{n:"mustyRoom",w:"smallDarkRoom",u:"mustyRoom",d:"smallDarkRoom"}},widePassage:{name:"Wide Passage",exits:{s:"trophyRoom",e:"slipperySteps"}},slipperySteps:{name:"Slippery Steps",exits:{w:"widePassage",s:"cellar",u:"widePassage",d:"cellar"}},clifftop:{name:"Clifftop",exits:{n:"path",s:"cliffPath"}},crumblingWall:{name:"Crumbling Wall",description:"Here further progress is blocked by a crumbling wall.",exits:{n:"sideOfHouse"},scenery:{wall:"You dare not approach it for fear of being hit by a falling piece of masonry."}},gloomyPassage:{name:"Gloomy Passage",description:"This long, gloomy section of hallway continues north and south.",exits:{n:"backOfHallway",s:"frontHall"}},poolOfLight:{name:"Pool of Light",exits:{n:"darkAlcove",e:"vaultedHall",s:"sittingRoom"}},vaultedHall:{name:"Impressive Vaulted Hallway",exits:{w:"darkAlcove",e:"hallWithLockedDoor"},darkness:!0},hallWithLockedDoor:{name:"Hall by Thick Wooden Door",exits:{w:"vaultedHall",e:"trophyRoom"},darkness:!0},trophyRoom:{name:"Trophy Room",exits:{n:"widePassage",s:"diningRoom",w:"hallWithLockedDoor"},darkness:!0},cellar:{name:"Cellar With Barred Window",description:"The air in this cellar is damp with moisture. There is a barred window on the east wall.",exits:{n:"slipperySteps",s:"deepCellar"},scenery:{window:"The window has long since been smashed open, but there are bars blocking your exit.",bars:"The bars are planted in front of the window. However, the moisture appears to have softened the brickwork around the frame.",bricks:"They aren't as rigid as they once were.",brickwork:"It isn't as rigid as it once was."}},cliffPathByWindow:{name:"Cliff Path by Window",exits:{n:"clifftop",s:"cliffPath"}},cupboard:{name:"Cupboard With Hanging Coats",description:"This tiny side room off of the main closet is where old garments are stored.",exits:{s:"closet"}},frontHall:{name:"Front Hall",description:"The entranceway ends here. To the north is a long hallway leading towards the back of the house. To the east are the main rooms of the mansion",exits:{n:"gloomyPassage",e:"sittingRoom",s:"frontLobby"}},sittingRoom:{name:"Sitting Room",exits:{n:"poolOfLight",w:"frontHall",s:"library"}},secretRoom:{name:"Secret Room",exits:{s:"study"}},steepMarbleStairs:{name:"Steep Marble Stairs",exits:{n:"hallWithLockedDoor",s:"cobwebbyRoom",u:"hallWithLockedDoor",d:"cobwebbyRoom"}},diningRoom:{name:"Dining Room",exits:{n:"trophyRoom"}},deepCellar:{name:"Deep Cellar with Coffin",exits:{n:"cellar"}},cliffPath:{name:"Cliff Path",exits:{n:"cliffPathByWindow",s:"cliffPathByMarsh"}},closet:{name:"Closet",description:"The front closet is large and mosty empty. You notice a small opening to the north that leads to the cupboard.",exits:{n:"cupboard",e:"frontLobby"},scenery:{opening:"I think you can squeeze through."}},frontLobby:{name:"Front Lobby",description:"The entrance to the old mansion is cold and your footsteps echo off the marbled floor. The door through which you entered is sealed shut.",exits:{n:"frontHall",w:"closet"},onEnter:function(){flags.frontDoorOpen&&(message='With a tremendous "BANG!" the door slams shut behind you.',sndDoor.play(),flags.frontDoorOpen=!1,delete rooms.frontPorch.exits.n)},scenery:{door:"No matter how much you try, it won't open. You'll need to find another way out.",floor:"The floor is in surprisingly good shape considering its age."}},library:{name:"Library of Evil Books",exits:{n:"sittingRoom",e:"study"}},study:{name:"The Study",exits:{w:"library"},description:"This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",scenery:{wall:"It seems brittle. You may be able to chop your way through.",hole:"There's something beyond..."}},cobwebbyRoom:{name:"Weird Cobwebby Room",exits:{n:"steepMarbleStairs",e:"coldChamber",s:"upperGallery"}},coldChamber:{name:"Very Cold Chamber",description:"The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.",exits:{w:"cobwebbyRoom",e:"spookyRoom"},scenery:{frost:"Ice? There are unnatural forces at work.",walls:"The walls are stone and are coated in a thin sheen of frost."},dispelBarrier:function(){this.description="The air in this room is bitingly cold. An icy frost covers the walls. The exit to the east is now clear."},createBarrier:function(){this.description="The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east."}},spookyRoom:{name:"Spooky Room",description:"The walls of this room are covered in cryptic drawings. As you look down you see that floor is littered with burnt remnants of clothing. A chill wafts through the doorway to the west. ",exits:{w:"coldChamber"},scenery:{floor:"It's covered in pieces of what appears to be burnt clothing",wall:"Drawings fill the bottom half of the walls.",walls:"Drawings fill the bottom half of the walls.",drawings:"They are child-like representations of tiny figures, each surrounded by menacing dark shapes.",shapes:"They are monstrous shadows with tentacles and teeth.",clothing:"Barely recognizable, but it's clear that these garments were made for a child."}},cliffPathByMarsh:{name:"Cliff Path by Marsh",description:"The path ends here at the edge of a boggy marsh. Travelling south could be very dangerous.",exits:{n:"cliffPath",s:"soggyPath"},shore:!0},verandah:{name:"Rubble-Strewn Verandah",description:"Here the mansion's verandah ends. Like the rest of the house it is strewn with rubble.",exits:{s:"twistedRailings",e:"frontPorch"},scenery:{rubble:"The rubble is comprised of various bits and pieces that have fallen from the structure of the house."}},frontPorch:{name:"Front Porch",description:"The front porch of the mansion is weather worn and rotting. To the north, the ornately carved front doorway of the mansion beckons.",exits:{n:"frontLobby",w:"verandah",s:"pathThroughIronGate"},scenery:{doorway:"The carvings depict various sinister creatures.",carvings:"The carvings depict various sinister creatures."}},frontTower:{name:"Front Tower",description:"This tower overlooks the front of the property. The windows have been barred and nailed shut.",exits:{e:"slopingCorridor"},scenery:{windows:"It was rumored they heiress plunged to her death from here.",bars:"They look like they were meant to keep things in.",nails:"Bars AND nails. They needed to be sure no one was getting out."}},slopingCorridor:{name:"Sloping Corridor",description:"This corridor slopes upwards on its way towards the front tower.",exits:{w:"frontTower",e:"upperGallery"}},upperGallery:{name:"Upper Gallery",description:"The upper gallery is filled with artifacts from many travels abroad. You shudder with fear as flurry of ghosts encircles you, blocking your movement to the west.",exits:{n:"cobwebbyRoom",w:"slopingCorridor"},scenery:{artifacts:"Odd items from around the globe but nothing of any particular value."},ghostsDispelled:function(){this.description="The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling."}},marshByWall:{name:"Marsh by Wall",description:"The ground here beneath the south wall is wet and muddy. To the east it becomes marshland-sticky and impassable by foot.",exits:{s:"fallenBrickwork",e:"marsh"},shore:!0},marsh:{name:"Marsh",description:"This boggy marsh looks deep and forboding. Clouds of tiny bugs flitter around your head and bite at your flesh. Best not linger here too long.",exits:{e:"soggyPath",w:"marshByWall"},scenery:{bugs:"They are too small too really hurt you but provide a constant annoyance.",clouds:"Not quite a swarm, but enough to make you want to move on.",marsh:"The water is dark and you can't see the bottom."},water:!0},soggyPath:{name:"Soggy Path",description:"The path here has been flooded by the ever-encroaching marshlands to the west. Steep cliff blocks your passage to the south.",exits:{n:"cliffPathByMarsh",w:"marsh"},scenery:{cliff:"There is no way to climb it."},water:!0},twistedRailings:{name:"The Twisted Railing",description:"The fence ends here in a twisted mass of barbs and rusty edges.",exits:{n:"verandah",e:"pathThroughIronGate"},scenery:{fence:"It's just an ordinary haunted fence. There is no way around it.",barbs:"The barbs look sharp and dangerous, best not mess with them.",mass:"The barbs look sharp and dangerous, best not mess with them."}},pathThroughIronGate:{name:"Path Through Iron Gate",description:"The wind howls as you make your way to the entrance of the property. The old mansion looms ahead of you silhouetted against a full moon.",exits:{n:"frontPorch",w:"twistedRailings",e:"pathByRailings"},scenery:{gate:"The gate is old and rusted.",mansion:"You wonder what treasures await you inside.",moon:"The moon provides just enough light to make your way visible."},onExit:function(){message="And so you begin your adventure...",delete this.onExit},endingTrigger:function(){this.exits.s="exit",this.description="The old mansion looms ahead of you silhouetted against a full moon. Now's you chance to make your escape through the gate to the south!",this.scenery.gate="Hurry, head south to win the game!"}},pathByRailings:{name:"Path by Railings",description:"Here the path runs west towards the entrance and continues east towards the base of the front tower.",exits:{w:"pathThroughIronGate",e:"beneathTower"},scenery:{railings:"The metal railings block your exit to the south.",path:"The path is muddy and overgrown with vegetation."}},beneathTower:{name:"Beneath the Front Tower",description:"Above you looms the dark front tower of the mansion. Who knows what horrors lurk up there.",exits:{w:"pathByRailings",e:"debris"},scenery:{tower:"The menacing tower rises above you into the moonlit sky."}},debris:{name:"Pile of Debris",description:"Here the facade of the mansion has crumbled and all that remains is a pile of broken debris.",exits:{w:"beneathTower",e:"fallenBrickwork"},scenery:{debris:"It's just a messy pile of building materials.",pile:"The pile of building materials is impassable.",facade:"It must have been stunning when it was new."}},fallenBrickwork:{name:"Large Fallen Brickwork",description:"All around lies the remnants of decayed brickwork. The ground towards the north looks marshy and dangerous.",exits:{n:"marshByWall",w:"debris",e:"stoneArch"},scenery:{brickwork:"The nineteenth century masonry could not withstand this stormy climate."}},stoneArch:{name:"Rotting Stone Arch",description:"Here you pass under a decaying stone arch. To the east the path leads upwards towards a clifftop. To the north you see a murky bog.",exits:{w:"fallenBrickwork",e:"crumblingClifftop"},scenery:{arch:"In happier times the owners must have strolled here regularly.",bog:"It looks impassable on foot."}},crumblingClifftop:{name:"Crumbling Clifftop",description:"You are standing at the top of a cliff. Below you to the north you see the marshy, impassable wetlands.",exits:{w:"stoneArch"},scenery:{cliff:"Your stomach begins to flutter as you peer over the edge.",wetlands:"You don't want to get caught in there without a boat."}},inTheTree:{name:"In the Blasted Tree",description:"From up in the tree you see a thick forest and a cliff to the south.",exits:{d:"blastedTree"},onEnter:function(){message="You use the rope to climb the tree."}},exit:{name:"The Winner's Circle"}},verbs={about:{action:function(e,o){verbs.help.action("about")},singleWord:!0},board:{synonym:"enter"},carrying:{action:function(e,o){if(!e){var t="";for(var a in objects)"player"===objects[a].location&&(t.length>0?t+=", ":t="<br>",t+=objects[a].name);t||(t="Nothing."),message="You are carrying: ".concat(t)}},singleWord:!0},chop:{action:function(e,o){message="You don't need to chop that.",isCarrying("axe")?verbSubroutine("swing","axe",verbs.swing,objects.axe):message="Not with your bare hands. Your karate skills aren't what they used to be."}},climb:{action:function(e,o){if(message="You can't climb that.",("tree"===e||"rope"===o.id)&&flags.ropeTiedToTree&&isRoom("blastedTree"))return message="You use the rope to climb the tree.",objects.rope.omnipresence=!0,void(currentRoom=rooms.inTheTree);"tree"===e&&flags.ropeTiedToTree&&isRoom("inTheTree")?verbs.go.action("down"):("rope"===o.id&&isRoom("inTheTree")&&(message="You use the rope to climb down.",o.omnipresence=!1,currentRoom=rooms.blastedTree),"rope"===o.id&&isCarrying("rope")&&(message="It isn't attached to anything!"))}},close:{action:function(e,o){return message="You can't close that.","drawer"===o.id&&objectInRange(o)&&o.isOpen&&"study"===objects.candle.location?(message=o.closeMessage,objects.candle.location="drawer",void o.closeAction()):"coffin"===o.id&&o.isOpen&&objectInRange(o)?(message="You slam the coffin shut.",o.closeAction(),void sndDoor.play()):!1===o.isOpen&&objectInRange(o)?void(message="It's already closed."):o.isOpen&&objectInRange(o)?(message=o.closeMessage?o.closeMessage:"You close it.",o.closeAction&&o.closeAction(),void("door"===o.id&&sndDoor.play())):void 0}},d:{action:function(e,o){e||verbs.go.action("down")},singleWord:!0},dig:{singleWord:!0,action:function(e,o){message="You can't dig that.",isCarrying("shovel")?e?isRoom("cellar")&&nounCheck(e,["bars","window","barred window","brickwork","bricks"])&&(flags.barsDug?message="You've already cleared the bars away from the window.":(message="After several minutes of work, you manage to dig the bars out.",flags.barsDug=!0,rooms.cellar.exits.e="cliffPath",rooms.cellar.name="Cellar with Hole in the Wall",rooms.cellar.description="The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.",rooms.cliffPath.exits.w="cellar")):message="Where do you want to dig?":message="You have nothing to dig with."}},down:{synonym:"d"},drop:{action:function(e,o){if(!(o.score>0&&isCarrying(o)))return"player"===o.location?(o.location=currentRoom.rid,void(message="Dropped.")):"boat"===e&&flags.inBoat?(message="You jump out of the boat.",currentRoom.water&&(message+=" SPLASH!<br>",sndSplash.play()),void(flags.inBoat=!1)):void 0;message="The ".concat(e," is too valuable to drop.")}},e:{action:function(e,o){e||verbs.go.action("east")},singleWord:!0},east:{synonym:"e"},enter:{action:function(e,o){if(message="You can't enter that.","boat"===e&&objectInRange("boat")&&!flags.inBoat)return message="You board the boat.",flags.sinking=0,void(flags.inBoat=!0);"boat"===e&&objectInRange("boat")&&flags.inBoat?message="You are already onboard.":"boat"!==e||(message="There is no boat here.")}},examine:{synonym:"look"},exit:{action:function(e,o){message="You can't exit that.","boat"!==e||verbs.drop.action("boat",objects.boat)}},extinguish:{synonym:"unlight"},get:{action:function(e,o){if(message='What "'.concat(e.toUpperCase(),'?"'),!o&&currentRoom.scenery)for(var t in currentRoom.scenery)if(t.toLowerCase()==e.toLowerCase())return void(message="You can't take that.");if("boat"===o.id&&objectInRange("boat"))message=flags.inBoat?"Um, you are sitting in the boat. Besides, it's too big to carry.":"It's too big to carry around. It will carry you if you board it.";else if("bats"!==o.id||flags.batsAttacking||currentRoom.rid!==objects.bats.location){if("rope"===o.id&&objectInRange(o)&&flags.ropeTiedToTree)return message="You untie the rope from the tree.",o.location="player",o.removeFromTree(),void(flags.ropeTiedToTree=!1);if(o.portable&&objectInRange(o)){if(o.location===currentRoom.rid)return message="Taken.",o.location="player",o.score>0&&(message="You've found treasure!",sndPickup.play(),checkScore()===getMaxScore()&&(message="You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!")),void verbs.get.combineObjects(e,o);if("player"===o.location)return void(message="You already have it!")}o.portable||!objectInRange(o)||o.location!==currentRoom.rid||(message="You don't need to take that.")}else message="Ew! You don't want to touch the filthy bat carcasses!"},combineObjects:function(e,o){if(!isCarrying("candlestick")||!isCarrying("candle")||"candlestick"!==o.id&&"candle"!==o.id)return isCarrying("batteries")&&isCarrying("vacuum")&&("batteries"===o.id||"vacuum"===o.id)?(objects.vacuum.insertBatteries(),objects.batteries.location="vacuum",flags.vacuumHasPower=!0,void(message+="<br>The batteries are a perfect match for the vacuum. The vacuum is now powered.")):void 0;message+="<br>You place the candle in the candlestick."}},go:{action:function(e,o){var t;switch(e){case"north":t="n";break;case"south":t="s";break;case"west":t="w";break;case"east":t="e";break;case"up":t="u";break;case"down":t="d";break;case"boat":return void verbs.enter.action("boat",objects.boat);default:return void(message="You need to specify a direction in which to&nbsp;<em>GO</em>.")}var a=currentRoom.exits[t.toLowerCase()];if(!currentRoom.darkness||flags.candleLit)if(flags.batsAttacking&&isRoom("mustyRoom")&&"e"===t)message="The bats are blocking that direction.";else if(flags.ghostsAttacking&&isRoom("upperGallery")&&"w"===t)message="The ghosts won't let you pass!";else{if(isRoom("coldChamber")&&flags.magicalBarrier&&"e"===t)return message="A magical barrier is blocking your way.",void sndShock.play();if(!currentRoom.water||flags.inBoat)if(t&&a){var r=previousRoom;if(message="OK",previousRoom=currentRoom,(currentRoom=getRoom(a)).darkness&&!flags.candleLit)return currentRoom=previousRoom,previousRoom=r,void(message="It's too dark in that direction. You'll need a light.");if((currentRoom.water||currentRoom.shore)&&flags.inBoat&&(objects.boat.location=currentRoom.rid,message="Aye aye captain"),currentRoom.water&&!flags.inBoat)return currentRoom=previousRoom,previousRoom=r,void(message="You need a way to navigate the bog.");if(!currentRoom.water&&!currentRoom.shore&&flags.inBoat)return currentRoom=previousRoom,previousRoom=r,void(message="You need to exit the boat first.");if("exit"===currentRoom.rid)return void(flags.winner=!0);previousRoom.onExit&&previousRoom.onExit(),currentRoom.onEnter&&currentRoom.onEnter()}else message=t?"You can't go that way!":"Go where?";else message="The marshy ground prevents any movement."}else message="It's too dark to move!"}},help:{action:function(e,o){if(message='"God helps those who help themselves."',!e)return displayOverlay("Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to win the game.<br><br>For more help type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>."),void(message="");if("movement"===e)return displayOverlay("You can move around the mansion by typing <em>GO NORTH</em>, <em>GO WEST</em>, <em>GO UP</em>, etc. Save keystrokes by simply entering a single initial of the direction you want to move: <em>N</em>,<em>S</em>,<em>E</em>,<em>W</em>,<em>U</em> and <em>D</em>.<br><br>Available exits are listed below the room description.<br><br>Occasionally you will find that your path is blocked by various obstacles. Your job is to find the right object or action to get past these impediments. Explore everywhere!"),void(message="");if("commands"===e)return displayOverlay("There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that."),void(message="");if("about"===e)return displayOverlay('<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>&copy;2020 Robert Wm. Gomez'),void(message="");if("verbs"===e){var t="";for(var a in verbs)a.length>1&&(t+=a.toUpperCase()+", ");return displayOverlay('Tired of playing "Guess the verb?"<br><br><b>Verbs I know:</b>  '.concat(t.substring(0,t.length-2))),void(message="")}},singleWord:!0},i:{synonym:"carrying",singleWord:!0},inventory:{synonym:"carrying",singleWord:!0},leave:{synonym:"drop"},light:{action:function(e,o){message="You can't light that.",isCarrying("matches")?"candle"===e&&isCarrying("candle")&&isCarrying("candlestick")?flags.candleLit?message="It's already lit.":(message="It casts a flickering light.",flags.candleLit=!0):"candle"!==e||!isCarrying("candle")||isCarrying("candlestick")?"aerosol"===e&&isCarrying("aerosol")?message="An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.":nounCheck(e,["cooker","stove"])&&"kitchen"===currentRoom.rid?message="The cooker rusted out and is in no state to be lit.":"rubbish"!==e||"yard"!==currentRoom.rid||(message="It's too damp to light."):message="It will burn your hands!":message="You have nothing to light it with."}},look:{action:function(e,o){if(message="You see nothing special.","coat"===o.id&&objectInRange(o)&&"coat"===objects.key.location&&(message="As you search through the old coat you find a key in the pocket.",objects.key.location=currentRoom.rid,sndKey.play()),o.description&&objectInRange(o))message=o.description;else if(o.description)message="You do see that here.";else if(currentRoom.scenery)for(var t in currentRoom.scenery)if(t.toLowerCase()==e.toLowerCase())return void(message=currentRoom.scenery[t])}},n:{action:function(e,o){e||verbs.go.action("north")},singleWord:!0},north:{synonym:"n"},open:{action:function(e,o){if(message="You can't open that.","drawer"===o.id&&objectInRange(o)&&!o.isOpen&&"drawer"===objects.candle.location)return message="You slide the drawer open, revealing a candle.",objects.candle.location="study",void o.openAction();if("coffin"===o.id&&objectInRange(o)){if(!o.isOpen&&"coffin"===objects.ring.location)return message="You slowly raise the lid revealing... a ring!",objects.ring.location=o.location,o.isOpen=!0,o.openAction(),void sndKey.play();if(!o.isOpen)return message="That's creepy!",void o.openAction()}if(o.locked&&!1===o.isOpen&&objectInRange(o))message="It's locked!";else{if(!o.isOpen||!objectInRange(o))return!1===o.isOpen&&objectInRange(o)?(message=o.openMessage?o.openMessage:"You've opened it.",void(o.openAction&&o.openAction())):void 0;message="It's already open."}}},read:{action:function(e,o){message=o.readable&&objectInRange(o)?o.readableText:"Nothing to read there."}},remove:{action:function(e,o){if("coat"===e&&isCarrying("coat")&&flags.wearingCoat)return message="You remove the coat",void(flags.wearingCoat=!1);"coat"!==e||!isCarrying("coat")||flags.wearingCoat||(message="You are not wearing it.")}},s:{action:function(e,o){e||verbs.go.action("south")},singleWord:!0},say:{action:function(e,o){message="You say, &quot;"+e.toUpperCase()+"!&quot;","xzanfar"===o.id&&isCarrying("magic spells")?isRoom("coldChamber")&&flags.magicalBarrier?(message+="<br><br>The air sizzles with energy and the magic field dissipates into nothingness.",flags.magicalBarrier=!1,rooms.coldChamber.dispelBarrier(),objects.barrier.location=null):isRoom("coldChamber")?(message+="<br><br>The magical field re-materializes!",flags.magicalBarrier=!0,rooms.coldChamber.createBarrier(),objects.barrier.location="coldChamber"):message+="<br><br>*Magic Occurs*":nounCheck(e,["fuck","shit","cunt","tits"])&&(message+="<br><br>Relax. It's just a game.")}},score:{action:function(e,o){message="Your score is ".concat(checkScore(),"/").concat(getMaxScore()+1,"."),0===checkScore()&&(message+=" You need to find some treasure!"),checkScore()===getMaxScore()&&(message+=" That's all the treasure. Hurry, find your way back to the front gate to claim that final point!")},singleWord:!0},south:{synonym:"s"},spray:{action:function(e,o){if(message="You can't spray that!",("aerosol"===o.id||"bats"===o.id)&&isCarrying("aerosol")&&flags.batsAttacking&&currentRoom.rid===objects.bats.location)return flags.batsAttacking=!1,message="Pfft! Got 'em! The bats spiral to the ground in a smattering of thuds. They now lie motionless on the ground.",rooms.mustyRoom.batsKilled(),objects.bats.batsKilled(),void(flags.batsAttacking=!1);"aerosol"===o.id&&isCarrying("aerosol")&&(message="Hisssss...")}},swing:{action:function(e,o){if(message="There's no reason to be swinging that.","rope"===o.id&&flags.ropeTiedToTree&&isRoom("blastedTree"))message="This is no time to be playing games.";else{if("rope"!==o.id||!isCarrying(["rope"]))return"axe"===o.id&&isCarrying("axe")&&isRoom("study")&&!flags.studyWallBroken?(message="You broke the thin wall.",flags.studyWallBroken=!0,currentRoom.exits.n="secretRoom",currentRoom.name="Study with Secret Room",currentRoom.description="This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room",currentRoom.scenery.hole="The hole is much bigger now.",currentRoom.scenery.wall="The wall is no more. A secret room lies to the north.",void(currentRoom.scenery.passage="It leads north to a secret room.")):void("axe"===o.id&&isCarrying("axe")&&(isRoom("forest")||isRoom("thickForest")||isRoom("blastedTree"))?message="Don't chop the trees. You get the feeling it would anger the woodland spirits.":"axe"===o.id&&isCarrying("axe")&&(message="Whoosh!!!"));message="You swung it. Yee haw, cowboy!"}}},take:{synonym:"get"},tie:{action:function(e,o){if(message="You can't tie that.","rope"===o.id&&isCarrying("rope"))return"blastedTree"===currentRoom.rid?(message="You reattach the rope to the branch.",o.tieToTree(),o.location="blastedTree",void(flags.ropeTiedToTree=!0)):void(message="There's no need to tie the rope to anything here.")}},u:{action:function(e,o){e||verbs.go.action("up")},singleWord:!0},unlight:{action:function(e,o){if("candle"===o.id&&flags.candleLit)return message="You blow out the candle.",void(flags.candleLit=!1)}},unlock:{action:function(e,o){if(message="You can't unlock that.",o.locked&&o.key&&objectInRange(o)&&isCarrying(o.key))return message=o.unlockMessage?o.unlockMessage:"You've unlocked the ".concat(e,"."),o.locked=!1,"door"===o.id&&currentRoom.rid===o.location&&(rooms.hallWithLockedDoor.exits.s="steepMarbleStairs"),void(o.unlockAction&&o.unlockAction());o.locked&&o.key&&objectInRange(o)?message="You don't have a means to unlock that.":o.locked&&objectInRange(o)&&"You've unlocked the ".concat(e,".")}},up:{synonym:"u"},use:{action:function(e,o){if("aerosol"!==o.id)return"vacuum"===o.id&&flags.vacuumHasPower&&flags.ghostsAttacking&&"upperGallery"===currentRoom.rid?(message="With a loud whoosh, the tiny vacuum revs up. You've sucked up all the ghosts!",flags.ghostsAttacking=!1,flags.vacuumHasPower=!1,objects.ghosts.location="vacuum",rooms.upperGallery.ghostsDispelled(),void objects.vacuum.captureGhosts()):void("vacuum"!==o.id||"vacuum"!==objects.ghosts.location?"vacuum"!==o.id||!isCarrying("vacuum")||isCarrying("batteries")?"xzanfar"!==o.id||verbs.say.action(e,o):message="This vacuum requires batteries.":message="It's filled with ghosts. You don't want to risk releasing them again.");verbs.spray.action(e,o)}},w:{action:function(e,o){e||verbs.go.action("west")},singleWord:!0},wear:{action:function(e,o){if(message="You can't wear that.","coat"===e&&isCarrying("coat")&&!flags.wearingCoat)return message="You put on the coat. Stylish.","coat"===objects.key.location&&(message+=" Wait, there is something in the pocket!"),void(flags.wearingCoat=!0);"coat"===e&&isCarrying("coat")&&flags.wearingCoat?message="You are already wearing it.":"coat"!==e||isCarrying("coat")||(message="You don't have a coat.")}},west:{synonym:"w"},x:{synonym:"look"}},$container=document.getElementById("hh-container"),$display=document.getElementById("hh-output"),$inputZone=document.getElementById("hh-input"),$userInput=document.getElementById("hh-userInput"),$inputForm=document.getElementById("hh-input-form"),$restartBtn=document.getElementById("hh-reload"),$displayOverlay=document.getElementById("hh-output-overlay"),$continueBtn=document.getElementById("hh-continue"),totalScore=0,turns=0,winner=!1,lightLevel=60,encroachingDarkness=0,currentRoom=rooms.pathThroughIronGate,previousRoom=null,message="OK",previousObj=null;for(var _room in $continueBtn.addEventListener("click",(function(e){$container.classList.remove("overlay"),$userInput.focus(),$userInput.select()})),rooms)rooms[_room].rid=_room;for(var key in verbs)verbs[key].name=key;for(var _key in objects)objects[_key].id=_key,objects[_key].name||(objects[_key].name=_key);var flags={frontDoorOpen:!0,candleLit:!1,ghostsAttacking:!0,vacuumSwitchedOn:!1,vacuumHasPower:!1,batsAttacking:!0,magicalBarrier:!0,hallDoorLocked:!0,barsDug:!1,ropeTiedToTree:!0,studyWallBroken:!1,inBoat:!1,sinking:0,wearingCoat:!1,winner:!1};function display(){var e=getExtraDescription(currentRoom),o=getObjectsInRoom(currentRoom);cls(),prnt("HAUNTED HOUSE"),prnt("---------------------------------------------<br>"),prnt('<span class="room-name">'.concat(currentRoom.name,"</span>")),currentRoom.darkness&&!flags.candleLit?prnt("<br>It's pitch black and you can't see anything!"):e&&currentRoom.description?prnt("<br>".concat(currentRoom.description," ").concat(e)):e?prnt("<br>".concat(e)):currentRoom.description&&prnt("<br>".concat(currentRoom.description)),(currentRoom.darkness&&flags.candleLit||!currentRoom.darkness)&&(prnt('<br><span class="exits">Exits:</span>'.concat(splitExits(currentRoom.exits))),o&&prnt(o)),prnt("<br>---------------------------------------------"),message.length>0&&prnt('<br><span class="message">'.concat(message,"</span>")),flags.winner&&victory(),message="What?",debugInfo()}function displayOverlay(e){$displayOverlay.innerHTML="",$displayOverlay.innerHTML+='<span class="message">'.concat(e,"</span>"),$container.classList.add("overlay")}function getExtraDescription(e){var o="";return objects.boat.location===e.rid&&(flags.inBoat?o+="You are in the boat.":o+="There is a boat here."),""===o&&(o=!1),o}function getObjectsInRoom(e){var o="";for(var t in objects)objects[t].location==e.rid&&objects[t].portable&&(o+='<br/><span class="message objects-in-room">You can see '.concat(objects[t].name," here.</span>"));return""===o&&(o=!1),o}function prnt(e){$display.innerHTML+=e+"<br>"}function cls(){$display.innerHTML=""}function splitExits(e){if(!e)return"No exits!";var o="";for(var t in e)o+=t.toUpperCase()+", ";var a=(o=o.replace(new RegExp(", $"),"")).lastIndexOf(", ");return""==(o=o.slice(0,a)+o.slice(a).replace(", "," &amp; "))?"No exits!":o}function parseInput(e){e=e.trim().toLowerCase();for(var o=null,t=null,a=0;a<e.length;a++){if(" "===e.substring(a,a+1)&&!o){o=e.substring(0,a),t=e.substring(a+1,e.length).trim();break}if(e.indexOf(" ")<0){o=e.trim(),t=null;break}}var r=getVerb(o),s=getNoun(t);r.synonym&&(r=getVerb(o=r.synonym)),s.synonym&&(s=getNoun(t=s.synonym)),"it"===t&&previousObj&&(t=(s=previousObj).id);var n=!1;if(t&&!s&&(message="That's silly!"),t||r.singleWord||(message="I need two words.",n=!0),!r&&s&&(message="You can't \"".concat(e.toUpperCase(),'."')),r||s||(message="You don't make sense."),r&&s.portable&&"player"!=s.location&&(message="You don't have \"".concat(t.toUpperCase(),'."')),n||(flags.candleLit&&lightLevel--,verbSubroutine(o,t,r,s)),flags.candleLit&&lightLevel>1&&lightLevel<11&&(message+="<br>Your candle is waning!"),1==lightLevel&&(message+="<br>Your candle has gone out!",flags.candleLit=!1,lightLevel=0,objects.candle.location=null),currentRoom.darkness&&!flags.candleLit&&(++encroachingDarkness>1&&encroachingDarkness<4&&(message+="<br>You hear something in the darkness!"),encroachingDarkness>=4&&encroachingDarkness<6&&(message+="<br>You hear a terrifying growl. There is definitely something in the room with you!"),encroachingDarkness>=6))death("A slimy appendage grabs you from out of the darkness and wraps itself around your neck!<br><br>You are helpless and filled with a sense of unspeakable terror as the creature squeezes the life out of you.");else{if(currentRoom.darkness&&flags.candleLit&&(encroachingDarkness=0),currentRoom.water&&!flags.inBoat){if(flags.sinking++,message+="<br>You are sinking in the bog!",flags.sinking>3)return void death("Flailing and struggling, you sink deeper and deeper into the sticky bog. Despite your efforts, the water envelops you.");3===flags.sinking&&(message+=" Do something, quick!")}turns++,getMaxScore()===checkScore()&&triggerEndGame(),previousObj=s,display()}}function getVerb(e){for(var o in verbs)if(o==e)return verbs[o];return!1}function getNoun(e){for(var o in objects)if(o==e)return objects[o];return!1}function verbSubroutine(e,o,t,a){a.hasOwnProperty("overrides")&&objectInRange(a)&&a.overrides.hasOwnProperty(e)?a.overrides[e]():t&&t.action(o,a)}function checkScore(){var e=0;for(var o in objects)"player"==objects[o].location&&objects[o].score&&(e+=objects[o].score);return e}function getMaxScore(){var e=0;for(var o in objects)objects[o].score&&(e+=objects[o].score);return e}function triggerEndGame(){rooms.pathThroughIronGate.endingTrigger()}function victory(){$inputZone.remove(),cls(),prnt("HAUNTED HOUSE"),prnt("---------------------------------------------<br>"),prnt('<span class="message">Congratulations, you\'ve won the game!</span><br>'),prnt("Your final score is: <em>".concat(checkScore()+1,"/").concat(getMaxScore()+1,"</em><br>"));var e=["Bask in the glory of your victory, you've earned it!","Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.","So many points! Don't spend them all in one place.","As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!"],o=Math.floor(Math.random()*e.length);prnt("".concat(e[o])),prnt("<br>---------------------------------------------<br>"),prnt("You took <em>".concat(turns,"</em> turns to complete the adventure.<br>")),prnt('<span class="message">This "remastered" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>'),$restartBtn.classList.remove("is-hidden")}function getRoom(e){return rooms[e]}function getObject(e){return objects[e]}function death(e){$inputZone.remove(),cls(),prnt("HAUNTED HOUSE"),prnt("---------------------------------------------<br>"),prnt('<span class="message">'.concat(e,"</span>")),prnt('<br><span class="room-name">You Have Died!</span>'),prnt("<br>---------------------------------------------<br>"),prnt("You took <em>".concat(turns,"</em> turns before meeting your demise.<br>")),prnt("Your final score is: <em>".concat(checkScore(),"/").concat(getMaxScore()+1,"</em>")),$restartBtn.classList.remove("is-hidden")}function objectInRange(e){return"string"==typeof e&&(e=getObject(e)),!(e.location!=currentRoom.rid&&"player"!=e.location&&!e.omnipresence)}function isCarrying(e){return"string"==typeof e&&(e=getObject(e)),"player"===e.location}function isRoom(e){return currentRoom.rid===e}function nounCheck(e,o){return o.includes(e)}$inputForm.addEventListener("submit",(function(e){e.preventDefault(),$userInput.value.length>0&&parseInput($userInput.value.toUpperCase()),checkScore()>=17&&57==room&&parseInput("SCORE"),$userInput.value=""})),$restartBtn.addEventListener("click",(function(e){location.reload(),e.preventDefault()}));var Sound=function(){function e(o){_classCallCheck(this,e),this.sound=document.createElement("audio"),this.sound.src=o,this.sound.setAttribute("preload","auto"),this.sound.setAttribute("controls","none"),this.sound.style.display="none",document.body.appendChild(this.sound)}return _createClass(e,[{key:"play",value:function(){this.sound.play()}},{key:"stop",value:function(){this.sound.pause()}}]),e}(),sndOwl=new Sound("audio/owl.mp3"),sndDoor=new Sound("audio/door.mp3"),sndKey=new Sound("audio/key.mp3"),sndPickup=new Sound("audio/treasure_pickup.mp3"),sndShock=new Sound("audio/shock.mp3"),sndSplash=new Sound("audio/splash.mp3");function cl(e){e?console.log(e):console.log("hit!")}function debugInfo(){debug&&(cl("Turns: "+turns),cl("score: "+totalScore),cl("Terror: "+encroachingDarkness))}var debug=!0;display(),$userInput.focus(),$userInput.select();var $btnSmaller=document.getElementById("btnSmaller"),$btnBigger=document.getElementById("btnBigger"),$html=document.querySelector("html"),htmlFontSize=16;$html.style.fontSize=htmlFontSize+"px",$btnSmaller.addEventListener("click",(function(e){e.preventDefault(),--htmlFontSize<8&&(htmlFontSize=8),$html.style.fontSize=htmlFontSize+"px"})),$btnBigger.addEventListener("click",(function(e){e.preventDefault(),++htmlFontSize>36&&(htmlFontSize=36),$html.style.fontSize=htmlFontSize+"px"}));
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _sounds_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+// Define the world's objects here.
+var objects = {
+  "aerosol": {
+    "name": "a can of aerosol",
+    "description": "The can reads, \"For the highest hair. Warning: do not spray on small animals.\"",
+    "location": "debris",
+    "portable": true,
+    "flamable": true
+  },
+  "air": {
+    "description": "It can't be seen.",
+    "omnipresence": true
+  },
+  "axe": {
+    "name": "an axe",
+    "description": "Although a bit rusty, the blade is sharp. Looks like one <em>swing</em> could do some serious damage.",
+    "location": "byWoodpile",
+    "portable": true
+  },
+  "barrier": {
+    "name": "the magical barrier",
+    "description": "It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",
+    "location": "coldChamber"
+  },
+  "bats": {
+    "location": "mustyRoom",
+    "description": "They are fluttering all around you. Occasionally, one will swoop down and attempt to take a bite!",
+    "batsKilled": function batsKilled() {
+      this.description = "The bat carcasses lie motionless on the ground in tiny puddles of their own filth and blood.";
+    },
+    "takeMessage": "No way, you'll get bit!"
+  },
+  "batteries": {
+    "name": "some batteries",
+    "description": "They are heavy duty power cells. Perfect for small appliances.",
+    "location": "smallDarkRoom",
+    "portable": true
+  },
+  "boat": {
+    "name": "a boat",
+    "description": "It's rickety and old, but it should float.",
+    "location": "cliffPathByMarsh"
+  },
+  "books": {
+    "description": "They are demonic works.",
+    "readable": true,
+    "readableText": "You are unable to make sense of the ancient writings.",
+    "location": "library",
+    "takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone."
+  },
+  "can": {
+    "synonym": "aerosol"
+  },
+  "candle": {
+    "name": "a candle",
+    "description": "It's a normal wax candle.",
+    "location": "drawer",
+    "portable": true
+  },
+  "candlestick": {
+    "name": "a golden candlestick",
+    "description": "It's gold and ornamented with various jewels. And it can also hold a candle, literally!",
+    "location": "library",
+    "portable": true,
+    "score": 1,
+    "takeMessage": "It's a lot heavier than it looks. Must be solid gold!"
+  },
+  "coat": {
+    "name": "a dusty old coat",
+    "description": "It's a dusty old rancher's coat.",
+    "location": "cupboard",
+    "portable": true
+  },
+  "coffin": {
+    "description": "The dark-stained pine box has tarnished brass hinges. The lid is closed.",
+    "location": "deepCellar",
+    "isOpen": false,
+    "openAction": function openAction() {
+      this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
+      this.isOpen = true;
+    },
+    "closeAction": function closeAction() {
+      this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
+      this.isOpen = false;
+    },
+    "takeMessage": "It's far to heavy to carry."
+  },
+  "coins": {
+    "description": "It's a sack of Seventeenth Century Spanish doubloons.",
+    "location": "darkAlcove",
+    "portable": true,
+    "score": 1
+  },
+  "desk": {
+    "location": "study",
+    "description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
+    "takeMessage": "Your job is finding treasure, not furniture!"
+  },
+  "desks": {
+    "synonym": "desk"
+  },
+  "door": {
+    "location": "hallWithLockedDoor",
+    "description": "It's made of a thick, unbreakable wood.",
+    "locked": true,
+    "key": "key",
+    "unlockMessage": "You slowly turn the key and unlock the door!",
+    "unlockAction": function unlockAction() {
+      this.description = "It's made of a thick, unbreakable wood. It's open.";
+      this.isOpen = true;
+    },
+    "isOpen": false,
+    "closeAction": function closeAction() {
+      this.description = "It's made of a thick, unbreakable wood. It's closed.";
+      this.isOpen = false;
+    },
+    "openAction": function openAction() {
+      this.description = "It's made of a thick, unbreakable wood. It's open.";
+      this.isOpen = true;
+    }
+  },
+  "drawer": {
+    "location": "study",
+    "description": "It's a small side drawer. It's closed.",
+    "isOpen": false,
+    "openMessage": "You slide the drawer open.",
+    "openAction": function openAction() {
+      this.description = "The small side drawer is open.";
+      this.isOpen = true;
+    },
+    "closeMessage": "You slide the drawer closed.",
+    "closeAction": function closeAction() {
+      this.description = "It's a small side drawer. It's closed.";
+      this.isOpen = false;
+    }
+  },
+  "ghost": {
+    "synonym": "ghosts"
+  },
+  "ghosts": {
+    "description": "The ghosts whirl about the room like so many clouds of dust!",
+    "location": "upperGallery",
+    "takeMessage": "You try to grab the ghosts, but your hands pass through their ephemeral bodies."
+  },
+  "goblet": {
+    "name": "a jeweled goblet",
+    "description": "It made of shiny metal and encrusted with sparkling jewels.",
+    "location": "frontTower",
+    "portable": true,
+    "score": 1
+  },
+  "key": {
+    "name": "a key",
+    "description": "It's made of brass and it probably unlocks something, right?",
+    "location": "coat",
+    "portable": true,
+    "takeMessage": "You take the key and wonder what it unlocks."
+  },
+  "magic spells": {
+    "name": "a tome of magic spells",
+    "description": "There is something written on it.",
+    "readableText": "The text reads: Use this word with care, \"Xzanfar.\"",
+    "location": "secretRoom",
+    "readable": true,
+    "portable": true,
+    "score": 1,
+    "takeMessage": "The tome vibrates with energy as you pick it up."
+  },
+  "magical barrier": {
+    "synonym": "barrier"
+  },
+  "matches": {
+    "name": "a box of matches",
+    "location": "kitchen",
+    "description": "The matches rattle around in the box.",
+    "portable": true
+  },
+  "message": {
+    "location": "sideOfHouse",
+    "description": "It's written in blood!",
+    "readable": true,
+    "readableText": "It says, \"Seek the word to dispell the barrier.\""
+  },
+  "painting": {
+    "name": "a beautiful painting",
+    "description": "It depicts a smiling, golden-haired child.",
+    "location": "spookyRoom",
+    "portable": true,
+    "score": 1
+  },
+  "pocket": {
+    "synonym": "coat"
+  },
+  "remains": {
+    "name": "skeletal remains",
+    "location": "diningRoom",
+    "description": "They look to be the remains of a small mammal. A dog perhaps?",
+    "takeMessage": "The idea of carrying around those bones disgusts you."
+  },
+  "ring": {
+    "name": "a golden ring",
+    "location": "coffin",
+    "portable": true,
+    "score": 1
+  },
+  "rope": {
+    "name": "a rope tied to a tree",
+    "description": "It's a normal length of rope and it's currently tied to an upper branch of the tree.",
+    "location": "blastedTree",
+    "portable": true,
+    "removeFromTree": function removeFromTree() {
+      this.name = "a length of rope";
+      this.description = "It's a normal length of rope.";
+    },
+    "tieToTree": function tieToTree() {
+      this.name = "a rope tied to a tree";
+      this.description = "It's a normal length of rope and it's currently tied to an upper branch of the tree.";
+    }
+  },
+  "rubbish": {
+    "location": "yard",
+    "description": "The garbage has decomposed into a heap of goo. That's very disgusting!",
+    "takeMessage": "I know you miss your youthful days of dumpster diving, but let's not mess with the rubbish heap."
+  },
+  "scroll": {
+    "location": "rearTurretRoom",
+    "portable": true,
+    "readable": true,
+    "description": "It is decorated with gold leaf and medieval illustrations. The text is written is in an alien tongue.",
+    "readableText": "It says \"Klatu Borata Nickto.\"",
+    "score": 1
+  },
+  "shovel": {
+    "name": "a shovel",
+    "description": "It's a small garden shovel. Perfect for digging!",
+    "location": "weedPatch",
+    "portable": true
+  },
+  "spells": {
+    "synonym": "magic spells"
+  },
+  "statue": {
+    "name": "an ebony statue",
+    "description": "It looks African in origin and is most likely very valuable.",
+    "location": "hallWithLockedDoor",
+    "portable": true,
+    "score": 1
+  },
+  "tome": {
+    "synonym": "magic spells"
+  },
+  "vacuum": {
+    "name": "a tiny vacuum",
+    "description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",
+    "location": "gloomyPassage",
+    "portable": true,
+    "insertBatteries": function insertBatteries() {
+      this.description = "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more! It is fully powered and ready to <em>use</em>.";
+      this.name = "a fully powered vacuum";
+    },
+    "captureGhosts": function captureGhosts() {
+      this.name = "a tiny vacuum filled with ghosts";
+      this.description = "It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!";
+    }
+  },
+  "xzanfar": {}
+}; // Define your rooms here
+
+var rooms = {
+  "darkCorner": {
+    "name": "Dark Corner",
+    "description": "The far corner of the yard is covered in dark shadow. The property continues to the south around the west side of the mansion.",
+    "exits": {
+      "e": "overgrownGarden",
+      "s": "cornerOfHouse"
+    },
+    "onEnter": function onEnter() {
+      if (Math.random() > .4) {
+        message = "You hear an owl hooting off in the distance.";
+        _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].owl.play();
+      }
+    }
+  },
+  "overgrownGarden": {
+    "name": "Overgrown Garden",
+    "description": "This once was a fertile garden full of vegetables and herbs. Now it has been choked and overtaken by prickly weeds.",
+    "exits": {
+      "w": "darkCorner",
+      "e": "byWoodpile"
+    },
+    "scenery": {
+      "weeds": "They have grown almost to waist level and are covered in sharp thorns.",
+      "thorns": "They're very sharp. Best not get too close."
+    }
+  },
+  "byWoodpile": {
+    "name": "Large Wood Pile",
+    "description": "A large stack of wood is haphazardly piled against the side of the mansion.",
+    "exits": {
+      "w": "overgrownGarden",
+      "e": "yard"
+    },
+    "scenery": {
+      "pile": "The wood is stacked about a meter high.",
+      "wood": "It's damp, mossy, and probably no longer useful."
+    }
+  },
+  "yard": {
+    "name": "Yard by Rubbish",
+    "description": "Despite being years since anyone lived here, the rubbish bins still emit a sour stench. The back entrance to the house lies to the south.",
+    "exits": {
+      "w": "byWoodpile",
+      "e": "weedPatch",
+      "s": "sculleryDoor"
+    },
+    "scenery": {
+      "bins": "They are filled with rubbish. Small bones are scattered around their base.",
+      "bones": "Racoons perhaps?"
+    }
+  },
+  "weedPatch": {
+    "name": "Weed Patch",
+    "description": "This area doesn't look like it has ever been anything but the overgrown weed patch you see before you.",
+    "exits": {
+      "w": "yard",
+      "e": "forest"
+    },
+    "scenery": {
+      "weeds": "They look itchy.",
+      "patch": "It would take an industrial grade mower to clear this area.",
+      "weed patch": "It would take an industrial grade mower to clear this area."
+    }
+  },
+  "forest": {
+    "name": "Forest",
+    "description": "This area of sparse forest grows right up to the north side of the house. Most of the trees' branches are bereft of leaves.",
+    "exits": {
+      "w": "weedPatch",
+      "e": "thickForest"
+    },
+    "scenery": {
+      "trees": "They are tall and barren."
+    }
+  },
+  "thickForest": {
+    "name": "Thick Forest",
+    "description": "Here your progress is slowed considerably by the dense trees in this area of the forest.",
+    "exits": {
+      "w": "forest",
+      "e": "blastedTree",
+      "s": "clearing"
+    },
+    "scenery": {
+      "trees": "They are tall, barren, and growing very close to each other."
+    }
+  },
+  "blastedTree": {
+    "name": "Blasted Tree",
+    "description": "This corner of the property is eerily dim. Looming above is an ominous tree. It's leafless branches crackle in the breeze.",
+    "exits": {
+      "w": "thickForest",
+      "s": "path"
+    },
+    "onEnter": function onEnter() {
+      objects["rope"].omnipresence = false;
+    },
+    "scenery": {
+      "tree": "The tree is devoid of leaves and has an almost demon-like appearance.",
+      "branches": "The branches are devoid of leaves."
+    }
+  },
+  "cornerOfHouse": {
+    "name": "Corner of the House",
+    "description": "The moonlight is obscured by the mansion to the east as you make your way around the back corner of the house.",
+    "exits": {
+      "n": "darkCorner",
+      "s": "sideOfHouse"
+    }
+  },
+  "entranceToKitchen": {
+    "name": "Entrance to the Kitchen",
+    "description": "The kitchen entrance must have also served as a dining area at one time. There is a table in the middle of the space and the floor is riddled with broken dishes.",
+    "exits": {
+      "s": "backOfHallway",
+      "e": "kitchen"
+    },
+    "scenery": {
+      "table": "The surface is scarred with knife marks and reddish brown stains, as though a large carcass was butchered here.",
+      "dishes": "They crunch under your feet.",
+      "stains": "Blood? Let's hope it's just ketchup. Unless they were preparing hotdogs, because only a monster would put ketchup on a hotdog."
+    }
+  },
+  "kitchen": {
+    "name": "Kitchen and Grimy Cooker",
+    "description": "A grimy iron cooker fills most of the space of the kitchen. A few pots lie scattered about but most of the cookware and cutlery has long since been looted.",
+    "exits": {
+      "w": "entranceToKitchen",
+      "e": "sculleryDoor"
+    },
+    "scenery": {
+      "cooker": "It is unusable. Covered in grime and rust from years of neglect.",
+      "pots": "They are rusty and covered in muck.",
+      "grime": "Yuck!",
+      "muck": "Gross!"
+    }
+  },
+  "sculleryDoor": {
+    "name": "Scullery Door",
+    "description": "A dented old washbasin is all that remains here in the scullery. To the north an exit leads outside to the back of the house.",
+    "exits": {
+      "n": "yard",
+      "w": "kitchen"
+    },
+    "scenery": {
+      "washbasin": "You doubt it can still hold water."
+    }
+  },
+  "mustyRoom": {
+    "name": "Musty Room",
+    "description": "There is a nasty swarm of bats attacking you! Their fluttering wings stir up a putrid, musty stench.",
+    "exits": {
+      "s": "spiralStaircase",
+      "e": "rearTurretRoom"
+    },
+    "batsKilled": function batsKilled() {
+      this.description = "This quiet corner room is filled with the musty stench of rabid, wild animals. The floor is covered with bat carcasses.";
+    }
+  },
+  "rearTurretRoom": {
+    "name": "Rear Turret Room",
+    "description": "This round chamber's slim windows look out on to the dense forest to the north of the mansion. There is a strange bench in the middle of the room.",
+    "exits": {
+      "w": "mustyRoom"
+    },
+    "scenery": {
+      "bench": "Upon closer inspection, you realize that this is \"bench\" is actually a torture device complete with locks and chains.",
+      "device": "It's what they called \"The Rack\" back in the dark ages.",
+      "locks": "They hold a victim's arms and legs in place.",
+      "chains": "Heavy enough to bruise and cut flesh."
+    }
+  },
+  clearing: {
+    "name": "Clearing by House",
+    "exits": {
+      "n": "thickForest",
+      "e": "path"
+    }
+  },
+  path: {
+    "name": "Path",
+    "exits": {
+      "n": "blastedTree",
+      "s": "clifftop",
+      "w": "clearing"
+    }
+  },
+  "sideOfHouse": {
+    "name": "Side of House",
+    "description": "As you make your way down the side of the house, you notice a message hastily scrawed on the siding here.",
+    "exits": {
+      "n": "cornerOfHouse",
+      "s": "crumblingWall"
+    },
+    "scenery": {
+      "siding": "There's a message scrawled on it."
+    }
+  },
+  "backOfHallway": {
+    "name": "Back Hallway",
+    "description": "The hallway appears to be coming to an end here. There is a portrait hanging on the wall. The cased opening to the north leads to the kitchen.",
+    "exits": {
+      "n": "entranceToKitchen",
+      "s": "gloomyPassage"
+    },
+    "scenery": {
+      "portrait": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
+      "tapestry": "It depicts an elderly woman in a black dress. She stands aside an old tree.",
+      "woman": "I think her eyes just moved!",
+      "eyes": "They seem to follow you around the room.",
+      "tree": "The tree is barren and looks like there is a rope tied to one of the branches.",
+      "rope": "Maybe it's just a vine? The artist was not that keen on details.",
+      "dress": "It's a lacy number like they used to wear in the nineteenth century."
+    }
+  },
+  darkAlcove: {
+    "name": "Dark Alcove",
+    "exits": {
+      "s": "poolOfLight",
+      "e": "smallDarkRoom"
+    },
+    darkness: true
+  },
+  smallDarkRoom: {
+    "name": "Small Dark Room",
+    "exits": {
+      "w": "darkAlcove",
+      "e": "spiralStaircase"
+    }
+  },
+  spiralStaircase: {
+    "name": "Spiral Staircase",
+    "description": "Bottom of Spiral Staircase",
+    "exits": {
+      "n": "mustyRoom",
+      "w": "smallDarkRoom",
+      u: "mustyRoom",
+      d: "smallDarkRoom"
+    }
+  },
+  widePassage: {
+    "name": "Wide Passage",
+    "exits": {
+      "s": "trophyRoom",
+      "e": "slipperySteps"
+    }
+  },
+  "slipperySteps": {
+    "name": "Slippery Steps",
+    "description": "The damp and slippery wooden staircase leads down to the mansion's cellar. The stairs creak under your weight.",
+    "exits": {
+      "u": "widePassage",
+      "d": "cellar"
+    }
+  },
+  clifftop: {
+    "name": "Clifftop",
+    "exits": {
+      "n": "path",
+      "s": "cliffPath"
+    }
+  },
+  "crumblingWall": {
+    "name": "Crumbling Wall",
+    "description": "Here further progress is blocked by a crumbling wall.",
+    "exits": {
+      "n": "sideOfHouse"
+    },
+    "scenery": {
+      "wall": "You dare not approach it for fear of being hit by a falling piece of masonry."
+    }
+  },
+  "gloomyPassage": {
+    "name": "Gloomy Passage",
+    "description": "This long, gloomy section of hallway continues north and south.",
+    "exits": {
+      "n": "backOfHallway",
+      "s": "frontHall"
+    }
+  },
+  "poolOfLight": {
+    "name": "Pool of Light",
+    "description": "What little light fills the rooms of the mansion ends here. The ways to the north and east are masked in darkness.",
+    "exits": {
+      "n": "darkAlcove",
+      "e": "vaultedHall",
+      "s": "sittingRoom"
+    },
+    "scenery": {
+      "darkness": "It can be none blacker."
+    }
+  },
+  vaultedHall: {
+    "name": "Impressive Vaulted Hallway",
+    "exits": {
+      "w": "darkAlcove",
+      "e": "hallWithLockedDoor"
+    },
+    darkness: true
+  },
+  "hallWithLockedDoor": {
+    "name": "Hall by Thick Wooden Door",
+    "exits": {
+      "w": "vaultedHall",
+      "e": "trophyRoom"
+    },
+    "darkness": true
+  },
+  trophyRoom: {
+    "name": "Trophy Room",
+    "exits": {
+      "n": "widePassage",
+      "s": "diningRoom",
+      "w": "hallWithLockedDoor"
+    },
+    darkness: true
+  },
+  "cellar": {
+    "name": "Cellar With Barred Window",
+    "description": "The air in this cellar is damp with moisture. There is a barred window on the east wall.",
+    "exits": {
+      "n": "slipperySteps",
+      "s": "deepCellar"
+    },
+    "scenery": {
+      "window": "The window has long since been smashed open, but there are bars blocking your exit.",
+      "bars": "The bars are planted in front of the window. However, the moisture appears to have softened the brickwork around the frame.",
+      "bricks": "They aren't as rigid as they once were.",
+      "brickwork": "It isn't as rigid as it once was."
+    },
+    "digWindow": function digWindow() {
+      this.exits.e = "cliffPath";
+      this.name = "Cellar with Hole in the Wall";
+      this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.";
+    }
+  },
+  cliffPathByWindow: {
+    "name": "Cliff Path by Window",
+    "exits": {
+      "n": "clifftop",
+      "s": "cliffPath"
+    }
+  },
+  "cupboard": {
+    "name": "Cupboard With Hanging Coats",
+    "description": "This tiny side room off of the main closet is where old garments are stored.",
+    "exits": {
+      "s": "closet"
+    }
+  },
+  "frontHall": {
+    "name": "Front Hall",
+    "description": "The entranceway ends here. To the north is a long hallway leading towards the back of the house. To the east are the main rooms of the mansion",
+    "exits": {
+      "n": "gloomyPassage",
+      "e": "sittingRoom",
+      "s": "frontLobby"
+    }
+  },
+  "sittingRoom": {
+    "name": "Sitting Room",
+    "description": "A tattered sofa and a couple of rickety chairs are arranged in the center of this sitting room.",
+    "exits": {
+      "n": "poolOfLight",
+      "w": "frontHall",
+      "s": "library"
+    },
+    "scenery": {
+      "chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
+      "sofa": "The stuffing is bursting through the seams.",
+      "stuffing": "You think it's horse hair."
+    }
+  },
+  "secretRoom": {
+    "name": "Secret Room",
+    "description": "Except for fragments of the false wall that are scattered about the floor, this secret room is rather sparse. They certainly went through great lengths to keep whatever is here hidden.",
+    "exits": {
+      "s": "study"
+    },
+    "scenery": {
+      "fragments": "Bits of plaster and wood."
+    }
+  },
+  "steepMarbleStairs": {
+    "name": "Steep Marble Stairs",
+    "description": "These marble stairs lead up towards the more private areas of the house.",
+    "exits": {
+      "u": "cobwebbyRoom",
+      "d": "hallWithLockedDoor"
+    },
+    "scenery": {
+      "stairs": "The marble surface is quite slippery. Be careful!"
+    }
+  },
+  "diningRoom": {
+    "name": "Dining Room",
+    "description": "A large dining table fills the room surrounded by its matching accoutrement of chairs. In the center of the table are the skeletal remains of some poor creature.",
+    "exits": {
+      "n": "trophyRoom"
+    },
+    "scenery": {
+      "table": "Inscribed below the remains is an encircled pentagram.",
+      "pentagram": "The symbol of evil. Horrible rites must have taken place here.",
+      "chairs": "They seat six. An appropriate number."
+    }
+  },
+  "deepCellar": {
+    "name": "Deep Cellar with Coffin",
+    "description": "This is the deepest, darkest corner of the cellar. A decrepit coffin rests in the center of the room upon a stone pedestal.",
+    "exits": {
+      "n": "cellar"
+    },
+    "scenery": {
+      "pedestal": "It's made of stone. There once was writing on it but text has been chiseled off."
+    }
+  },
+  "cliffPath": {
+    "name": "Cliff Path",
+    "exits": {
+      "n": "cliffPathByWindow",
+      "s": "cliffPathByMarsh"
+    },
+    "digWindow": function digWindow() {
+      this.exits.w = "cellar";
+    }
+  },
+  "closet": {
+    "name": "Closet",
+    "description": "The front closet is large and mostly empty. You notice a small opening to the north that leads to the cupboard.",
+    "exits": {
+      "n": "cupboard",
+      "e": "frontLobby"
+    },
+    "scenery": {
+      "opening": "I think you can squeeze through."
+    }
+  },
+  "frontLobby": {
+    "name": "Front Lobby",
+    "description": "The entrance to the old mansion is cold and your footsteps echo off the marbled floor. The door through which you entered is sealed shut.",
+    "exits": {
+      "n": "frontHall",
+      "w": "closet"
+    },
+    "onEnter": function onEnter() {
+      if (flags.frontDoorOpen) {
+        message = "With a tremendous \"BANG!\" the door slams shut behind you.";
+        _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].door.play();
+        flags.frontDoorOpen = false;
+        delete rooms["frontPorch"].exits.n;
+      }
+    },
+    "scenery": {
+      "door": "No matter how much you try, it won't open. You'll need to find another way out.",
+      "floor": "The floor is in surprisingly good shape considering its age."
+    }
+  },
+  "library": {
+    "name": "Library of Evil Books",
+    "description": "Shelves of musty books fill this room. A brief glance shows that topics range from witchcraft to demonic possession.",
+    "exits": {
+      "n": "sittingRoom",
+      "e": "study"
+    }
+  },
+  "study": {
+    "name": "The Study",
+    "exits": {
+      "w": "library"
+    },
+    "description": "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
+    "scenery": {
+      "wall": "It seems brittle. You may be able to chop your way through.",
+      "hole": "There's something beyond..."
+    }
+  },
+  "cobwebbyRoom": {
+    "name": "Weird Cobwebby Room",
+    "description": "The angles of this room seem off kilter. The design may not be to your liking but the spiders seem to enjoy it. As such, the room is filled with cobwebs.",
+    "exits": {
+      "n": "steepMarbleStairs",
+      "e": "coldChamber",
+      "s": "upperGallery"
+    },
+    "scenery": {
+      "cobwebs": "They stretch from ceiling to floor and brush against your face as you move through the room.",
+      "webs": "They stretch from ceiling to floor and brush against your face as you move through the room.",
+      "angles": "The architect must have had a sense of humor.",
+      "angle": "Trigonometry was never your best subject.",
+      "spiders": "If you leave them alone they won't bother you."
+    }
+  },
+  "coldChamber": {
+    "name": "Very Cold Chamber",
+    "description": "The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.",
+    "exits": {
+      "w": "cobwebbyRoom",
+      "e": "spookyRoom"
+    },
+    "scenery": {
+      "frost": "Ice? There are unnatural forces at work.",
+      "walls": "The walls are stone and are coated in a thin sheen of frost."
+    },
+    "dispelBarrier": function dispelBarrier() {
+      this.description = "The air in this room is bitingly cold. An icy frost covers the walls. The exit to the east is now clear.";
+    },
+    "createBarrier": function createBarrier() {
+      this.description = "The air in this room is bitingly cold. An icy frost covers the walls. A translucent, glowing barrier blocks your exit to the east.";
+    }
+  },
+  "spookyRoom": {
+    "name": "Spooky Room",
+    "description": "The walls of this room are covered in cryptic drawings. As you look down you see that floor is littered with burnt remnants of clothing. A chill wafts through the doorway to the west. ",
+    "exits": {
+      "w": "coldChamber"
+    },
+    "scenery": {
+      "floor": "It's covered in pieces of what appears to be burnt clothing",
+      "wall": "Drawings fill the bottom half of the walls.",
+      "walls": "Drawings fill the bottom half of the walls.",
+      "drawings": "They are child-like representations of tiny figures, each surrounded by menacing dark shapes.",
+      "shapes": "They are monstrous shadows with tentacles and teeth.",
+      "clothing": "Barely recognizable, but it's clear that these garments were made for a child."
+    }
+  },
+  "cliffPathByMarsh": {
+    "name": "Cliff Path by Marsh",
+    "description": "The path ends here at the edge of a boggy marsh. Travelling south could be very dangerous.",
+    "exits": {
+      "n": "cliffPath",
+      "s": "soggyPath"
+    },
+    "shore": true
+  },
+  "verandah": {
+    "name": "Rubble-Strewn Verandah",
+    "description": "Here the mansion's verandah ends. Like the rest of the house it is strewn with rubble.",
+    "exits": {
+      "s": "twistedRailings",
+      "e": "frontPorch"
+    },
+    "scenery": {
+      "rubble": "The rubble is comprised of various bits and pieces that have fallen from the structure of the house."
+    }
+  },
+  "frontPorch": {
+    "name": "Front Porch",
+    "description": "The front porch of the mansion is weather worn and rotting. To the north, the ornately carved front doorway of the mansion beckons.",
+    "exits": {
+      "n": "frontLobby",
+      "w": "verandah",
+      "s": "pathThroughIronGate"
+    },
+    "scenery": {
+      "doorway": "The carvings depict various sinister creatures.",
+      "carvings": "The carvings depict various sinister creatures."
+    }
+  },
+  "frontTower": {
+    "name": "Front Tower",
+    "description": "This tower overlooks the front of the property. The windows have been barred and nailed shut.",
+    "exits": {
+      "e": "slopingCorridor"
+    },
+    "scenery": {
+      "windows": "It was rumored they heiress plunged to her death from here.",
+      "bars": "They look like they were meant to keep things in.",
+      "nails": "Bars AND nails. They needed to be sure no one was getting out."
+    }
+  },
+  "slopingCorridor": {
+    "name": "Sloping Corridor",
+    "description": "This corridor slopes upwards on its way towards the front tower.",
+    "exits": {
+      "w": "frontTower",
+      "e": "upperGallery"
+    }
+  },
+  "upperGallery": {
+    "name": "Upper Gallery",
+    "description": "The upper gallery is filled with artifacts from many travels abroad. You shudder with fear as flurry of ghosts encircles you, blocking your movement to the west.",
+    "exits": {
+      "n": "cobwebbyRoom",
+      "w": "slopingCorridor"
+    },
+    "scenery": {
+      "artifacts": "Odd items from around the globe but nothing of any particular value."
+    },
+    "ghostsDispelled": function ghostsDispelled() {
+      this.description = "The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling.";
+    }
+  },
+  "marshByWall": {
+    "name": "Marsh by Wall",
+    "description": "The ground here beneath the south wall is wet and muddy. To the east it becomes marshland-sticky and impassable by foot.",
+    "exits": {
+      "s": "fallenBrickwork",
+      "e": "marsh"
+    },
+    "shore": true
+  },
+  "marsh": {
+    "name": "Marsh",
+    "description": "This boggy marsh looks deep and forboding. Clouds of tiny bugs flitter around your head and bite at your flesh. Best not linger here too long.",
+    "exits": {
+      "e": "soggyPath",
+      "w": "marshByWall" //"s": "stoneArch"
+
+    },
+    "scenery": {
+      "bugs": "They are too small too really hurt you but provide a constant annoyance.",
+      "clouds": "Not quite a swarm, but enough to make you want to move on.",
+      "marsh": "The water is dark and you can't see the bottom."
+    },
+    "water": true
+  },
+  "soggyPath": {
+    "name": "Soggy Path",
+    "description": "The path here has been flooded by the ever-encroaching marshlands to the west. Steep cliff blocks your passage to the south.",
+    "exits": {
+      "n": "cliffPathByMarsh",
+      "w": "marsh"
+    },
+    "scenery": {
+      "cliff": "There is no way to climb it."
+    },
+    "water": true
+  },
+  "twistedRailings": {
+    "name": "The Twisted Railing",
+    "description": "The fence ends here in a twisted mass of barbs and rusty edges.",
+    "exits": {
+      "n": "verandah",
+      "e": "pathThroughIronGate"
+    },
+    "scenery": {
+      "fence": "It's just an ordinary haunted fence. There is no way around it.",
+      "barbs": "The barbs look sharp and dangerous, best not mess with them.",
+      "mass": "The barbs look sharp and dangerous, best not mess with them."
+    }
+  },
+  "pathThroughIronGate": {
+    "name": "Path Through Iron Gate",
+    "description": "The wind howls as you make your way to the entrance of the property. The old mansion looms ahead of you silhouetted against a full moon.",
+    "exits": {
+      "n": "frontPorch",
+      "w": "twistedRailings",
+      "e": "pathByRailings"
+    },
+    "scenery": {
+      "gate": "The gate is old and rusted.",
+      "mansion": "You wonder what treasures await you inside.",
+      "moon": "The moon provides just enough light to make your way visible."
+    },
+    "onExit": function onExit() {
+      message = "And so you begin your adventure...";
+      delete this.onExit;
+    },
+    "endingTrigger": function endingTrigger() {
+      this.exits.s = "exit";
+      this.description = "The old mansion looms ahead of you silhouetted against a full moon. Now's you chance to make your escape through the gate to the south!";
+      this.scenery.gate = "Hurry, head south to win the game!";
+    }
+  },
+  "pathByRailings": {
+    "name": "Path by Railings",
+    "description": "Here the path runs west towards the entrance and continues east towards the base of the front tower.",
+    "exits": {
+      "w": "pathThroughIronGate",
+      "e": "beneathTower"
+    },
+    "scenery": {
+      "railings": "The metal railings block your exit to the south.",
+      "path": "The path is muddy and overgrown with vegetation."
+    }
+  },
+  "beneathTower": {
+    "name": "Beneath the Front Tower",
+    "description": "Above you looms the dark front tower of the mansion. Who knows what horrors lurk up there.",
+    "exits": {
+      "w": "pathByRailings",
+      "e": "debris"
+    },
+    "scenery": {
+      "tower": "The menacing tower rises above you into the moonlit sky."
+    }
+  },
+  "debris": {
+    "name": "Pile of Debris",
+    "description": "Here the facade of the mansion has crumbled and all that remains is a pile of broken debris.",
+    "exits": {
+      "w": "beneathTower",
+      "e": "fallenBrickwork"
+    },
+    "scenery": {
+      "debris": "It's just a messy pile of building materials.",
+      "pile": "The pile of building materials is impassable.",
+      "facade": "It must have been stunning when it was new."
+    }
+  },
+  "fallenBrickwork": {
+    "name": "Large Fallen Brickwork",
+    "description": "All around lies the remnants of decayed brickwork. The ground towards the north looks marshy and dangerous.",
+    "exits": {
+      "n": "marshByWall",
+      "w": "debris",
+      "e": "stoneArch"
+    },
+    "scenery": {
+      "brickwork": "The nineteenth century masonry could not withstand this stormy climate."
+    }
+  },
+  "stoneArch": {
+    "name": "Rotting Stone Arch",
+    "description": "Here you pass under a decaying stone arch. To the east the path leads upwards towards a clifftop. To the north you see a murky bog.",
+    "exits": {
+      //"n": "marsh",
+      "w": "fallenBrickwork",
+      "e": "crumblingClifftop"
+    },
+    "scenery": {
+      "arch": "In happier times the owners must have strolled here regularly.",
+      "bog": "It looks impassable on foot."
+    }
+  },
+  "crumblingClifftop": {
+    "name": "Crumbling Clifftop",
+    "description": "You are standing at the top of a cliff. Below you to the north you see the marshy, impassable wetlands.",
+    "exits": {
+      "w": "stoneArch"
+    },
+    "scenery": {
+      "cliff": "Your stomach begins to flutter as you peer over the edge.",
+      "wetlands": "You don't want to get caught in there without a boat."
+    }
+  },
+  "inTheTree": {
+    "name": "In the Blasted Tree",
+    "description": "From up in the tree you see a thick forest and a cliff to the south.",
+    "exits": {
+      "d": "blastedTree"
+    },
+    "onEnter": function onEnter() {
+      message = "You use the rope to climb the tree.";
+    }
+  },
+  "exit": {
+    "name": "The Winner's Circle"
+  }
+}; // Define your game verbs here.
+
+var verbs = {
+  "about": {
+    "action": function action(noun, obj) {
+      verbs["help"].action("about");
+    },
+    "singleWord": true
+  },
+  "board": {
+    "synonym": "enter"
+  },
+  "carrying": {
+    "action": function action(noun, obj) {
+      if (noun) {
+        return;
+      }
+
+      var inventory = "";
+
+      for (var key in objects) {
+        if (objects[key].location === "player") {
+          if (inventory.length > 0) {
+            inventory += ", ";
+          } else {
+            inventory = "<br>";
+          }
+
+          inventory += objects[key].name;
+        }
+      }
+
+      if (!inventory) inventory = "Nothing.";
+      message = "You are carrying: ".concat(inventory);
+    },
+    "singleWord": true
+  },
+  "chop": {
+    "action": function action(noun, obj) {
+      message = "You don't need to chop that.";
+
+      if (isCarrying("axe")) {
+        verbSubroutine("swing", "axe", verbs["swing"], objects["axe"]);
+      } else {
+        message = "Not with your bare hands. Your karate skills aren't what they used to be.";
+      }
+    }
+  },
+  "climb": {
+    "action": function action(noun, obj) {
+      message = "You can't climb that.";
+
+      if ((noun === "tree" || obj.id === "rope") && flags.ropeTiedToTree && isRoom("blastedTree")) {
+        message = "You use the rope to climb the tree.";
+        objects["rope"].omnipresence = true;
+        currentRoom = rooms["inTheTree"];
+        return;
+      }
+
+      if (noun === "tree" && flags.ropeTiedToTree && isRoom("inTheTree")) {
+        verbs["go"].action("down");
+        return;
+      }
+
+      if (obj.id === "rope" && isRoom("inTheTree")) {
+        message = "You use the rope to climb down.";
+        obj.omnipresence = false;
+        currentRoom = rooms["blastedTree"];
+      }
+
+      if (obj.id === "rope" && isCarrying("rope")) {
+        message = "It isn't attached to anything!";
+        return;
+      }
+    }
+  },
+  "close": {
+    "action": function action(noun, obj) {
+      message = "You can't close that."; // Drawer exception to put candle away if drawer closed
+
+      if (obj.id === "drawer" && objectInRange(obj) && obj.isOpen && objects["candle"].location === "study") {
+        message = obj.closeMessage;
+        objects["candle"].location = "drawer";
+        obj.closeAction();
+        return;
+      } // Coffin exception to play sound
+
+
+      if (obj.id === "coffin" && obj.isOpen && objectInRange(obj)) {
+        message = "You slam the coffin shut.";
+        obj.closeAction();
+        _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].door.play();
+        return;
+      }
+
+      if (obj.isOpen === false && objectInRange(obj)) {
+        message = "It's already closed.";
+        return;
+      }
+
+      if (obj.isOpen && objectInRange(obj)) {
+        message = obj.closeMessage ? obj.closeMessage : "You close it.";
+
+        if (obj.closeAction) {
+          obj.closeAction();
+        }
+
+        if (obj.id === "door") {
+          _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].door.play();
+        }
+
+        return;
+      }
+    }
+  },
+  "d": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("down");
+    },
+    "singleWord": true
+  },
+  "dig": {
+    "singleWord": true,
+    "action": function action(noun, obj) {
+      message = "You can't dig that.";
+
+      if (!isCarrying("shovel")) {
+        message = "You have nothing to dig with.";
+        return;
+      }
+
+      if (!noun) {
+        message = "Where do you want to dig?";
+        return;
+      }
+
+      if (isRoom("cellar") && nounCheck(noun, ["bars", "window", "barred window", "brickwork", "bricks"])) {
+        if (!flags.barsDug) {
+          message = "After several minutes of work, you manage to dig the bars out.";
+          flags.barsDug = true;
+          rooms["cellar"].digWindow();
+          rooms["cliffPath"].digWindow();
+        } else {
+          message = "You've already cleared the bars away from the window.";
+        }
+
+        return;
+      }
+    }
+  },
+  "down": {
+    "synonym": "d"
+  },
+  "drop": {
+    "action": function action(noun, obj) {
+      // Don't allow treasure to be dropped
+      if (obj.score > 0 && isCarrying(obj)) {
+        message = "The ".concat(noun, " is too valuable to drop.");
+        return;
+      } // Default behavior
+
+
+      if (obj.location === "player") {
+        obj.location = currentRoom.rid;
+        message = "Dropped.";
+        return;
+      } // Weird boat syntax
+
+
+      if (noun === "boat" && flags.inBoat) {
+        message = "You jump out of the boat.";
+
+        if (currentRoom.water) {
+          message += " SPLASH!<br>";
+          _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].splash.play();
+        }
+
+        flags.inBoat = false;
+        return;
+      }
+    }
+  },
+  "e": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("east");
+    },
+    "singleWord": true
+  },
+  "east": {
+    "synonym": "e"
+  },
+  "enter": {
+    "action": function action(noun, obj) {
+      message = "You can't enter that.";
+
+      if (noun === "boat" && objectInRange("boat") && !flags.inBoat) {
+        message = "You board the boat.";
+        flags.sinking = 0;
+        flags.inBoat = true;
+        return;
+      }
+
+      if (noun === "boat" && objectInRange("boat") && flags.inBoat) {
+        message = "You are already onboard.";
+        return;
+      }
+
+      if (noun === "boat") {
+        message = "There is no boat here.";
+        return;
+      }
+    }
+  },
+  "examine": {
+    synonym: "look"
+  },
+  "exit": {
+    "action": function action(noun, obj) {
+      message = "You can't exit that.";
+
+      if (noun === "boat") {
+        verbs["drop"].action("boat", objects["boat"]);
+        return;
+      }
+    }
+  },
+  "extinguish": {
+    "synonym": "unlight"
+  },
+  "get": {
+    "action": function action(noun, obj) {
+      message = "What \"".concat(noun.toUpperCase(), "?\""); // Check if noun is scenery
+
+      if (!obj && currentRoom.scenery) {
+        for (var key in currentRoom.scenery) {
+          if (key.toLowerCase() == noun.toLowerCase()) {
+            message = "You can't take that.";
+            return;
+          }
+        }
+      }
+
+      if (obj.id === "boat" && objectInRange("boat")) {
+        if (!flags.inBoat) {
+          message = "It's too big to carry around. It will carry you if you board it.";
+        } else {
+          message = "Um, you are sitting in the boat. Besides, it's too big to carry.";
+        }
+
+        return;
+      } // Dead bats
+
+
+      if (obj.id === "bats" && !flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
+        message = "Ew! You don't want to touch the filthy bat carcasses!";
+        return;
+      }
+
+      if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
+        message = "You untie the rope from the tree.";
+        obj.location = "player";
+        obj.removeFromTree();
+        flags.ropeTiedToTree = false;
+        return;
+      }
+
+      if (obj.portable && objectInRange(obj)) {
+        if (obj.location === currentRoom.rid) {
+          message = obj.takeMessage ? obj.takeMessage : "Taken.";
+          obj.location = "player";
+
+          if (obj.score > 0) {
+            message += " You've found treasure!";
+            _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].pickup.play();
+
+            if (checkScore() === getMaxScore()) {
+              message += " You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!";
+            }
+          }
+
+          verbs["get"].combineObjects(noun, obj);
+          return;
+        }
+
+        if (obj.location === "player") {
+          message = "You already have it!";
+          return;
+        }
+      }
+
+      if (!obj.portable && objectInRange(obj)) {
+        message = obj.takeMessage ? obj.takeMessage : "You don't need to take that.";
+        return;
+      }
+    },
+    "combineObjects": function combineObjects(noun, obj) {
+      // Candle
+      if (isCarrying("candlestick") && isCarrying("candle") && (obj.id === "candlestick" || obj.id === "candle")) {
+        message += "<br>You place the candle in the candlestick.";
+        return;
+      } // Vacuum
+
+
+      if (isCarrying("batteries") && isCarrying("vacuum") && (obj.id === "batteries" || obj.id === "vacuum")) {
+        objects["vacuum"].insertBatteries();
+        objects["batteries"].location = "vacuum";
+        flags.vacuumHasPower = true;
+        message += "<br>The batteries are a perfect match for the vacuum. The vacuum is now powered.";
+        return;
+      }
+    }
+  },
+  "go": {
+    "action": function action(noun, obj) {
+      var direction;
+
+      switch (noun) {
+        case "north":
+          direction = "n";
+          break;
+
+        case "south":
+          direction = "s";
+          break;
+
+        case "west":
+          direction = "w";
+          break;
+
+        case "east":
+          direction = "e";
+          break;
+
+        case "up":
+          direction = "u";
+          break;
+
+        case "down":
+          direction = "d";
+          break;
+
+        case "boat":
+          verbs["enter"].action("boat", objects["boat"]);
+          return;
+
+        default:
+          message = "You need to specify a direction in which to&nbsp;<em>GO</em>.";
+          return;
+      } // Get the room id of the chosen exit direction
+
+
+      var chosenExit = currentRoom.exits[direction.toLowerCase()]; // THINGS THAT HINDER MOVEMENT
+      // Darkness
+
+      if (currentRoom.darkness && !flags.candleLit) {
+        message = "It's too dark to move!";
+        return;
+      } // Bats attacking
+
+
+      if (flags.batsAttacking && isRoom("mustyRoom") && direction === "e") {
+        message = "The bats are blocking that direction.";
+        return;
+      } // Ghosts in upper gallery
+
+
+      if (flags.ghostsAttacking && isRoom("upperGallery") && direction === "w") {
+        message = "The ghosts won't let you pass!";
+        return;
+      } // Magical barrier
+
+
+      if (isRoom("coldChamber") && flags.magicalBarrier && direction === "e") {
+        message = "A magical barrier is blocking your way.";
+        _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].shock.play();
+        return;
+      } // Water in room
+
+
+      if (currentRoom.water && !flags.inBoat) {
+        message = "The marshy ground prevents any movement.";
+        return;
+      } // MOVEMENT ALLOWED
+
+
+      if (direction && chosenExit) {
+        var tempRoomHolder = previousRoom;
+        message = "OK";
+        previousRoom = currentRoom;
+        currentRoom = getRoom(chosenExit); // THINGS THAT BLOCK NEW ROOM, MOVEMENT NOT ALLOWED
+
+        if (currentRoom.darkness && !flags.candleLit) {
+          currentRoom = previousRoom;
+          previousRoom = tempRoomHolder;
+          message = "It's too dark in that direction. You'll need a light.";
+          return;
+        }
+
+        if ((currentRoom.water || currentRoom.shore) && flags.inBoat) {
+          objects["boat"].location = currentRoom.rid;
+          message = "Aye aye captain";
+        }
+
+        if (currentRoom.water && !flags.inBoat) {
+          currentRoom = previousRoom;
+          previousRoom = tempRoomHolder; //message = `You are sinking in a bog!`;
+
+          message = "You need a way to navigate the bog.";
+          return;
+        }
+
+        if (!currentRoom.water && !currentRoom.shore && flags.inBoat) {
+          currentRoom = previousRoom;
+          previousRoom = tempRoomHolder;
+          message = "You need to exit the boat first.";
+          return;
+        }
+
+        if (isRoom("exit")) {
+          flags.winner = true;
+          return;
+        } // Trigger on exit events for last room.
+
+
+        if (previousRoom.onExit) {
+          previousRoom.onExit();
+        } // Initial room visit events
+
+
+        if (currentRoom.onEnter) {
+          currentRoom.onEnter();
+        }
+      } else if (direction) {
+        message = "You can't go that way!";
+      } else {
+        message = "Go where?";
+      }
+    }
+  },
+  "help": {
+    "action": function action(noun, obj) {
+      message = "\"God helps those who help themselves.\"";
+      var myHelp;
+
+      if (!noun) {
+        myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to win the game.<br><br>For more help type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.";
+        displayOverlay(myHelp);
+        message = '';
+        return;
+      }
+
+      if (noun === "movement") {
+        myHelp = "You can move around the mansion by typing <em>GO NORTH</em>, <em>GO WEST</em>, <em>GO UP</em>, etc. Save keystrokes by simply entering a single initial of the direction you want to move: <em>N</em>,<em>S</em>,<em>E</em>,<em>W</em>,<em>U</em> and <em>D</em>.<br><br>Available exits are listed below the room description.<br><br>Occasionally you will find that your path is blocked by various obstacles. Your job is to find the right object or action to get past these impediments. Explore everywhere!";
+        displayOverlay(myHelp);
+        message = '';
+        return;
+      }
+
+      if (noun === "commands") {
+        myHelp = "There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.";
+        displayOverlay(myHelp);
+        message = '';
+        return;
+      }
+
+      if (noun === "about") {
+        myHelp = "<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This \"remastered\" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.<br><br>&copy;2020 Robert Wm. Gomez";
+        displayOverlay(myHelp);
+        message = '';
+        return;
+      }
+
+      if (noun === "verbs") {
+        var verblist = "";
+
+        for (var verb in verbs) {
+          if (verb.length > 1) {
+            verblist += verb.toUpperCase() + ", ";
+          }
+        }
+
+        myHelp = "Tired of playing \"Guess the verb?\"<br><br><b>Verbs I know:</b>  ".concat(verblist.substring(0, verblist.length - 2));
+        displayOverlay(myHelp);
+        message = '';
+        return;
+      }
+    },
+    "singleWord": true
+  },
+  "i": {
+    "synonym": "carrying",
+    "singleWord": true
+  },
+  "inventory": {
+    "synonym": "carrying",
+    "singleWord": true
+  },
+  "kill": {
+    "action": function action(noun, obj) {
+      if (obj.id === "bats" && objectInRange("bats") && flags.batsAttacking) {
+        message = "And how do you propose to do that?";
+        return;
+      }
+
+      if (obj.id === "bats" && objectInRange("bats") && !flags.batsAttacking) {
+        message = "They are already dead.";
+        return;
+      }
+
+      if (obj.id === "ghosts" && objectInRange("ghosts") && flags.ghostsAttacking) {
+        message = "You can't kill the undead!";
+        return;
+      }
+
+      if (nounCheck(noun, ["self", "me", "myself", "player"])) {
+        message = "Cheer up buddy boy! No need to resort to that... yet.";
+        return;
+      }
+    }
+  },
+  "leave": {
+    "synonym": "drop"
+  },
+  "light": {
+    "action": function action(noun, obj) {
+      message = "You can't light that.";
+
+      if (!isCarrying("matches")) {
+        message = "You have nothing to light it with.";
+        return;
+      }
+
+      if (noun === "candle" && isCarrying("candle") && isCarrying("candlestick")) {
+        if (flags.candleLit) {
+          message = "It's already lit.";
+        } else {
+          message = "It casts a flickering light.";
+          flags.candleLit = true;
+        }
+
+        return;
+      }
+
+      if (noun === "candle" && isCarrying("candle") && !isCarrying("candlestick")) {
+        message = "It will burn your hands!";
+        return;
+      }
+
+      if (noun === "aerosol" && isCarrying("aerosol")) {
+        message = "An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.";
+        return;
+      }
+
+      if (nounCheck(noun, ["cooker", "stove"]) && isRoom("kitchen")) {
+        message = "The cooker rusted out and is in no state to be lit.";
+        return;
+      }
+
+      if (noun === "rubbish" && isRoom("yard")) {
+        message = "It's too damp to light.";
+        return;
+      }
+    }
+  },
+  "look": {
+    "action": function action(noun, obj) {
+      message = "You see nothing special."; // Key in coat pocket
+
+      if (obj.id === "coat" && objectInRange(obj) && objects["key"].location === "coat") {
+        message = "As you search through the old coat you find a key in the pocket.";
+        objects["key"].location = currentRoom.rid;
+        _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].key.play();
+      } // Default action if obj has a description
+
+
+      if (obj.description && objectInRange(obj)) {
+        message = obj.description;
+        return;
+      } else if (obj.description) {
+        message = "You do see that here.";
+        return;
+      } // Default action if noun is scenery in room
+
+
+      if (currentRoom.scenery) {
+        for (var key in currentRoom.scenery) {
+          if (key.toLowerCase() == noun.toLowerCase()) {
+            message = currentRoom.scenery[key];
+            return;
+          }
+        }
+      }
+    }
+  },
+  "n": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("north");
+    },
+    "singleWord": true
+  },
+  "north": {
+    "synonym": "n"
+  },
+  "open": {
+    "action": function action(noun, obj) {
+      message = "You can't open that.";
+
+      if (obj.id === "drawer" && objectInRange(obj) && !obj.isOpen && objects["candle"].location === "drawer") {
+        message = "You slide the drawer open, revealing a candle.";
+        objects["candle"].location = "study";
+        obj.openAction();
+        return;
+      }
+
+      if (obj.id === "coffin" && objectInRange(obj)) {
+        if (!obj.isOpen && objects["ring"].location === "coffin") {
+          message = "You slowly raise the lid revealing... a ring!";
+          objects["ring"].location = obj.location;
+          obj.isOpen = true;
+          obj.openAction();
+          _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].key.play();
+          return;
+        }
+
+        if (!obj.isOpen) {
+          message = "That's creepy!";
+          obj.openAction();
+          return;
+        }
+      }
+
+      if (obj.locked && obj.isOpen === false && objectInRange(obj)) {
+        message = "It's locked!";
+        return;
+      }
+
+      if (obj.isOpen && objectInRange(obj)) {
+        message = "It's already open.";
+        return;
+      }
+
+      if (obj.isOpen === false && objectInRange(obj)) {
+        message = obj.openMessage ? obj.openMessage : "You've opened it.";
+
+        if (obj.openAction) {
+          obj.openAction();
+        }
+
+        return;
+      }
+    }
+  },
+  "read": {
+    "action": function action(noun, obj) {
+      if (obj.readable && objectInRange(obj)) {
+        message = obj.readableText;
+        return;
+      }
+
+      message = "Nothing to read there.";
+    }
+  },
+  "remove": {
+    "action": function action(noun, obj) {
+      if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+        message = "You remove the coat";
+        flags.wearingCoat = false;
+        return;
+      }
+
+      if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+        message = "You are not wearing it.";
+        return;
+      }
+    }
+  },
+  "s": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("south");
+    },
+    "singleWord": true
+  },
+  "say": {
+    "action": function action(noun, obj) {
+      message = "You say, &quot;" + noun.toUpperCase() + "!&quot;"; // Saying the magic word to dispel the field
+
+      if (obj.id === "xzanfar" && isCarrying("magic spells")) {
+        if (isRoom("coldChamber") && flags.magicalBarrier) {
+          message += "<br><br>The air sizzles with energy and the magic field dissipates into nothingness.";
+          flags.magicalBarrier = false;
+          rooms["coldChamber"].dispelBarrier();
+          objects["barrier"].location = null;
+        } else if (isRoom("coldChamber")) {
+          message += "<br><br>The magical field re-materializes!";
+          flags.magicalBarrier = true;
+          rooms["coldChamber"].createBarrier();
+          objects["barrier"].location = "coldChamber";
+        } else {
+          message += "<br><br>*Magic Occurs*";
+        }
+
+        return;
+      } // Saying naughty things
+
+
+      if (nounCheck(noun, ["fuck", "shit", "cunt", "tits"])) {
+        message += "<br><br>Relax. It's just a game.";
+        return;
+      }
+    }
+  },
+  "score": {
+    "action": function action(noun, obj) {
+      message = "Your score is ".concat(checkScore(), "/").concat(getMaxScore() + 1, ".");
+
+      if (checkScore() === 0) {
+        message += " You need to find some treasure!";
+      }
+
+      if (checkScore() === getMaxScore()) {
+        message += " That's all the treasure. Hurry, find your way back to the front gate to claim that final point!";
+      }
+    },
+    "singleWord": true
+  },
+  "south": {
+    "synonym": "s"
+  },
+  "spray": {
+    "action": function action(noun, obj) {
+      message = "You can't spray that!";
+
+      if ((obj.id === "aerosol" || obj.id === "bats") && isCarrying("aerosol") && flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
+        flags.batsAttacking = false;
+        message = "Pfft! Got 'em! The bats spiral to the ground in a smattering of thuds. They now lie motionless on the ground.";
+        rooms["mustyRoom"].batsKilled();
+        objects["bats"].batsKilled();
+        flags.batsAttacking = false;
+        return;
+      }
+
+      if (obj.id === "aerosol" && isCarrying("aerosol")) {
+        message = "Hisssss...";
+        return;
+      }
+    }
+  },
+  "swing": {
+    "action": function action(noun, obj) {
+      message = "There's no reason to be swinging that.";
+
+      if (obj.id === "rope" && flags.ropeTiedToTree && isRoom("blastedTree")) {
+        message = "This is no time to be playing games.";
+        return;
+      }
+
+      if (obj.id === "rope" && isCarrying(["rope"])) {
+        message = "You swung it. Yee haw, cowboy!";
+        return;
+      }
+
+      if (obj.id === "axe" && isCarrying("axe") && isRoom("study") && !flags.studyWallBroken) {
+        message = "You broke the thin wall.";
+        flags.studyWallBroken = true;
+        currentRoom.exits.n = "secretRoom";
+        currentRoom.name = "Study with Secret Room";
+        currentRoom.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+        currentRoom.scenery.hole = "The hole is much bigger now.";
+        currentRoom.scenery.wall = "The wall is no more. A secret room lies to the north.";
+        currentRoom.scenery.passage = "It leads north to a secret room.";
+        return;
+      }
+
+      if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
+        message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
+        return;
+      }
+
+      if (obj.id === "axe" && isCarrying("axe")) {
+        message = "Whoosh!!!";
+        return;
+      }
+    }
+  },
+  "take": {
+    synonym: "get"
+  },
+  "tie": {
+    "action": function action(noun, obj) {
+      message = "You can't tie that.";
+
+      if (obj.id === "rope" && isCarrying("rope")) {
+        if (isRoom("blastedTree")) {
+          message = "You reattach the rope to the branch.";
+          obj.tieToTree();
+          obj.location = "blastedTree";
+          flags.ropeTiedToTree = true;
+          return;
+        }
+
+        message = "There's no need to tie the rope to anything here.";
+        return;
+      }
+    }
+  },
+  "u": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("up");
+    },
+    "singleWord": true
+  },
+  "unlight": {
+    "action": function action(noun, obj) {
+      //message = `You can't do that.`;
+      if (obj.id === "candle" && flags.candleLit) {
+        message = "You blow out the candle.";
+        flags.candleLit = false;
+        return;
+      }
+    }
+  },
+  "unlock": {
+    "action": function action(noun, obj) {
+      message = "You can't unlock that.";
+
+      if (obj.locked && obj.key && objectInRange(obj) && isCarrying(obj.key)) {
+        message = obj.unlockMessage ? obj.unlockMessage : "You've unlocked the ".concat(noun, ".");
+        obj.locked = false; // Heavy door exception
+
+        if (obj.id === "door" && currentRoom.rid === obj.location) {
+          rooms["hallWithLockedDoor"].exits.s = "steepMarbleStairs";
+        }
+
+        if (obj.unlockAction) {
+          obj.unlockAction();
+        }
+
+        return;
+      }
+
+      if (obj.locked && obj.key && objectInRange(obj)) {
+        message = "You don't have a means to unlock that.";
+        return;
+      }
+
+      if (obj.locked && objectInRange(obj)) {
+        "You've unlocked the ".concat(noun, ".");
+        return;
+      }
+    }
+  },
+  "up": {
+    "synonym": "u"
+  },
+  "use": {
+    "action": function action(noun, obj) {
+      // Aerosol
+      if (obj.id === "aerosol") {
+        verbs["spray"].action(noun, obj);
+        return;
+      } // Using the tiny vacuum
+
+
+      if (obj.id === "vacuum" && flags.vacuumHasPower && flags.ghostsAttacking && isRoom("upperGallery")) {
+        message = "With a loud whoosh, the tiny vacuum revs up. You've sucked up all the ghosts!";
+        flags.ghostsAttacking = false;
+        flags.vacuumHasPower = false;
+        objects["ghosts"].location = "vacuum";
+        rooms["upperGallery"].ghostsDispelled();
+        objects["vacuum"].captureGhosts();
+        return;
+      }
+
+      if (obj.id === "vacuum" && objects["ghosts"].location === "vacuum") {
+        message = "It's filled with ghosts. You don't want to risk releasing them again.";
+        return;
+      }
+
+      if (obj.id === "vacuum" && isCarrying("vacuum") && !isCarrying("batteries")) {
+        message = "This vacuum requires batteries.";
+        return;
+      }
+
+      if (obj.id === "xzanfar") {
+        verbs["say"].action(noun, obj);
+        return;
+      }
+    }
+  },
+  "w": {
+    "action": function action(noun, obj) {
+      if (noun) return;
+      verbs["go"].action("west");
+    },
+    "singleWord": true
+  },
+  "wear": {
+    "action": function action(noun, obj) {
+      message = "You can't wear that.";
+
+      if (noun === "coat" && isCarrying("coat") && !flags.wearingCoat) {
+        message = "You put on the coat. Stylish.";
+
+        if (objects["key"].location === "coat") {
+          message += " Wait, there is something in the pocket!";
+        }
+
+        flags.wearingCoat = true;
+        return;
+      }
+
+      if (noun === "coat" && isCarrying("coat") && flags.wearingCoat) {
+        message = "You are already wearing it.";
+        return;
+      }
+
+      if (noun === "coat" && !isCarrying("coat")) {
+        message = "You don't have a coat.";
+        return;
+      }
+    }
+  },
+  "west": {
+    "synonym": "w"
+  },
+  "x": {
+    "synonym": "look"
+  }
+};
+ // Initialize DOM items as JS variables
+
+var $container = document.getElementById('hh-container');
+var $display = document.getElementById('hh-output');
+var $inputZone = document.getElementById('hh-input');
+var $inputForm = document.getElementById('hh-input-form');
+var $userInput = document.getElementById('hh-userInput');
+var $restartBtn = document.getElementById('hh-reload');
+var $displayOverlay = document.getElementById('hh-output-overlay');
+var $continueBtn = document.getElementById('hh-continue'); // Global Variables
+
+var currentRoom = {}; // RM 57
+
+var message = ''; // M$
+
+var previousObj = null;
+var previousRoom = null;
+var totalScore = 0;
+var turns = 0; // Game state variables
+
+var flags = {
+  barsDug: false,
+  batsAttacking: true,
+  // flags[26]
+  candleLit: false,
+  // flags[0]
+  encroachingDarkness: 0,
+  frontDoorOpen: true,
+  // flags[23]
+  ghostsAttacking: true,
+  // flags[27]
+  hallDoorLocked: true,
+  inBoat: false,
+  lightLevel: 60,
+  magicalBarrier: true,
+  //flags[34]
+  ropeTiedToTree: true,
+  sinking: 0,
+  studyWallBroken: false,
+  vacuumHasPower: false,
+  vacuumSwitchedOn: false,
+  // flags[24]
+  wearingCoat: false,
+  winner: false
+};
+/**
+ * Primary loop for rendering the screen.
+ */
+
+function display() {
+  var extraInfo = getExtraDescription(currentRoom);
+  var roomItems = getObjectsInRoom(currentRoom);
+  cls(); // Clear the screen
+
+  prnt("HAUNTED HOUSE");
+  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"room-name\">".concat(currentRoom.name, "</span>"));
+
+  if (currentRoom.darkness && !flags.candleLit) {
+    prnt("<br>It's pitch black and you can't see anything!");
+  } else if (extraInfo && currentRoom.description) {
+    prnt("<br>".concat(currentRoom.description, " ").concat(extraInfo));
+  } else if (extraInfo) {
+    prnt("<br>".concat(extraInfo));
+  } else if (currentRoom.description) {
+    prnt("<br>".concat(currentRoom.description));
+  }
+
+  if (currentRoom.darkness && flags.candleLit || !currentRoom.darkness) {
+    prnt("<br><span class=\"exits\">Exits:</span>".concat(splitExits(currentRoom.exits)));
+    if (roomItems) prnt(roomItems);
+  }
+
+  prnt("<br>---------------------------------------------");
+
+  if (message.length > 0) {
+    prnt("<br><span class=\"message\">".concat(message, "</span>"));
+  }
+
+  if (flags.winner) {
+    victory();
+  }
+
+  message = "What?";
+  debugInfo();
+}
+/**
+ * Gets additional description text to be added based on flags.
+ * @param {object} roomObject The room to be analyzed
+ * @returns {string|false} Additional flavor text or false if so extra text
+ */
+
+
+function getExtraDescription(roomObject) {
+  var output = "";
+
+  if (objects["boat"].location === roomObject.rid) {
+    if (flags.inBoat) {
+      output += "You are in the boat.";
+    } else {
+      output += "There is a boat here.";
+    }
+  }
+
+  if (output === "") output = false;
+  return output;
+}
+/**
+ * List any objects that are in view.
+ * @param {object} roomObject The room to be analyzed
+ * @returns {string|false} A list of object names, or false if nothing in room
+ */
+
+
+function getObjectsInRoom(roomObject) {
+  var output = "";
+
+  for (var obj in objects) {
+    // Look for objects in room
+    if (objects[obj].location == roomObject.rid && objects[obj].portable) {
+      output += "<br/><span class=\"message objects-in-room\">You can see ".concat(objects[obj].name, " here.</span>");
+    }
+  }
+
+  if (output === "") output = false;
+  return output;
+}
+/**
+ * Outputs HTML to the display with a line feed at the end.
+ * @param {string} text The line to be printed
+ */
+
+
+function prnt(text) {
+  $display.innerHTML += text + "<br>";
+}
+/**
+ * A quick helper to clear the screen!
+ */
+
+
+function cls() {
+  $display.innerHTML = '';
+}
+/**
+ * Displays the "cutscene" overlay display
+ * @param {string} text The block of text to display
+ */
+
+
+function displayOverlay(text) {
+  $displayOverlay.innerHTML = "";
+  $displayOverlay.innerHTML += "<span class=\"message\">".concat(text, "</span>");
+  $container.classList.add('overlay');
+}
+/**
+ * Renders a room's exits as a comma separated list
+ * @param {object} exits The sub object of exits
+ * @returns {string} A list of exits
+ */
+
+
+function splitExits(exits) {
+  if (!exits) return "No exits!";
+  var exitListing = "";
+
+  for (var exit in exits) {
+    exitListing += exit.toUpperCase() + ", ";
+  } // Replace last ocurrance of ", "
+
+
+  exitListing = exitListing.replace(new RegExp(", " + '$'), ''); // Replace last comma with ampersand
+
+  var n = exitListing.lastIndexOf(", ");
+  exitListing = exitListing.slice(0, n) + exitListing.slice(n).replace(", ", " &amp; ");
+  if (exitListing == "") return " No exits!";
+  return exitListing;
+}
+/**
+ * Parses the user input into a verb and a noun
+ * @param {string} myInput The value of the input field
+ */
+
+
+function parseInput(myInput) {
+  myInput = myInput.trim().toLowerCase();
+  var verb = null;
+  var noun = null;
+
+  for (var i = 0; i < myInput.length; i++) {
+    // Parse verb and noun from input
+    if (myInput.substring(i, i + 1) === " " && !verb) {
+      verb = myInput.substring(0, i);
+      noun = myInput.substring(i + 1, myInput.length).trim();
+      break;
+    } else if (myInput.indexOf(' ') < 0) {
+      // One word input
+      verb = myInput.trim();
+      noun = null;
+      break;
+    }
+  } // Check if words exist as objects
+
+
+  var vb = getVerb(verb);
+  var ob = getNoun(noun); // If verb has a synonym, change the verb to synonym
+
+  if (vb.synonym) {
+    verb = vb.synonym;
+    vb = getVerb(verb);
+  } // If noun has a synonym, change the object to synonym
+
+
+  if (ob.synonym) {
+    noun = ob.synonym;
+    ob = getNoun(noun);
+  } // Save keystrokes by reusing object from last parse
+
+
+  if (noun === "it" && previousObj) {
+    ob = previousObj;
+    noun = ob.id;
+  }
+
+  var error = false;
+
+  if (noun && !ob) {
+    message = "That's silly!";
+  }
+
+  if (!noun && !vb.singleWord) {
+    message = "I need two words.";
+    error = true;
+  }
+
+  if (!vb && ob) {
+    message = "You can't \"".concat(myInput.toUpperCase(), ".\"");
+  }
+
+  if (!vb && !ob) {
+    message = "You don't make sense.";
+  }
+
+  if (vb && ob.portable && ob.location != "player") {
+    message = "You don't have \"".concat(noun.toUpperCase(), ".\"");
+  } // RUN THE VERB SUBROUTINE
+
+
+  if (!error) {
+    // Candle slowly burns down if lit
+    if (flags.candleLit) {
+      flags.lightLevel--;
+    }
+
+    verbSubroutine(verb, noun, vb, ob);
+  } // POST VERB MESSAGES
+  // Candle power
+
+
+  if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 11) {
+    message += "<br>Your candle is waning!";
+  }
+
+  if (flags.lightLevel == 1) {
+    message += "<br>Your candle has gone out!";
+    flags.candleLit = false;
+    flags.lightLevel = 0;
+    objects["candle"].location = null;
+  } // Darkness effects
+
+
+  if (currentRoom.darkness && !flags.candleLit) {
+    flags.encroachingDarkness++;
+
+    if (flags.encroachingDarkness > 1 && flags.encroachingDarkness < 4) {
+      message += "<br>You hear something in the darkness!";
+    }
+
+    if (flags.encroachingDarkness >= 4 && flags.encroachingDarkness < 6) {
+      message += "<br>You hear a terrifying growl. There is definitely something in the room with you!";
+    }
+
+    if (flags.encroachingDarkness >= 6) {
+      death("A slimy appendage grabs you from out of the darkness and wraps itself around your neck!<br><br>You are helpless and filled with a sense of unspeakable terror as the creature squeezes the life out of you.");
+      return;
+    }
+  }
+
+  if (currentRoom.darkness && flags.candleLit) {
+    flags.encroachingDarkness = 0;
+  } // Water effects
+
+
+  if (currentRoom.water && !flags.inBoat) {
+    flags.sinking++;
+    message += "<br>You are sinking in the bog!";
+
+    if (flags.sinking > 3) {
+      death("Flailing and struggling, you sink deeper and deeper into the sticky bog. Despite your efforts, the water envelops you.");
+      return;
+    }
+
+    if (flags.sinking === 3) {
+      message += " Do something, quick!";
+    }
+  } // Increment turns
+
+
+  turns++;
+
+  if (getMaxScore() === checkScore()) {
+    triggerEndGame();
+  }
+
+  switch (turns) {
+    case 4:
+      $userInput.classList.add('fading-1');
+      break;
+
+    case 6:
+      $userInput.classList.remove('fading-1');
+      $userInput.classList.add('fading-2');
+      break;
+
+    case 8:
+      $userInput.classList.remove('fading-2');
+      $userInput.classList.add('fading-3');
+      break;
+
+    case 10:
+      $userInput.classList.remove('fading-3');
+      $userInput.placeholder = '';
+      break;
+  }
+
+  previousObj = ob;
+  display();
+}
+/**
+ * Searches verb object and returns object of verb if matches.
+ * @param {string} verb The verb as parsed from the input
+ * @returns {object}
+ */
+
+
+function getVerb(verb) {
+  for (var obj in verbs) {
+    if (obj == verb) {
+      return verbs[obj];
+    }
+  }
+
+  return false;
+}
+/**
+ * Searches the objects object for item passed as noun
+ * @param {string} noun The key value of the object
+ * @returns {object}
+ */
+
+
+function getNoun(noun) {
+  for (var obj in objects) {
+    if (obj == noun) {
+      return objects[obj];
+    }
+  }
+
+  return false;
+}
+/**
+ * Gets the room object of specified room.
+ * @param {string} room The machine name of the room you want to get 
+ */
+
+
+function getRoom(room) {
+  return rooms[room];
+}
+/**
+ * Gets the "object" object of specified noun.
+ * @param {string} noun The machine name of the object you want to get 
+ */
+
+
+function getObject(noun) {
+  return objects[noun];
+}
+/**
+ * Process the user input after parsing.
+ * @param {string} verb The user typed in verb.
+ * @param {string} noun The user typed in noun
+ * @param {object} vb The verb object
+ * @param {object} ob The noun object
+ */
+
+
+function verbSubroutine(verb, noun, vb, ob) {
+  // Does the object contain unique actions?
+  if (ob.hasOwnProperty('overrides')) {
+    // Does the current verb match any of the overriddes?
+    if (objectInRange(ob)) {
+      if (ob['overrides'].hasOwnProperty(verb)) {
+        ob.overrides[verb]();
+        return;
+      }
+    }
+  }
+
+  if (!vb) return;
+  vb.action(noun, ob);
+} // ===== CHECKING OBJECT/ROOM STATUSES =====
+
+/**
+ * Check if the object is in room or with player
+ * @param {object|string} obj The objects{} item to be anaylized
+ * @returns boolean
+ */
+
+
+function objectInRange(obj) {
+  if (typeof obj === "string") {
+    obj = getObject(obj);
+  }
+
+  if (obj.location == currentRoom.rid || obj.location == "player" || obj.omnipresence) {
+    return true;
+  }
+
+  return false;
+}
+/**
+ * Detects if the player is carrying an object
+ * @param {object|string} objectName The name of the object
+ * @returns boolean
+ */
+
+
+function isCarrying(obj) {
+  if (typeof obj === "string") {
+    obj = getObject(obj);
+  }
+
+  if (obj.location === "player") {
+    return true;
+  }
+
+  return false;
+}
+/**
+ * Detects if current room matches name passed
+ * @param {string} roomString The machine name of the room
+ * @returns boolean
+ */
+
+
+function isRoom(roomString) {
+  if (currentRoom.rid === roomString) {
+    return true;
+  }
+
+  return false;
+}
+/**
+ * Check if the user's noun is one of a list of possibilities
+ * @param {string} noun The user's input
+ * @param {array} nounArray A list of possible nouns to match
+ * @returns {boolean}
+ */
+
+
+function nounCheck(noun, nounArray) {
+  return nounArray.includes(noun);
+} // ===== SCORING =====
+
+/**
+ * Counts all the scorable objects held by the player.
+ * @returns {number}
+ */
+
+
+function checkScore() {
+  var score = 0;
+
+  for (var key in objects) {
+    if (objects[key].location == "player" && objects[key].score) {
+      score += objects[key].score;
+    }
+  }
+
+  return score;
+}
+/**
+ * Tallies all the scorable objects to get total possible score.
+ * @returns {number}
+ */
+
+
+function getMaxScore() {
+  var maxScore = 0;
+
+  for (var key in objects) {
+    if (objects[key].score) {
+      maxScore += objects[key].score;
+    }
+  }
+
+  return maxScore;
+} // ===== END GAME FUNCTIONS ======
+
+/**
+ * Any actions that happen after all treasure is collected
+ * go here.
+ */
+
+
+function triggerEndGame() {
+  rooms["pathThroughIronGate"].endingTrigger();
+}
+
+function death(message) {
+  $inputZone.remove();
+  cls();
+  prnt("HAUNTED HOUSE");
+  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"message\">".concat(message, "</span>"));
+  prnt("<br><span class=\"room-name\">You Have Died!</span>");
+  prnt("<br>---------------------------------------------<br>");
+  prnt("You took <em>".concat(turns, "</em> turns before meeting your demise.<br>"));
+  prnt("Your final score is: <em>".concat(checkScore(), "/").concat(getMaxScore() + 1, "</em>"));
+  $restartBtn.classList.remove('is-hidden');
+}
+
+function victory() {
+  $inputZone.remove();
+  cls();
+  prnt("HAUNTED HOUSE");
+  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"message\">Congratulations, you've won the game!</span><br>");
+  prnt("Your final score is: <em>".concat(checkScore() + 1, "/").concat(getMaxScore() + 1, "</em><br>"));
+  var messages = ["Bask in the glory of your victory, you've earned it!", "Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.", "So many points! Don't spend them all in one place.", "As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!"];
+  var rnd = Math.floor(Math.random() * messages.length);
+  prnt("".concat(messages[rnd]));
+  prnt("<br>---------------------------------------------<br>");
+  prnt("You took <em>".concat(turns, "</em> turns to complete the adventure.<br>"));
+  prnt("<span class=\"message\">This \"remastered\" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.</span>");
+  $restartBtn.classList.remove('is-hidden');
+} // ===== EVENT LISTENERS =====
+
+/**
+ * Parse user input event
+ */
+
+
+$inputForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+
+  if ($userInput.value.length > 0) {
+    parseInput($userInput.value);
+  }
+
+  $userInput.value = '';
+});
+/**
+ * Reset button event
+ */
+
+$restartBtn.addEventListener('click', function (evt) {
+  location.reload();
+  evt.preventDefault();
+});
+/**
+ * Set event for overlay close button
+ */
+
+$continueBtn.addEventListener('click', function (evt) {
+  $container.classList.remove('overlay');
+  $userInput.focus();
+  $userInput.select();
+});
+/**
+ * Console Log shortcut
+ * @param {string} msg String to display in console
+ */
+
+function cl(msg) {
+  if (msg) {
+    console.log(msg);
+  } else {
+    console.log("hit!");
+  }
+}
+
+function debugInfo() {
+  if (!debug) return; //console.clear();
+  //console.log(currentRoom);
+
+  cl("Turns: " + turns); // cl("flags.lightLevel: " + flags.lightLevel);
+
+  cl("score: " + totalScore); // cl("sinking: " + flags.sinking);
+
+  cl("Terror: " + flags.encroachingDarkness);
+}
+/**
+ * Initialize the game
+ * @param {string} startRoom Starting room id
+ * @param {array} carrying List of strings of objects player is carrying
+ */
+
+
+function init(startRoom, carrying) {
+  // Initialize game data objects
+  // Set the machine name of all the rooms to .rid for easy reference
+  for (var room in rooms) {
+    rooms[room].rid = room;
+  }
+
+  for (var key in verbs) {
+    verbs[key].name = key;
+  }
+
+  for (var _key in objects) {
+    objects[_key].id = _key;
+
+    if (!objects[_key].name) {
+      objects[_key].name = _key;
+    }
+  }
+
+  currentRoom = rooms[startRoom];
+
+  if (carrying) {
+    for (var index in carrying) {
+      objects[carrying[index]].location = "player";
+    }
+  }
+
+  display();
+  $userInput.focus();
+  $userInput.select();
+} // INITIALIZE GAME
+
+
+var debug = true; //init("pathThroughIronGate",[]);
+
+init("deepCellar", []);
+/**
+ * This file contains scripts that enhance the layout display.
+ * This code does not affect the game play.
+ */
+
+var $btnSmaller = document.getElementById('btnSmaller');
+var $btnBigger = document.getElementById('btnBigger');
+var $btnFontToggle = document.getElementById('btnFonts');
+var $html = document.querySelector('html');
+var htmlFontSize = 16;
+$html.style.fontSize = htmlFontSize + "px";
+$btnSmaller.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  if (--htmlFontSize < 8) {
+    htmlFontSize = 8;
+  }
+
+  $html.style.fontSize = htmlFontSize + "px";
+});
+$btnBigger.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  if (++htmlFontSize > 36) {
+    htmlFontSize = 36;
+  }
+
+  $html.style.fontSize = htmlFontSize + "px";
+});
+$btnFontToggle.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  document.querySelector('body').classList.toggle('alt-font');
+});
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+/**
+ * sounds.js
+ */
+var Sound =
+/*#__PURE__*/
+function () {
+  function Sound(src) {
+    _classCallCheck(this, Sound);
+
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+  }
+
+  _createClass(Sound, [{
+    key: "play",
+    value: function play() {
+      this.sound.play();
+    }
+  }, {
+    key: "stop",
+    value: function stop() {
+      this.sound.pause();
+    }
+  }]);
+
+  return Sound;
+}();
+
+var snd = {}; // Link your sound files here
+
+snd.owl = new Sound("audio/owl.mp3");
+snd.door = new Sound("audio/door.mp3");
+snd.key = new Sound("audio/key.mp3");
+snd.pickup = new Sound("audio/treasure_pickup.mp3");
+snd.shock = new Sound("audio/shock.mp3");
+snd.splash = new Sound("audio/splash.mp3");
+/* harmony default export */ __webpack_exports__["default"] = (snd);
+
+/***/ })
+/******/ ]);
 //# sourceMappingURL=Haunted-House-dist.js.map
