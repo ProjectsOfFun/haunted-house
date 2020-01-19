@@ -85,7 +85,7 @@ const verbs = {
 			if (obj.id === "coffin" && obj.isOpen && objectInRange(obj)) {
 				message = `You slam the coffin shut.`;
 				obj.closeAction();
-				sndDoor.play();
+				snd.door.play();
 				return
 			}
 
@@ -98,7 +98,7 @@ const verbs = {
 				message = obj.closeMessage ? obj.closeMessage : `You close it.`;
 				if (obj.closeAction) { obj.closeAction(); }
 				if (obj.id === "door") {
-					sndDoor.play();
+					snd.door.play();
 				}
 				return;
 			}
@@ -129,10 +129,8 @@ const verbs = {
 				if (!flags.barsDug) {
 					message = "After several minutes of work, you manage to dig the bars out.";
 					flags.barsDug = true;
-					rooms["cellar"].exits.e = "cliffPath";
-					rooms["cellar"].name = "Cellar with Hole in the Wall";
-					rooms["cellar"].description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through."
-					rooms["cliffPath"].exits.w = "cellar";
+					rooms["cellar"].digWindow();
+					rooms["cliffPath"].digWindow();
 				} else {
 					message = "You've already cleared the bars away from the window.";
 				}
@@ -163,7 +161,7 @@ const verbs = {
 				message = `You jump out of the boat.`;
 				if (currentRoom.water) {
 					message += ` SPLASH!<br>`;
-					sndSplash.play();
+					snd.splash.play();
 				}
 				flags.inBoat = false;
 				return;
@@ -257,14 +255,14 @@ const verbs = {
 
 			if (obj.portable && objectInRange(obj)) {
 				if (obj.location === currentRoom.rid) {
-					message = "Taken.";
+					message = obj.takeMessage ? obj.takeMessage : "Taken.";
 					obj.location = "player";
 					if (obj.score > 0) {
-						message = "You've found treasure!";
-						sndPickup.play();
+						message += " You've found treasure!";
+						snd.pickup.play();
 
 						if (checkScore() === getMaxScore()) {
-							message = `You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!`;
+							message += ` You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!`;
 						}
 					}
 					verbs["get"].combineObjects(noun,obj);
@@ -277,10 +275,8 @@ const verbs = {
 			}
 
 			if (!obj.portable && objectInRange(obj)) {
-				if (obj.location === currentRoom.rid) {
-					message = "You don't need to take that.";
-					return;
-				}
+				message = obj.takeMessage ? obj.takeMessage : "You don't need to take that.";
+				return;
 			}
 
 		},
@@ -359,7 +355,7 @@ const verbs = {
 			// Magical barrier
 			if (isRoom("coldChamber") && flags.magicalBarrier && direction === "e") {
 				message = `A magical barrier is blocking your way.`;
-				sndShock.play();
+				snd.shock.play();
 				return;
 			}
 
@@ -405,8 +401,7 @@ const verbs = {
 					return;
 				}
 
-				if (currentRoom.rid === "exit") {
-					//winner();
+				if (isRoom("exit")) {
 					flags.winner = true;
 					return;
 				}
@@ -486,6 +481,30 @@ const verbs = {
 		"synonym": "carrying",
 		"singleWord": true
 	},
+	"kill": {
+		"action": function(noun,obj){
+
+			if (obj.id === "bats" && objectInRange("bats") && flags.batsAttacking) {
+				message = `And how do you propose to do that?`;
+				return;
+			}
+
+			if (obj.id === "bats" && objectInRange("bats") && !flags.batsAttacking) {
+				message = `They are already dead.`;
+				return;
+			}
+
+			if (obj.id === "ghosts" && objectInRange("ghosts") && flags.ghostsAttacking) {
+				message = `You can't kill the undead!`;
+				return;
+			}
+
+			if (nounCheck(noun, ["self","me","myself","player"])) {
+				message = `Cheer up buddy boy! No need to resort to that... yet.`;
+				return;
+			}
+		}
+	},
 	"leave": {
 		"synonym": "drop"	
 	},
@@ -518,12 +537,12 @@ const verbs = {
 				return;
 			}
 			
-			if (nounCheck(noun,["cooker","stove"]) && currentRoom.rid === "kitchen") {
+			if (nounCheck(noun,["cooker","stove"]) && isRoom("kitchen")) {
 				message = `The cooker rusted out and is in no state to be lit.`;
 				return;
 			}
 
-			if (noun === "rubbish" && currentRoom.rid === "yard") {
+			if (noun === "rubbish" && isRoom("yard")) {
 				message = `It's too damp to light.`;
 				return;
 			}
@@ -538,7 +557,7 @@ const verbs = {
 			if (obj.id === "coat" && objectInRange(obj) && objects["key"].location === "coat") {
 				message = "As you search through the old coat you find a key in the pocket.";
 				objects["key"].location = currentRoom.rid;
-				sndKey.play();
+				snd.key.play();
 			}
 
 			// Default action if obj has a description
@@ -589,7 +608,7 @@ const verbs = {
 					objects["ring"].location = obj.location;
 					obj.isOpen = true;
 					obj.openAction();
-					sndKey.play();
+					snd.key.play();
 					return;
 				}
 
@@ -754,7 +773,7 @@ const verbs = {
 
 			if (obj.id === "rope" && isCarrying("rope")) {
 
-				if (currentRoom.rid === "blastedTree") {
+				if (isRoom("blastedTree")) {
 					message = `You reattach the rope to the branch.`;
 					obj.tieToTree();
 					obj.location = "blastedTree";
@@ -828,7 +847,7 @@ const verbs = {
 			}
 
 			// Using the tiny vacuum
-			if (obj.id === "vacuum" && flags.vacuumHasPower && flags.ghostsAttacking && currentRoom.rid === "upperGallery") {
+			if (obj.id === "vacuum" && flags.vacuumHasPower && flags.ghostsAttacking && isRoom("upperGallery")) {
 				message = `With a loud whoosh, the tiny vacuum revs up. You've sucked up all the ghosts!`;
 				flags.ghostsAttacking = false;
 				flags.vacuumHasPower = false;

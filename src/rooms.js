@@ -11,7 +11,7 @@ const rooms = {
 		"onEnter": function() {
 			if (Math.random() > .4) {
 				message = "You hear an owl hooting off in the distance.";
-				sndOwl.play();
+				snd.owl.play();
 			}
 		}
 	},
@@ -73,7 +73,7 @@ const rooms = {
 			"e": "thickForest"
 		},
 		"scenery": {
-			"trees": "They are tall and baren."
+			"trees": "They are tall and barren."
 		}
 	},
 	"thickForest": {
@@ -85,7 +85,7 @@ const rooms = {
 			"s": "clearing"
 		},
 		"scenery": {
-			"trees": "They are tall, baren, and growing very close to each other."
+			"trees": "They are tall, barren, and growing very close to each other."
 		}
 	},
 	"blastedTree": {
@@ -248,13 +248,12 @@ const rooms = {
 			"e": "slipperySteps"
 		}
 	},
-	slipperySteps: {
+	"slipperySteps": {
 		"name": "Slippery Steps",
+		"description": "The damp and slippery wooden staircase leads down to the mansion's cellar. The stairs creak under your weight.",
 		"exits": {
-			"w": "widePassage",
-			"s": "cellar",
-			u: "widePassage",
-			d: "cellar"
+			"u": "widePassage",
+			"d": "cellar"
 		}
 	},
 	clifftop: {
@@ -274,7 +273,7 @@ const rooms = {
 			"wall": "You dare not approach it for fear of being hit by a falling piece of masonry."
 		}
 	},
-	gloomyPassage: {
+	"gloomyPassage": {
 		"name": "Gloomy Passage",
 		"description": "This long, gloomy section of hallway continues north and south.",
 		"exits": {
@@ -282,12 +281,16 @@ const rooms = {
 			"s": "frontHall"
 		}
 	},
-	poolOfLight: {
+	"poolOfLight": {
 		"name": "Pool of Light",
+		"description": "What little light fills the rooms of the mansion ends here. The ways to the north and east are masked in darkness.",
 		"exits": {
 			"n": "darkAlcove",
 			"e": "vaultedHall",
 			"s": "sittingRoom"
+		},
+		"scenery": {
+			"darkness": "It can be none blacker."
 		}
 	},
 	vaultedHall: {
@@ -315,7 +318,7 @@ const rooms = {
 		},
 		darkness : true
 	},
-	cellar: {
+	"cellar": {
 		"name": "Cellar With Barred Window",
 		"description": "The air in this cellar is damp with moisture. There is a barred window on the east wall.",
 		"exits": {
@@ -327,6 +330,11 @@ const rooms = {
 			"bars": "The bars are planted in front of the window. However, the moisture appears to have softened the brickwork around the frame.",
 			"bricks": "They aren't as rigid as they once were.",
 			"brickwork": "It isn't as rigid as it once was."
+		},
+		"digWindow": function() {
+			this.exits.e = "cliffPath";
+			this.name = "Cellar with Hole in the Wall";
+			this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through."
 		}
 	},
 	cliffPathByWindow: {
@@ -336,14 +344,14 @@ const rooms = {
 			"s": "cliffPath"
 		}
 	},
-	cupboard: {
+	"cupboard": {
 		"name": "Cupboard With Hanging Coats",
 		"description": "This tiny side room off of the main closet is where old garments are stored.",
 		"exits": {
 			"s": "closet"
 		}
 	},
-	frontHall: {
+	"frontHall": {
 		"name": "Front Hall",
 		"description": "The entranceway ends here. To the north is a long hallway leading towards the back of the house. To the east are the main rooms of the mansion",
 		"exits": {
@@ -352,51 +360,76 @@ const rooms = {
 			"s": "frontLobby"
 		}
 	},
-	sittingRoom: {
+	"sittingRoom": {
 		"name": "Sitting Room",
+		"description": "A tattered sofa and a couple of rickety chairs are arranged in the center of this sitting room.",
 		"exits": {
 			"n": "poolOfLight",
 			"w": "frontHall",
 			"s": "library"
+		},
+		"scenery": {
+			"chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
+			"sofa": "The stuffing is bursting through the seams.",
+			"stuffing": "You think it's horse hair."
 		}
 	},
-	secretRoom: {
+	"secretRoom": {
 		"name": "Secret Room",
+		"description": "Except for fragments of the false wall that are scattered about the floor, this secret room is rather sparse. They certainly went through great lengths to keep whatever is here hidden.",
 		"exits": {
 			"s": "study"
+		},
+		"scenery": {
+			"fragments": "Bits of plaster and wood."
 		}
 	},
-	steepMarbleStairs: {
+	"steepMarbleStairs": {
 		"name": "Steep Marble Stairs",
+		"description": "These marble stairs lead up towards the more private areas of the house.",
 		"exits": {
-			"n": "hallWithLockedDoor",
-			"s": "cobwebbyRoom",
-			u: "hallWithLockedDoor",
-			d: "cobwebbyRoom"
+			"u": "cobwebbyRoom",
+			"d": "hallWithLockedDoor",
+		},
+		"scenery": {
+			"stairs": "The marble surface is quite slippery. Be careful!"
 		}
 	},
-	diningRoom: {
+	"diningRoom": {
 		"name": "Dining Room",
+		"description": "A large dining table fills the room surrounded by its matching accoutrement of chairs. In the center of the table are the skeletal remains of some poor creature.",
 		"exits": {
 			"n": "trophyRoom"
+		},
+		"scenery": {
+			"table": "Inscribed below the remains is an encircled pentagram.",
+			"pentagram": "The symbol of evil. Horrible rites must have taken place here.",
+			"chairs": "They seat six. An appropriate number."
 		}
 	},
-	deepCellar: {
+	"deepCellar": {
 		"name": "Deep Cellar with Coffin",
+		"description": "This is the deepest, darkest corner of the cellar. A decrepit coffin rests in the center of the room upon a stone pedestal.",
 		"exits": {
 			"n": "cellar"
+		},
+		"scenery": {
+			"pedestal": "It's made of stone. There once was writing on it but text has been chiseled off."
 		}
 	},
-	cliffPath: {
+	"cliffPath": {
 		"name": "Cliff Path",
 		"exits": {
 			"n": "cliffPathByWindow",
 			"s": "cliffPathByMarsh"
+		},
+		"digWindow": function() {
+			this.exits.w = "cellar";
 		}
 	},
-	closet: {
+	"closet": {
 		"name": "Closet",
-		"description": "The front closet is large and mosty empty. You notice a small opening to the north that leads to the cupboard.",
+		"description": "The front closet is large and mostly empty. You notice a small opening to the north that leads to the cupboard.",
 		"exits": {
 			"n": "cupboard",
 			"e": "frontLobby"
@@ -415,7 +448,7 @@ const rooms = {
 		"onEnter": function() {
 			if (flags.frontDoorOpen) {
 				message = `With a tremendous "BANG!" the door slams shut behind you.`;
-				sndDoor.play();
+				snd.door.play();
 				flags.frontDoorOpen = false;
 				delete rooms["frontPorch"].exits.n;
 			}
@@ -425,8 +458,9 @@ const rooms = {
 			"floor": "The floor is in surprisingly good shape considering its age."
 		}
 	},
-	library: {
+	"library": {
 		"name": "Library of Evil Books",
+		"description": "Shelves of musty books fill this room. A brief glance shows that topics range from witchcraft to demonic possession.",
 		"exits": {
 			"n": "sittingRoom",
 			"e": "study"
@@ -445,10 +479,18 @@ const rooms = {
 	},
 	"cobwebbyRoom": {
 		"name": "Weird Cobwebby Room",
+		"description": "The angles of this room seem off kilter. The design may not be to your liking but the spiders seem to enjoy it. As such, the room is filled with cobwebs.",
 		"exits": {
 			"n": "steepMarbleStairs",
 			"e": "coldChamber",
 			"s": "upperGallery"
+		},
+		"scenery": {
+			"cobwebs": "They stretch from ceiling to floor and brush against your face as you move through the room.",
+			"webs": "They stretch from ceiling to floor and brush against your face as you move through the room.",
+			"angles": "The architect must have had a sense of humor.",
+			"angle": "Trigonometry was never your best subject.",
+			"spiders": "If you leave them alone they won't bother you."
 		}
 	},
 	"coldChamber": {
@@ -600,7 +642,6 @@ const rooms = {
 			"mass" : "The barbs look sharp and dangerous, best not mess with them."
 		}
 	},
-
 	"pathThroughIronGate": {
 		"name": "Path Through Iron Gate",
 		"description": "The wind howls as you make your way to the entrance of the property. The old mansion looms ahead of you silhouetted against a full moon.",
@@ -624,7 +665,6 @@ const rooms = {
 			this.scenery.gate = `Hurry, head south to win the game!`;
 		}
 	},
-
 	"pathByRailings": {
 		"name": "Path by Railings",
 		"description": "Here the path runs west towards the entrance and continues east towards the base of the front tower.",
@@ -637,7 +677,6 @@ const rooms = {
 			"path": "The path is muddy and overgrown with vegetation."
 		}
 	},
-
 	"beneathTower": {
 		"name": "Beneath the Front Tower",
 		"description": "Above you looms the dark front tower of the mansion. Who knows what horrors lurk up there.",
@@ -649,7 +688,6 @@ const rooms = {
 			"tower" : "The menacing tower rises above you into the moonlit sky."	
 		}
 	},
-
 	"debris": {
 		"name": "Pile of Debris",
 		"description": "Here the facade of the mansion has crumbled and all that remains is a pile of broken debris.",
@@ -663,7 +701,6 @@ const rooms = {
 			"facade": "It must have been stunning when it was new."
 		}
 	},
-
 	"fallenBrickwork": {
 		"name": "Large Fallen Brickwork",
 		"description": "All around lies the remnants of decayed brickwork. The ground towards the north looks marshy and dangerous.",

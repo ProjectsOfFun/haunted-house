@@ -28,7 +28,8 @@ const objects = {
 		"description": "They are fluttering all around you. Occasionally, one will swoop down and attempt to take a bite!",
 		"batsKilled": function() {
 			this.description = "The bat carcasses lie motionless on the ground in tiny puddles of their own filth and blood.";
-		}
+		},
+		"takeMessage": "No way, you'll get bit!"
 	},
 	"batteries": {
 		"name": "some batteries",
@@ -45,7 +46,8 @@ const objects = {
 		"description": "They are demonic works.",
 		"readable": true,
 		"readableText": "You are unable to make sense of the ancient writings.",
-		"location": "library"
+		"location": "library",
+		"takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone."
 	},
 	"can": {
 		"synonym": "aerosol"
@@ -58,10 +60,11 @@ const objects = {
 	},
 	"candlestick": {
 		"name": "a golden candlestick",
-		"description": "It is ornamented with gold and various jewels. And it can also hold a candle, literally!",
+		"description": "It's gold and ornamented with various jewels. And it can also hold a candle, literally!",
 		"location": "library",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"takeMessage": "It's a lot heavier than it looks. Must be solid gold!"
 	},
 	"coat": {
 		"name": "a dusty old coat",
@@ -74,13 +77,14 @@ const objects = {
 		"location": "deepCellar",
 		"isOpen": false,
 		"openAction": function() {
-			this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior.";
+			this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
 			this.isOpen = true;
 		},
 		"closeAction": function() {
 			this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
 			this.isOpen = false;
-		}
+		},
+		"takeMessage": "It's far to heavy to carry."
 	},
 	"coins": {
 		"description": "It's a sack of Seventeenth Century Spanish doubloons.",
@@ -90,7 +94,8 @@ const objects = {
 	},
 	"desk": {
 		"location": "study",
-		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer."
+		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
+		"takeMessage": "Your job is finding treasure, not furniture!"
 	},
 	"desks": {
 		"synonym": "desk"
@@ -130,9 +135,13 @@ const objects = {
 			this.isOpen = false;
 		}
 	},
+	"ghost": {
+		"synonym": "ghosts"
+	},
 	"ghosts": {
 		"description": "The ghosts whirl about the room like so many clouds of dust!",
-		"location": "upperGallery"
+		"location": "upperGallery",
+		"takeMessage": "You try to grab the ghosts, but your hands pass through their ephemeral bodies."
 	},
 	"goblet": {
 		"name": "a jeweled goblet",
@@ -145,16 +154,18 @@ const objects = {
 		"name": "a key",
 		"description": "It's made of brass and it probably unlocks something, right?",
 		"location": "coat",
-		"portable": true
+		"portable": true,
+		"takeMessage": "You take the key and wonder what it unlocks."
 	},
 	"magic spells": {
 		"name": "a tome of magic spells",
 		"description": "There is something written on it.",
-		"readableText": "The text reads: Use this word with care, 'Xzanfar'.",
+		"readableText": `The text reads: Use this word with care, "Xzanfar."`,
 		"location": "secretRoom",
 		"readable": true,
 		"portable": true,
-		"score":1
+		"score": 1,
+		"takeMessage": "The tome vibrates with energy as you pick it up."
 	},
 	"magical barrier": {
 		"synonym": "barrier"
@@ -181,6 +192,12 @@ const objects = {
 	"pocket": {
 		"synonym": "coat"
 	},
+	"remains": {
+		"name": "skeletal remains",
+		"location": "diningRoom",
+		"description": "They look to be the remains of a small mammal. A dog perhaps?",
+		"takeMessage": "The idea of carrying around those bones disgusts you."
+	},
 	"ring": {
 		"name": "a golden ring",
 		"location": "coffin",
@@ -203,7 +220,8 @@ const objects = {
 	},
 	"rubbish": {
 		"location": "yard",
-		"description": "The garbage has decomposed into a heap of goo. That's very disgusting!"	
+		"description": "The garbage has decomposed into a heap of goo. That's very disgusting!",
+		"takeMessage": "I know you miss your youthful days of dumpster diving, but let's not mess with the rubbish heap."
 	},
 	"scroll": {
 		"location": "rearTurretRoom",

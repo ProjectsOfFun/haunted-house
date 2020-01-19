@@ -3,71 +3,48 @@
 //@prepros-prepend verbs.js
 //@prepros-append interface.js
 
+import snd from './sounds.js';
+
 
 // Initialize DOM items as JS variables
 const $container = document.getElementById('hh-container');
 const $display = document.getElementById('hh-output');
 const $inputZone = document.getElementById('hh-input');
-const $userInput = document.getElementById('hh-userInput');
 const $inputForm = document.getElementById('hh-input-form');
+const $userInput = document.getElementById('hh-userInput');
 const $restartBtn = document.getElementById('hh-reload');
 const $displayOverlay = document.getElementById('hh-output-overlay');
 const $continueBtn = document.getElementById('hh-continue');
 
+// Global Variables
+let currentRoom = {}; // RM 57
+let message = ''; // M$
+let previousObj = null;
+let previousRoom = null;
 let totalScore = 0;
 let turns = 0;
-let winner = false;
-let lightLevel = 60; // LL
-let encroachingDarkness = 0;
-let currentRoom = rooms["pathThroughIronGate"]; // RM 57
-let previousRoom = null;
-let message = "OK"; // M$
-let previousObj = null;
 
-
-// Set event for overlay close button
-$continueBtn.addEventListener('click', function(evt){
-	$container.classList.remove('overlay');
-	$userInput.focus();
-	$userInput.select();
-});
-
-
-// Set the machine name of all the rooms to .rid for easy reference
-for (let room in rooms) {
-	rooms[room].rid = room;
-}
-
-for (let key in verbs) {
-	verbs[key].name = key;
-}
-
-for (let key in objects) {
-	objects[key].id = key;
-	if (!objects[key].name) {
-		objects[key].name = key;
-	}
-}
-
-
-// Set the game flags object
+// Game state variables
 const flags = {
-	frontDoorOpen: true, // flags[23]
-	candleLit: false, // flags[0]
-	ghostsAttacking: true, // flags[27]
-	vacuumSwitchedOn: false, // flags[24]
-	vacuumHasPower: false,
-	batsAttacking: true, // flags[26]
-	magicalBarrier: true, //flags[34]
-	hallDoorLocked: true,
 	barsDug: false,
-	ropeTiedToTree: true,
-	studyWallBroken: false,
+	batsAttacking: true, // flags[26]
+	candleLit: false, // flags[0]
+	encroachingDarkness: 0,
+	frontDoorOpen: true, // flags[23]
+	ghostsAttacking: true, // flags[27]
+	hallDoorLocked: true,
 	inBoat: false,
+	lightLevel: 60,
+	magicalBarrier: true, //flags[34]
+	ropeTiedToTree: true,
 	sinking: 0,
+	studyWallBroken: false,
+	vacuumHasPower: false,
+	vacuumSwitchedOn: false, // flags[24]
 	wearingCoat: false,
 	winner: false
 }
+
 
 
 /**
@@ -112,11 +89,6 @@ function display() {
 	debugInfo();
 }
 
-function displayOverlay(text) {
-	$displayOverlay.innerHTML = "";
-	$displayOverlay.innerHTML += `<span class="message">${text}</span>`;
-	$container.classList.add('overlay');
-}
 
 /**
  * Gets additional description text to be added based on flags.
@@ -172,6 +144,17 @@ function cls() {
 
 
 /**
+ * Displays the "cutscene" overlay display
+ * @param {string} text The block of text to display
+ */
+function displayOverlay(text) {
+	$displayOverlay.innerHTML = "";
+	$displayOverlay.innerHTML += `<span class="message">${text}</span>`;
+	$container.classList.add('overlay');
+}
+
+
+/**
  * Renders a room's exits as a comma separated list
  * @param {object} exits The sub object of exits
  * @returns {string} A list of exits
@@ -187,7 +170,7 @@ function splitExits(exits) {
 	// Replace last comma with ampersand
 	let n = exitListing.lastIndexOf(", ");
 	exitListing = exitListing.slice(0, n) + exitListing.slice(n).replace(", ", " &amp; ");
-	if (exitListing == "") return "No exits!";
+	if (exitListing == "") return " No exits!";
 	return exitListing;
 }
 
@@ -262,7 +245,7 @@ function parseInput(myInput) {
 
 		// Candle slowly burns down if lit
 		if (flags.candleLit) {
-			lightLevel--;
+			flags.lightLevel--;
 		}
 
 		verbSubroutine(verb,noun,vb,ob);
@@ -271,32 +254,32 @@ function parseInput(myInput) {
 	// POST VERB MESSAGES
 
 	// Candle power
-	if (flags.candleLit && lightLevel > 1 && lightLevel < 11) {
+	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 11) {
 		message += `<br>Your candle is waning!`;
 	}
-	if (lightLevel == 1) {
+	if (flags.lightLevel == 1) {
 		message += `<br>Your candle has gone out!`;
 		flags.candleLit = false;
-		lightLevel = 0;
+		flags.lightLevel = 0;
 		objects["candle"].location = null;
 	}
 
 	// Darkness effects
 	if (currentRoom.darkness && !flags.candleLit) {
-		encroachingDarkness++
-		if (encroachingDarkness > 1 && encroachingDarkness < 4) {
+		flags.encroachingDarkness++
+		if (flags.encroachingDarkness > 1 && flags.encroachingDarkness < 4) {
 			message += `<br>You hear something in the darkness!`;
 		}
-		if (encroachingDarkness >= 4 && encroachingDarkness < 6) {
+		if (flags.encroachingDarkness >= 4 && flags.encroachingDarkness < 6) {
 			message += `<br>You hear a terrifying growl. There is definitely something in the room with you!`;
 		}
-		if (encroachingDarkness >= 6) {
+		if (flags.encroachingDarkness >= 6) {
 			death(`A slimy appendage grabs you from out of the darkness and wraps itself around your neck!<br><br>You are helpless and filled with a sense of unspeakable terror as the creature squeezes the life out of you.`);
 			return;
 		}
 	}
 	if (currentRoom.darkness && flags.candleLit) {
-		encroachingDarkness = 0;
+		flags.encroachingDarkness = 0;
 	}
 
 	// Water effects
@@ -316,6 +299,24 @@ function parseInput(myInput) {
 	
 	if (getMaxScore() === checkScore()) {
 		triggerEndGame();
+	}
+
+	switch (turns) {
+		case 4:
+			$userInput.classList.add('fading-1');
+			break;
+		case 6:
+			$userInput.classList.remove('fading-1');
+			$userInput.classList.add('fading-2');
+			break;
+		case 8:
+			$userInput.classList.remove('fading-2');
+			$userInput.classList.add('fading-3');
+			break;
+		case 10:
+			$userInput.classList.remove('fading-3');
+			$userInput.placeholder = '';
+			break;
 	}
 
 	previousObj = ob;
@@ -355,7 +356,25 @@ function getNoun(noun) {
 
 
 /**
- * Process the user input.
+ * Gets the room object of specified room.
+ * @param {string} room The machine name of the room you want to get 
+ */
+function getRoom(room) {
+	return rooms[room];
+}
+
+
+/**
+ * Gets the "object" object of specified noun.
+ * @param {string} noun The machine name of the object you want to get 
+ */
+function getObject(noun) {
+	return objects[noun];
+}
+
+
+/**
+ * Process the user input after parsing.
  * @param {string} verb The user typed in verb.
  * @param {string} noun The user typed in noun
  * @param {object} vb The verb object
@@ -380,94 +399,8 @@ function verbSubroutine(verb,noun,vb,ob) {
 }
 
 
-/**
- * Counts all the scorable objects held by the player.
- * @returns {number}
- */
-function checkScore() {
-	let score = 0;
-	for (let key in objects) {
-		if (objects[key].location == "player" && objects[key].score) {
-			score += objects[key].score;
-		}
-	}
-	return score;
-}
 
-
-/**
- * Tallies all the scorable objects to get total possible score.
- * @returns {number}
- */
-function getMaxScore() {
-	let maxScore = 0;
-	for (let key in objects) {
-		if (objects[key].score) {
-			maxScore += objects[key].score;
-		}
-	}
-	return maxScore;
-}
-
-
-function triggerEndGame() {
-	rooms["pathThroughIronGate"].endingTrigger();
-}
-
-
-function victory() {
-	$inputZone.remove();
-	cls();
-	prnt(`HAUNTED HOUSE`);
-	prnt(`---------------------------------------------<br>`);
-	prnt(`<span class="message">Congratulations, you've won the game!</span><br>`);
-	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);
-	
-	const messages = [`Bask in the glory of your victory, you've earned it!`,`Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.`,`So many points! Don't spend them all in one place.`,`As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!`];
-	let rnd = Math.floor(Math.random() * messages.length);
-	prnt(`${messages[rnd]}`);
-	prnt(`<br>---------------------------------------------<br>`);
-	prnt(`You took <em>${turns}</em> turns to complete the adventure.<br>`);
-
-	prnt(`<span class="message">This "remastered" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
-	
-
-	$restartBtn.classList.remove('is-hidden');
-}
-
-
-/**
- * Gets the room object of specified room.
- * @param {string} room The machine name of the room you want to get 
- */
-function getRoom(room) {
-	return rooms[room];
-}
-
-
-/**
- * Gets the "object" object of specified noun.
- * @param {string} noun The machine name of the object you want to get 
- */
-function getObject(noun) {
-	return objects[noun];
-}
-
-
-function death(message) {
-	$inputZone.remove();
-	cls();
-	prnt(`HAUNTED HOUSE`);
-	prnt(`---------------------------------------------<br>`);
-	prnt(`<span class="message">${message}</span>`);
-	prnt(`<br><span class="room-name">You Have Died!</span>`);
-	prnt(`<br>---------------------------------------------<br>`);
-	prnt(`You took <em>${turns}</em> turns before meeting your demise.<br>`);
-	prnt(`Your final score is: <em>${checkScore()}/${getMaxScore() + 1}</em>`);
-
-	$restartBtn.classList.remove('is-hidden');
-}
-
+// ===== CHECKING OBJECT/ROOM STATUSES =====
 
 /**
  * Check if the object is in room or with player
@@ -524,6 +457,91 @@ function nounCheck(noun,nounArray) {
 	return nounArray.includes(noun);
 }
 
+
+
+// ===== SCORING =====
+
+/**
+ * Counts all the scorable objects held by the player.
+ * @returns {number}
+ */
+function checkScore() {
+	let score = 0;
+	for (let key in objects) {
+		if (objects[key].location == "player" && objects[key].score) {
+			score += objects[key].score;
+		}
+	}
+	return score;
+}
+
+
+/**
+ * Tallies all the scorable objects to get total possible score.
+ * @returns {number}
+ */
+function getMaxScore() {
+	let maxScore = 0;
+	for (let key in objects) {
+		if (objects[key].score) {
+			maxScore += objects[key].score;
+		}
+	}
+	return maxScore;
+}
+
+
+
+// ===== END GAME FUNCTIONS ======
+
+/**
+ * Any actions that happen after all treasure is collected
+ * go here.
+ */
+function triggerEndGame() {
+	rooms["pathThroughIronGate"].endingTrigger();
+}
+
+
+function death(message) {
+	$inputZone.remove();
+	cls();
+	prnt(`HAUNTED HOUSE`);
+	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="message">${message}</span>`);
+	prnt(`<br><span class="room-name">You Have Died!</span>`);
+	prnt(`<br>---------------------------------------------<br>`);
+	prnt(`You took <em>${turns}</em> turns before meeting your demise.<br>`);
+	prnt(`Your final score is: <em>${checkScore()}/${getMaxScore() + 1}</em>`);
+
+	$restartBtn.classList.remove('is-hidden');
+}
+
+
+function victory() {
+	$inputZone.remove();
+	cls();
+	prnt(`HAUNTED HOUSE`);
+	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="message">Congratulations, you've won the game!</span><br>`);
+	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);
+	
+	const messages = [`Bask in the glory of your victory, you've earned it!`,`Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.`,`So many points! Don't spend them all in one place.`,`As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!`];
+	let rnd = Math.floor(Math.random() * messages.length);
+	prnt(`${messages[rnd]}`);
+	prnt(`<br>---------------------------------------------<br>`);
+	prnt(`You took <em>${turns}</em> turns to complete the adventure.<br>`);
+
+	prnt(`<span class="message">This "remastered" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
+	
+
+	$restartBtn.classList.remove('is-hidden');
+}
+
+
+
+// ===== EVENT LISTENERS =====
+
 /**
  * Parse user input event
  */
@@ -531,11 +549,7 @@ $inputForm.addEventListener('submit', function(evt){
 	evt.preventDefault();
 
 	if ($userInput.value.length > 0) {
-		parseInput($userInput.value.toUpperCase());
-	}
-
-	if (checkScore()>=17 && room == 57) {
-		parseInput("SCORE");	
+		parseInput($userInput.value);
 	}
 
 	$userInput.value = '';
@@ -549,36 +563,14 @@ $restartBtn.addEventListener('click', function(evt){
 	evt.preventDefault();
 });
 
-// SOUNDS
-
-class Sound {
-	constructor(src) {
-		this.sound = document.createElement("audio");
-		this.sound.src = src;
-		this.sound.setAttribute("preload", "auto");
-		this.sound.setAttribute("controls", "none");
-		this.sound.style.display = "none";
-		document.body.appendChild(this.sound);
-	}
-
-	play() {
-		this.sound.play();
-	}
-
-	stop() {
-		this.sound.pause();
-	}
-}
-const sndOwl = new Sound("audio/owl.mp3");
-const sndDoor = new Sound("audio/door.mp3");
-const sndKey = new Sound("audio/key.mp3");
-const sndPickup = new Sound("audio/treasure_pickup.mp3");
-const sndShock = new Sound("audio/shock.mp3");
-const sndSplash = new Sound("audio/splash.mp3");
-
-// const snd = {};
-// snd.owl = new Sound("audio/owl.mp3");
-// snd.owl.play();
+/**
+ * Set event for overlay close button
+ */
+$continueBtn.addEventListener('click', function(evt){
+	$container.classList.remove('overlay');
+	$userInput.focus();
+	$userInput.select();
+});
 
 
 /**
@@ -598,26 +590,51 @@ function debugInfo() {
 	//console.clear();
 	//console.log(currentRoom);
 	cl("Turns: " + turns);
-	// cl("lightLevel: " + lightLevel);
+	// cl("flags.lightLevel: " + flags.lightLevel);
 	cl("score: " + totalScore);
 	// cl("sinking: " + flags.sinking);
-	cl("Terror: " + encroachingDarkness);
+	cl("Terror: " + flags.encroachingDarkness);
 }
 
+/**
+ * Initialize the game
+ * @param {string} startRoom Starting room id
+ * @param {array} carrying List of strings of objects player is carrying
+ */
+function init(startRoom,carrying) {
 
-// DEBUG STUFF
-let debug = true;
-if (debug) {
-	//currentRoom = rooms["darkAlcove"];
-	//objects["candle"].location = currentRoom.rid;w
-	// for (let obj in objects) {
-	// 	if (objects[obj].score) {
-	// 		objects[obj].location = "player";
-	// 	}
-	// }
+	// Initialize game data objects
+	// Set the machine name of all the rooms to .rid for easy reference
+	for (let room in rooms) {
+		rooms[room].rid = room;
+	}
+
+	for (let key in verbs) {
+		verbs[key].name = key;
+	}
+
+	for (let key in objects) {
+		objects[key].id = key;
+		if (!objects[key].name) {
+			objects[key].name = key;
+		}
+	}
+
+	currentRoom = rooms[startRoom];
+
+	if (carrying) {
+		for (let index in carrying) {
+			objects[carrying[index]].location = "player";
+		}
+	}
+
+	display();
+	$userInput.focus();
+	$userInput.select();
+
 }
 
 // INITIALIZE GAME
-display();
-$userInput.focus();
-$userInput.select();
+let debug = true;
+//init("pathThroughIronGate",[]);
+init("deepCellar",[]);
