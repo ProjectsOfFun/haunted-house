@@ -140,7 +140,7 @@ const rooms = {
 	},
 	"sculleryDoor": {
 		"name": "Scullery Door",
-		"description": "A dented old washbasin is all that remains here in the scullery. To the north an exit leads outside to the back of the house.",
+		"description": "A dented old washbasin is all that remains here in the scullery. to the north an exit leads to the backyard.",
 		"exits": {
 			"n": "yard",
 			"w": "kitchen"
@@ -249,7 +249,7 @@ const rooms = {
 	},
 	"spiralStaircase": {
 		"name": "Spiral Staircase",
-		"description": "The spiral staircase winds its way up to the mansions rear turret room.",
+		"description": "The spiral staircase winds its way up to the mansion's rear turret room.",
 		"exits": {
 			"u": "mustyRoom",
 			"d": "smallDarkRoom"
@@ -408,6 +408,9 @@ const rooms = {
 			"n": "gloomyPassage",
 			"e": "sittingRoom",
 			"s": "frontLobby"
+		},
+		"scenery": {
+			"door": "It's sealed shut with no perceivable means of opening it."
 		}
 	},
 	"sittingRoom": {
@@ -519,10 +522,18 @@ const rooms = {
 		"exits": {
 			"w": "library"
 		},
-		"description": "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
+		"description": "This is where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
 		"scenery": {
 			"wall" : "It seems brittle. You may be able to chop your way through.",
 			"hole" : "There's something beyond..."	
+		},
+		"wallBreak": function() {
+			this.exits.n = "secretRoom";
+			this.name = "Study with Secret Room";
+			this.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+			this.scenery.hole = "The hole is much bigger now.";
+			this.scenery.wall = "The wall is no more. A secret room lies to the north.";
+			this.scenery.passage ="It leads north to a secret room.";
 		}
 	},
 	"cobwebbyRoom": {
@@ -604,7 +615,8 @@ const rooms = {
 		},
 		"scenery": {
 			"doorway": "The carvings depict various sinister creatures.",
-			"carvings": "The carvings depict various sinister creatures."
+			"carvings": "The carvings depict various sinister creatures.",
+			"creatures": "Evil wolves, evil spiders, evil bats, and evil squirrels."
 		}
 	},
 	"frontTower": {
@@ -727,13 +739,13 @@ const rooms = {
 	},
 	"beneathTower": {
 		"name": "Beneath the Front Tower",
-		"description": "Above you looms the dark front tower of the mansion. Who knows what horrors lurk up there.",
+		"description": "Above you looms the front tower of the mansion. Who knows what horrors lurk up in there.",
 		"exits": {
 			"w": "pathByRailings",
 			"e": "debris"
 		},
 		"scenery": {
-			"tower" : "The menacing tower rises above you into the moonlit sky."	
+			"tower" : "The menacing tower rises above you against the moonlit sky."	
 		}
 	},
 	"debris": {
@@ -776,7 +788,7 @@ const rooms = {
 	},
 	"crumblingClifftop": {
 		"name": "Crumbling Clifftop",
-		"description": "You are standing at the top of a cliff. Below you to the north you see the marshy, impassable wetlands.",
+		"description": "You are standing at the edge of a crumbling cliff. Below you to the north you see the marshy, impassable wetlands. To the east the cliff drops off into darkness.",
 		"exits": {
 			"w": "stoneArch"
 		},

@@ -301,6 +301,7 @@ function parseInput(myInput) {
 		triggerEndGame();
 	}
 
+	// Fade the helper placeholder text after a few turns
 	switch (turns) {
 		case 4:
 			$userInput.classList.add('fading-1');
@@ -502,7 +503,10 @@ function triggerEndGame() {
 	rooms["pathThroughIronGate"].endingTrigger();
 }
 
-
+/**
+ * Player death, game ending routine
+ * @param {string} message HTML message to be displayed to player on death
+ */
 function death(message) {
 	$inputZone.remove();
 	cls();
@@ -518,6 +522,9 @@ function death(message) {
 }
 
 
+/**
+ * Game end routine if player wins.
+ */
 function victory() {
 	$inputZone.remove();
 	cls();
@@ -532,7 +539,7 @@ function victory() {
 	prnt(`<br>---------------------------------------------<br>`);
 	prnt(`You took <em>${turns}</em> turns to complete the adventure.<br>`);
 
-	prnt(`<span class="message">This "remastered" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
+	prnt(`<span class="message">This "remastered" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
 	
 
 	$restartBtn.classList.remove('is-hidden');
@@ -543,7 +550,7 @@ function victory() {
 // ===== EVENT LISTENERS =====
 
 /**
- * Parse user input event
+ * Trigger user input parsing
  */
 $inputForm.addEventListener('submit', function(evt){
 	evt.preventDefault();
@@ -564,7 +571,7 @@ $restartBtn.addEventListener('click', function(evt){
 });
 
 /**
- * Set event for overlay close button
+ * Overlay close button
  */
 $continueBtn.addEventListener('click', function(evt){
 	$container.classList.remove('overlay');
@@ -644,4 +651,3 @@ function init(startRoom,carrying,inRoom) {
 // INITIALIZE GAME
 let debug = false;
 init("pathThroughIronGate",[],[]);
-//init("hallWithLockedDoor",["candle","candlestick","matches"],["key"]);

@@ -276,14 +276,16 @@ const verbs = {
 				if (obj.location === currentRoom.rid) {
 					message = obj.takeMessage ? obj.takeMessage : "Taken.";
 					obj.location = "player";
-					if (obj.score > 0) {
-						message += " You've found treasure!";
-						snd.pickup.play();
 
+					if (obj.score > 0) {
 						if (checkScore() === getMaxScore()) {
 							message += ` You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!`;
+						} else {
+							message += " You've found treasure!";
 						}
+						snd.pickup.play();
 					}
+
 					verbs["get"].combineObjects(noun,obj);
 					return;
 				}
@@ -478,11 +480,18 @@ const verbs = {
 			}
 
 			if (noun === "verbs") {
+				const verb_array = [];
 				let verblist = "";
+	
 				for (let verb in verbs) {
 					if (verb.length > 1) {
-						verblist += verb.toUpperCase() + ", ";
+						verb_array.push(verb.toUpperCase());
 					}
+				}
+				verb_array.sort();
+
+				for (let verb in verb_array) {
+					verblist += verb_array[verb] + ", ";
 				}
 				myHelp = `Tired of playing "Guess the verb?"<br><br><b>Verbs I know:</b>  ${verblist.substring(0,verblist.length - 2)}`;
 				displayOverlay(myHelp);
@@ -582,14 +591,6 @@ const verbs = {
 				message = "As you search through the old coat you find a key in the pocket.";
 				objects["key"].location = currentRoom.rid;
 				snd.key.play();
-			}
-
-			// Default action if obj has a description
-			if (obj.description && objectInRange(obj)) {
-				message = obj.description;
-				return;
-			} else if (obj.description) {
-				message = "You do see that here.";
 				return;
 			}
 
@@ -601,6 +602,15 @@ const verbs = {
 						return;
 					}
 				}	
+			}
+
+			// Default action if obj has a description
+			if (obj.description && objectInRange(obj)) {
+				message = obj.description;
+				return;
+			} else if (obj.description) {
+				message = "You do see that here.";
+				return;
 			}
 
 		}
@@ -696,7 +706,7 @@ const verbs = {
 	},
 	"say": {
 		"action": function(noun,obj) {
-			message = "You say, &quot;" + noun.toUpperCase() + "!&quot;";
+			message = `You say, "${noun.toUpperCase()}!"`;
 
 			// Saying the magic word to dispel the field
 			if (obj.id === "xzanfar" && isCarrying("magic spells")) {
@@ -717,7 +727,7 @@ const verbs = {
 			}
 
 			// Saying naughty things
-			if (nounCheck(noun,["fuck","shit","cunt","tits"])) {
+			if (nounCheck(noun,["fuck","shit","cunt","tits","piss","cocksucker","motherfucker"])) {
 				message += "<br><br>Relax. It's just a game.";
 				return;
 			}
@@ -772,20 +782,17 @@ const verbs = {
 			}
 
 			if (obj.id === "axe" && isCarrying("axe") && isRoom("study") && !flags.studyWallBroken) {
-				message = "You broke the thin wall.";
+				message = "With a powerful swing of the axe, you broke through the thin wall.";
 				flags.studyWallBroken = true;
-				currentRoom.exits.n = "secretRoom";
-				currentRoom.name = "Study with Secret Room";
-				currentRoom.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
-				currentRoom.scenery.hole = "The hole is much bigger now.";
-				currentRoom.scenery.wall = "The wall is no more. A secret room lies to the north.";
-				currentRoom.scenery.passage ="It leads north to a secret room.";
+				currentRoom.wallBreak();
 				return;
 			}
+
 			if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
 				message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
 				return;
 			}
+
 			if (obj.id === "axe" && isCarrying("axe")) {
 				message = "Whoosh!!!";
 				return;

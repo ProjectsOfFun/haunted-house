@@ -504,7 +504,7 @@ var rooms = {
   },
   "sculleryDoor": {
     "name": "Scullery Door",
-    "description": "A dented old washbasin is all that remains here in the scullery. To the north an exit leads outside to the back of the house.",
+    "description": "A dented old washbasin is all that remains here in the scullery. to the north an exit leads to the backyard.",
     "exits": {
       "n": "yard",
       "w": "kitchen"
@@ -613,7 +613,7 @@ var rooms = {
   },
   "spiralStaircase": {
     "name": "Spiral Staircase",
-    "description": "The spiral staircase winds its way up to the mansions rear turret room.",
+    "description": "The spiral staircase winds its way up to the mansion's rear turret room.",
     "exits": {
       "u": "mustyRoom",
       "d": "smallDarkRoom"
@@ -772,6 +772,9 @@ var rooms = {
       "n": "gloomyPassage",
       "e": "sittingRoom",
       "s": "frontLobby"
+    },
+    "scenery": {
+      "door": "It's sealed shut with no perceivable means of opening it."
     }
   },
   "sittingRoom": {
@@ -883,10 +886,18 @@ var rooms = {
     "exits": {
       "w": "library"
     },
-    "description": "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
+    "description": "This is where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
     "scenery": {
       "wall": "It seems brittle. You may be able to chop your way through.",
       "hole": "There's something beyond..."
+    },
+    "wallBreak": function wallBreak() {
+      this.exits.n = "secretRoom";
+      this.name = "Study with Secret Room";
+      this.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+      this.scenery.hole = "The hole is much bigger now.";
+      this.scenery.wall = "The wall is no more. A secret room lies to the north.";
+      this.scenery.passage = "It leads north to a secret room.";
     }
   },
   "cobwebbyRoom": {
@@ -968,7 +979,8 @@ var rooms = {
     },
     "scenery": {
       "doorway": "The carvings depict various sinister creatures.",
-      "carvings": "The carvings depict various sinister creatures."
+      "carvings": "The carvings depict various sinister creatures.",
+      "creatures": "Evil wolves, evil spiders, evil bats, and evil squirrels."
     }
   },
   "frontTower": {
@@ -1091,13 +1103,13 @@ var rooms = {
   },
   "beneathTower": {
     "name": "Beneath the Front Tower",
-    "description": "Above you looms the dark front tower of the mansion. Who knows what horrors lurk up there.",
+    "description": "Above you looms the front tower of the mansion. Who knows what horrors lurk up in there.",
     "exits": {
       "w": "pathByRailings",
       "e": "debris"
     },
     "scenery": {
-      "tower": "The menacing tower rises above you into the moonlit sky."
+      "tower": "The menacing tower rises above you against the moonlit sky."
     }
   },
   "debris": {
@@ -1140,7 +1152,7 @@ var rooms = {
   },
   "crumblingClifftop": {
     "name": "Crumbling Clifftop",
-    "description": "You are standing at the top of a cliff. Below you to the north you see the marshy, impassable wetlands.",
+    "description": "You are standing at the edge of a crumbling cliff. Below you to the north you see the marshy, impassable wetlands. To the east the cliff drops off into darkness.",
     "exits": {
       "w": "stoneArch"
     },
@@ -1456,12 +1468,13 @@ var verbs = {
           obj.location = "player";
 
           if (obj.score > 0) {
-            message += " You've found treasure!";
-            _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].pickup.play();
-
             if (checkScore() === getMaxScore()) {
               message += " You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!";
+            } else {
+              message += " You've found treasure!";
             }
+
+            _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].pickup.play();
           }
 
           verbs["get"].combineObjects(noun, obj);
@@ -1657,12 +1670,19 @@ var verbs = {
       }
 
       if (noun === "verbs") {
+        var verb_array = [];
         var verblist = "";
 
         for (var verb in verbs) {
           if (verb.length > 1) {
-            verblist += verb.toUpperCase() + ", ";
+            verb_array.push(verb.toUpperCase());
           }
+        }
+
+        verb_array.sort();
+
+        for (var _verb in verb_array) {
+          verblist += verb_array[_verb] + ", ";
         }
 
         myHelp = "Tired of playing \"Guess the verb?\"<br><br><b>Verbs I know:</b>  ".concat(verblist.substring(0, verblist.length - 2));
@@ -1761,14 +1781,6 @@ var verbs = {
         message = "As you search through the old coat you find a key in the pocket.";
         objects["key"].location = currentRoom.rid;
         _sounds_js__WEBPACK_IMPORTED_MODULE_0__["default"].key.play();
-      } // Default action if obj has a description
-
-
-      if (obj.description && objectInRange(obj)) {
-        message = obj.description;
-        return;
-      } else if (obj.description) {
-        message = "You do see that here.";
         return;
       } // Default action if noun is scenery in room
 
@@ -1780,6 +1792,15 @@ var verbs = {
             return;
           }
         }
+      } // Default action if obj has a description
+
+
+      if (obj.description && objectInRange(obj)) {
+        message = obj.description;
+        return;
+      } else if (obj.description) {
+        message = "You do see that here.";
+        return;
       }
     }
   },
@@ -1880,7 +1901,7 @@ var verbs = {
   },
   "say": {
     "action": function action(noun, obj) {
-      message = "You say, &quot;" + noun.toUpperCase() + "!&quot;"; // Saying the magic word to dispel the field
+      message = "You say, \"".concat(noun.toUpperCase(), "!\""); // Saying the magic word to dispel the field
 
       if (obj.id === "xzanfar" && isCarrying("magic spells")) {
         if (isRoom("coldChamber") && flags.magicalBarrier) {
@@ -1901,7 +1922,7 @@ var verbs = {
       } // Saying naughty things
 
 
-      if (nounCheck(noun, ["fuck", "shit", "cunt", "tits"])) {
+      if (nounCheck(noun, ["fuck", "shit", "cunt", "tits", "piss", "cocksucker", "motherfucker"])) {
         message += "<br><br>Relax. It's just a game.";
         return;
       }
@@ -1958,14 +1979,9 @@ var verbs = {
       }
 
       if (obj.id === "axe" && isCarrying("axe") && isRoom("study") && !flags.studyWallBroken) {
-        message = "You broke the thin wall.";
+        message = "With a powerful swing of the axe, you broke through the thin wall.";
         flags.studyWallBroken = true;
-        currentRoom.exits.n = "secretRoom";
-        currentRoom.name = "Study with Secret Room";
-        currentRoom.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
-        currentRoom.scenery.hole = "The hole is much bigger now.";
-        currentRoom.scenery.wall = "The wall is no more. A secret room lies to the north.";
-        currentRoom.scenery.passage = "It leads north to a secret room.";
+        currentRoom.wallBreak();
         return;
       }
 
@@ -2444,7 +2460,8 @@ function parseInput(myInput) {
 
   if (getMaxScore() === checkScore()) {
     triggerEndGame();
-  }
+  } // Fade the helper placeholder text after a few turns
+
 
   switch (turns) {
     case 4:
@@ -2651,6 +2668,11 @@ function getMaxScore() {
 function triggerEndGame() {
   rooms["pathThroughIronGate"].endingTrigger();
 }
+/**
+ * Player death, game ending routine
+ * @param {string} message HTML message to be displayed to player on death
+ */
+
 
 function death(message) {
   $inputZone.remove();
@@ -2664,6 +2686,10 @@ function death(message) {
   prnt("Your final score is: <em>".concat(checkScore(), "/").concat(getMaxScore() + 1, "</em>"));
   $restartBtn.classList.remove('is-hidden');
 }
+/**
+ * Game end routine if player wins.
+ */
+
 
 function victory() {
   $inputZone.remove();
@@ -2677,12 +2703,12 @@ function victory() {
   prnt("".concat(messages[rnd]));
   prnt("<br>---------------------------------------------<br>");
   prnt("You took <em>".concat(turns, "</em> turns to complete the adventure.<br>"));
-  prnt("<span class=\"message\">This \"remastered\" version <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.</span>");
+  prnt("<span class=\"message\">This \"remastered\" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.</span>");
   $restartBtn.classList.remove('is-hidden');
 } // ===== EVENT LISTENERS =====
 
 /**
- * Parse user input event
+ * Trigger user input parsing
  */
 
 
@@ -2704,7 +2730,7 @@ $restartBtn.addEventListener('click', function (evt) {
   evt.preventDefault();
 });
 /**
- * Set event for overlay close button
+ * Overlay close button
  */
 
 $continueBtn.addEventListener('click', function (evt) {
@@ -2782,8 +2808,7 @@ function init(startRoom, carrying, inRoom) {
 
 
 var debug = false;
-init("pathThroughIronGate", [], []); //init("hallWithLockedDoor",["candle","candlestick","matches"],["key"]);
-
+init("pathThroughIronGate", [], []);
 /**
  * This file contains scripts that enhance the layout display.
  * This code does not affect the game play.
