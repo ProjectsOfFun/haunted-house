@@ -130,18 +130,23 @@ body.alt-font {
 #hh-userInput::placeholder {
   color: #004000;
 }
+
 #hh-userInput.fading-1::-webkit-input-placeholder {
   color: #003d00;
 }
+
 #hh-userInput.fading-1::-moz-placeholder {
   color: #003d00;
 }
+
 #hh-userInput.fading-1:-ms-input-placeholder {
   color: #003d00;
 }
+
 #hh-userInput.fading-1::-ms-input-placeholder {
   color: #003d00;
 }
+
 #hh-userInput.fading-1::placeholder {
   color: #003d00;
 }
