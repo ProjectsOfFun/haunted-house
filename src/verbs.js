@@ -54,6 +54,7 @@ const verbs = {
 	"climb": {
 		"action": function(noun,obj) {
 			message = "You can't climb that.";
+			cl(obj.id);
 
 			if ((noun === "tree" || obj.id === "rope") && flags.ropeTiedToTree && isRoom("blastedTree")) {
 				message = `You use the rope to climb the tree.`;
@@ -274,13 +275,13 @@ const verbs = {
 				return;
 			}
 
-			if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
-				message = "You untie the rope from the tree.";
-				obj.location = "player";
-				obj.removeFromTree();
-				flags.ropeTiedToTree = false;
-				return;
-			}
+			// if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
+			// 	message = "You untie the rope from the tree.";
+			// 	obj.location = "player";
+			// 	obj.removeFromTree();
+			// 	flags.ropeTiedToTree = false;
+			// 	return;
+			// }
 
 			if (obj.id === "vase" && flags.inBoat && objectInRange("vase")) {
 				message = `It's stuck in the muck. You're going to have to exit the boat to get to it.`;
@@ -471,7 +472,7 @@ const verbs = {
 			let myHelp;
 
 			if (!noun) {
-				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. And for more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
+				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
 				displayOverlay(myHelp);
 				message = '';
 				return;
@@ -492,7 +493,7 @@ const verbs = {
 			}
 
 			if (noun === "about") {
-				myHelp = `<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>&copy;2020 Robert Wm. Gomez`;
+				myHelp = `<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>Special thanks to <em>John Burgess</em> for beta testing and some helpful suggestions.<br><br>&copy;2020 Robert Wm. Gomez`;
 				displayOverlay(myHelp);
 				message = '';
 				return;
@@ -837,27 +838,27 @@ const verbs = {
 	"take": {
 		synonym : "get"
 	},
-	"tie": {
-		"action": function(noun,obj) {
-			message = "You can't tie that.";
+	// "tie": {
+	// 	"action": function(noun,obj) {
+	// 		message = "You can't tie that.";
 
-			if (obj.id === "rope" && isCarrying("rope")) {
+	// 		if (obj.id === "rope" && isCarrying("rope")) {
 
-				if (isRoom("blastedTree")) {
-					message = `You reattach the rope to the branch.`;
-					obj.tieToTree();
-					obj.location = "blastedTree";
-					flags.ropeTiedToTree = true;
-					return;
-				}
+	// 			if (isRoom("blastedTree")) {
+	// 				message = `You reattach the rope to the branch.`;
+	// 				obj.tieToTree();
+	// 				obj.location = "blastedTree";
+	// 				flags.ropeTiedToTree = true;
+	// 				return;
+	// 			}
 
-				message = `There's no need to tie the rope to anything here.`;
-				return;
+	// 			message = `There's no need to tie the rope to anything here.`;
+	// 			return;
 
-			}
+	// 		}
 
-		}
-	},
+	// 	}
+	// },
 	"u": {
 		"action": function(noun,obj) {
 			if (noun) return;
@@ -900,6 +901,14 @@ const verbs = {
 
 			if (obj.locked && objectInRange(obj)) {
 				`You've unlocked the ${noun}.`;
+				return;
+			}
+		}
+	},
+	"untie": {
+		"action": function(noun,obj) {
+			if (obj.id = "rope" && objectInRange("rope")) {
+				verbs["get"].action(noun,obj);
 				return;
 			}
 		}

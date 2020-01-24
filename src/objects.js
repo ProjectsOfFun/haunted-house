@@ -223,9 +223,10 @@ const objects = {
 	},
 	"rope": {
 		"name": "a rope tied to a tree",
-		"description": `It's a normal length of rope and it's currently tied to an upper branch of the tree.`,
+		"description": `It's a length of rope tied to a branch of the tree. You can just reach it.`,
 		"location": "blastedTree",
-		"portable": true,
+		"portable": false,
+		"takeMessage": "You can't undo the knot. Besides, it's probably tied there for a (not-so-good) reason.",
 		"removeFromTree": function() {
 			this.name = "a length of rope";
 			this.description = `It's a normal length of rope.`;

@@ -702,5 +702,4 @@ function init(startRoom,carrying,inRoom) {
 // INITIALIZE GAME
 let debug = false;
 verbs["help"].action();
-init("pathThroughIronGate",["candle","matches","candlestick"],[]);
-//init("clifftop",[],[]);
+init("pathThroughIronGate",[],[]);

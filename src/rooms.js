@@ -90,7 +90,7 @@ const rooms = {
 	},
 	"blastedTree": {
 		"name": "Blasted Tree",
-		"description": "This corner of the property is eerily dim. Looming above is an ominous tree. It's leafless branches crackle in the breeze.",
+		"description": "This corner of the property is eerily dim. Looming above is an ominous tree. It's leafless branches crackle in the breeze. There is a rope tied to one of the branches.",
 		"exits": {
 			"w": "thickForest",
 			"s": "path"
@@ -806,6 +806,12 @@ const rooms = {
 		},
 		"onEnter": function(){
 			message = `You use the rope to climb the tree.`;
+		},
+		"scenery": {
+			"rope": "From up here you can see what appear to be fingernails wedged in the fibers of the rope.",
+			"fingernails": "Someone was desperately trying to untie this.",
+			"nails": "Someone was desperately trying to untie this.",
+			"fibers": "It's made of a very strong material."
 		}
 	},
 	"exit": {
