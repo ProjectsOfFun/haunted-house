@@ -185,6 +185,11 @@ var objects = {
     "score": 1,
     "takeMessage": "You pick up the sack of coins."
   },
+  "debris": {
+    "location": "debris",
+    "description": "It's just a messy pile of building materials.",
+    "takeMessage": "Sold out. Try de chedda!"
+  },
   "desk": {
     "location": "study",
     "description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
@@ -227,6 +232,13 @@ var objects = {
       this.description = "It's a small side drawer. It's closed.";
       this.isOpen = false;
     }
+  },
+  "egg": {
+    "name": "a jewel encrusted egg",
+    "description": "It's a finely crafted jeweled egg. You get the feeling that you've seen it before.",
+    "location": "inTheTree",
+    "portable": true,
+    "score": 1
   },
   "ghost": {
     "synonym": "ghosts"
@@ -359,6 +371,18 @@ var objects = {
     "captureGhosts": function captureGhosts() {
       this.name = "a tiny vacuum filled with ghosts";
       this.description = "It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!";
+    }
+  },
+  "vase": {
+    "name": "a vase in the muck",
+    "description": "It's mostly submerged in the muck, but it looks like a valuable antique.",
+    "location": "marsh",
+    "portable": true,
+    "score": 1,
+    "takeMessage": "With a loud \"schloop!\" pull the vase out of the bog.",
+    "takeVase": function takeVase() {
+      this.name = "an antique Chinese vase";
+      this.description = "The vase is Chinese in orgin. It is covered with images of spirits amoungst warriors.";
     }
   },
   "xzanfar": {}
@@ -561,13 +585,14 @@ var rooms = {
   },
   "sideOfHouse": {
     "name": "Side of House",
-    "description": "As you make your way down the side of the house, you notice a message hastily scrawed on the siding here.",
+    "description": "As you make your way down the side of the house, you notice a message hastily scrawled on the siding here.",
     "exits": {
       "n": "cornerOfHouse",
       "s": "crumblingWall"
     },
     "scenery": {
-      "siding": "There's a message scrawled on it."
+      "siding": "There's a message scrawled on it.",
+      "scrawl": "It's a message of some sort."
     }
   },
   "backOfHallway": {
@@ -1037,7 +1062,8 @@ var rooms = {
     "scenery": {
       "bugs": "They are too small too really hurt you but provide a constant annoyance.",
       "clouds": "Not quite a swarm, but enough to make you want to move on.",
-      "marsh": "The water is dark and you can't see the bottom."
+      "marsh": "The water is dark and you can't see the bottom.",
+      "muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
     },
     "water": true
   },
@@ -1103,7 +1129,7 @@ var rooms = {
   },
   "beneathTower": {
     "name": "Beneath the Front Tower",
-    "description": "Above you looms the front tower of the mansion. Who knows what horrors lurk up in there.",
+    "description": "Above you looms the front tower of the mansion. Who knows what horrors lurk in there.",
     "exits": {
       "w": "pathByRailings",
       "e": "debris"
@@ -1120,7 +1146,6 @@ var rooms = {
       "e": "fallenBrickwork"
     },
     "scenery": {
-      "debris": "It's just a messy pile of building materials.",
       "pile": "The pile of building materials is impassable.",
       "facade": "It must have been stunning when it was new."
     }
@@ -1183,6 +1208,16 @@ var verbs = {
     },
     "singleWord": true
   },
+  "blow": {
+    "action": function action(noun, obj) {
+      message = "You let out a puff of air.";
+
+      if (obj.id === "candle" && objectInRange("candle") || flags.candleLit) {
+        verbs["unlight"].action(noun, obj);
+        return;
+      }
+    }
+  },
   "board": {
     "synonym": "enter"
   },
@@ -1198,8 +1233,6 @@ var verbs = {
         if (objects[key].location === "player") {
           if (inventory.length > 0) {
             inventory += ", ";
-          } else {
-            inventory = "<br>";
           }
 
           inventory += objects[key].name;
@@ -1207,7 +1240,8 @@ var verbs = {
       }
 
       if (!inventory) inventory = "Nothing.";
-      message = "You are carrying: ".concat(inventory);
+      message = "You are carrying: ".concat(inventory); // displayOverlay(message);
+      // message = '';
     },
     "singleWord": true
   },
@@ -1462,6 +1496,15 @@ var verbs = {
         return;
       }
 
+      if (obj.id === "vase" && flags.inBoat && objectInRange("vase")) {
+        message = "It's stuck in the muck. You're going to have to exit the boat to get to it.";
+        return;
+      }
+
+      if (obj.id === "vase" && !flags.inBoat && objectInRange("vase")) {
+        obj.takeVase();
+      }
+
       if (obj.portable && objectInRange(obj)) {
         if (obj.location === currentRoom.rid) {
           message = obj.takeMessage ? obj.takeMessage : "Taken.";
@@ -1642,7 +1685,7 @@ var verbs = {
       var myHelp;
 
       if (!noun) {
-        myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to win the game.<br><br>For more help type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.";
+        myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. And for more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.";
         displayOverlay(myHelp);
         message = '';
         return;
@@ -1699,6 +1742,22 @@ var verbs = {
   },
   "inventory": {
     "synonym": "carrying",
+    "singleWord": true
+  },
+  "jump": {
+    "action": function action(noun, obj) {
+      message = "You jump up and down like an idiot.";
+
+      if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "cliffTop")) {
+        message = "Then the story would end in a cliffhanger.";
+        return;
+      }
+
+      if (obj.id === "candlestick" && objectInRange("candlestick")) {
+        message = "You be nimble, you be quick.";
+        return;
+      }
+    },
     "singleWord": true
   },
   "kill": {
@@ -2166,7 +2225,9 @@ var message = ''; // M$
 var previousObj = null;
 var previousRoom = null;
 var totalScore = 0;
-var turns = 0; // Game state variables
+var turns = 0;
+var history = ["help"];
+var historyCarat = 0; // Game state variables
 
 var flags = {
   barsDug: false,
@@ -2248,7 +2309,7 @@ function getExtraDescription(roomObject) {
     if (flags.inBoat) {
       output += "You are in the boat.";
     } else {
-      output += "There is a boat here.";
+      output += "There's a boat here.";
     }
   }
 
@@ -2409,6 +2470,10 @@ function parseInput(myInput) {
 
   if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 11) {
     message += "<br>Your candle is waning!";
+  }
+
+  if (flags.candleLit && flags.lightLevel > 8 && flags.lightLevel < 11) {
+    message += " <em>Extinguish</em> it if you want to save it for later.";
   }
 
   if (flags.lightLevel == 1) {
@@ -2716,14 +2781,47 @@ $inputForm.addEventListener('submit', function (evt) {
   evt.preventDefault();
 
   if ($userInput.value.length > 0) {
+    history.push($userInput.value);
+
+    if (history.length > 15) {
+      history.shift();
+    }
+
     parseInput($userInput.value);
   }
 
+  historyCarat = 0;
   $userInput.value = '';
 });
 /**
+ * Read input history
+ */
+
+document.onkeydown = checkKey;
+
+function checkKey(evt) {
+  evt = evt || window.event;
+
+  if (evt.keyCode == '38') {
+    if (++historyCarat > history.length) {
+      historyCarat = history.length;
+    }
+
+    $userInput.value = history[history.length - historyCarat];
+  }
+
+  if (evt.keyCode == '40') {
+    if (--historyCarat < 1) {
+      historyCarat = 1;
+    }
+
+    $userInput.value = history[history.length - historyCarat];
+  }
+}
+/**
  * Reset button event
  */
+
 
 $restartBtn.addEventListener('click', function (evt) {
   location.reload();
@@ -2808,7 +2906,9 @@ function init(startRoom, carrying, inRoom) {
 
 
 var debug = false;
-init("pathThroughIronGate", [], []);
+verbs["help"].action();
+init("pathThroughIronGate", ["candle", "matches", "candlestick"], []); //init("clifftop",[],[]);
+
 /**
  * This file contains scripts that enhance the layout display.
  * This code does not affect the game play.
