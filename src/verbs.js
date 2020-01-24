@@ -7,6 +7,16 @@ const verbs = {
 		},
 		"singleWord": true
 	},
+	"blow": {
+		"action": function(noun,obj) {
+			message = "You let out a puff of air.";
+
+			if (obj.id === "candle" && objectInRange("candle") || flags.candleLit) {
+				verbs["unlight"].action(noun,obj);
+				return;
+			}
+		}
+	},
 	"board": {
 		"synonym": "enter"
 	},
@@ -20,14 +30,14 @@ const verbs = {
 				if (objects[key].location === "player") {
 					if (inventory.length > 0) {
 						inventory += ", "
-					} else {
-						inventory = "<br>"
 					}
 					inventory += objects[key].name;	
 				}
 			}
 			if (!inventory) inventory = "Nothing.";
-			message = `You are carrying: ${inventory}`;	
+			message = `You are carrying: ${inventory}`;
+			// displayOverlay(message);
+			// message = '';
 		},
 		"singleWord": true
 	},
@@ -272,6 +282,15 @@ const verbs = {
 				return;
 			}
 
+			if (obj.id === "vase" && flags.inBoat && objectInRange("vase")) {
+				message = `It's stuck in the muck. You're going to have to exit the boat to get to it.`;
+				return;
+			}
+
+			if (obj.id === "vase" && !flags.inBoat && objectInRange("vase")) {
+				obj.takeVase();
+			}
+
 			if (obj.portable && objectInRange(obj)) {
 				if (obj.location === currentRoom.rid) {
 					message = obj.takeMessage ? obj.takeMessage : "Taken.";
@@ -452,7 +471,7 @@ const verbs = {
 			let myHelp;
 
 			if (!noun) {
-				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to win the game.<br><br>For more help type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
+				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. And for more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
 				displayOverlay(myHelp);
 				message = '';
 				return;
@@ -507,6 +526,22 @@ const verbs = {
 	},
 	"inventory": {
 		"synonym": "carrying",
+		"singleWord": true
+	},
+	"jump": {
+		"action": function(noun,obj) {
+			message = "You jump up and down like an idiot.";
+
+			if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "cliffTop")) {
+				message = "Then the story would end in a cliffhanger.";
+				return;
+			}
+
+			if (obj.id === "candlestick" && objectInRange("candlestick")) {
+				message = "You be nimble, you be quick.";
+				return;
+			}
+		},
 		"singleWord": true
 	},
 	"kill": {

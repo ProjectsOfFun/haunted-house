@@ -197,13 +197,14 @@ const rooms = {
 	},
 	"sideOfHouse": {
 		"name": "Side of House",
-		"description": "As you make your way down the side of the house, you notice a message hastily scrawed on the siding here.",
+		"description": "As you make your way down the side of the house, you notice a message hastily scrawled on the siding here.",
 		"exits": {
 			"n": "cornerOfHouse",
 			"s": "crumblingWall"
 		},
 		"scenery": {
-			"siding": "There's a message scrawled on it."
+			"siding": "There's a message scrawled on it.",
+			"scrawl": "It's a message of some sort."
 		}
 	},
 	"backOfHallway": {
@@ -673,7 +674,8 @@ const rooms = {
 		"scenery":{
 			"bugs": "They are too small too really hurt you but provide a constant annoyance.",
 			"clouds": "Not quite a swarm, but enough to make you want to move on.",
-			"marsh": "The water is dark and you can't see the bottom."
+			"marsh": "The water is dark and you can't see the bottom.",
+			"muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
 		},
 		"water": true
 	},
@@ -739,7 +741,7 @@ const rooms = {
 	},
 	"beneathTower": {
 		"name": "Beneath the Front Tower",
-		"description": "Above you looms the front tower of the mansion. Who knows what horrors lurk up in there.",
+		"description": "Above you looms the front tower of the mansion. Who knows what horrors lurk in there.",
 		"exits": {
 			"w": "pathByRailings",
 			"e": "debris"
@@ -756,7 +758,6 @@ const rooms = {
 			"e": "fallenBrickwork"
 		},
 		"scenery": {
-			"debris": "It's just a messy pile of building materials.",
 			"pile": "The pile of building materials is impassable.",
 			"facade": "It must have been stunning when it was new."
 		}

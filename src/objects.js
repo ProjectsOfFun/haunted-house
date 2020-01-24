@@ -93,6 +93,11 @@ const objects = {
 		"score": 1,
 		"takeMessage": "You pick up the sack of coins."
 	},
+	"debris": {
+		"location": "debris",
+		"description": "It's just a messy pile of building materials.",
+		"takeMessage": "Sold out. Try de chedda!"
+	},
 	"desk": {
 		"location": "study",
 		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
@@ -135,6 +140,13 @@ const objects = {
 			this.description = "It's a small side drawer. It's closed.";
 			this.isOpen = false;
 		}
+	},
+	"egg": {
+		"name": "a jewel encrusted egg",
+		"description": "It's a finely crafted jeweled egg. You get the feeling that you've seen it before.",
+		"location": "inTheTree",
+		"portable": true,
+		"score": 1
 	},
 	"ghost": {
 		"synonym": "ghosts"
@@ -267,6 +279,18 @@ const objects = {
 		"captureGhosts": function() {
 			this.name = "a tiny vacuum filled with ghosts";
 			this.description = `It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!`;
+		}
+	},
+	"vase": {
+		"name": "a vase in the muck",
+		"description": "It's mostly submerged in the muck, but it looks like a valuable antique.",
+		"location": "marsh",
+		"portable": true,
+		"score": 1,
+		"takeMessage": `With a loud "schloop!" pull the vase out of the bog.`,
+		"takeVase": function() {
+			this.name = "an antique Chinese vase";
+			this.description = "The vase is Chinese in orgin. It is covered with images of spirits amoungst warriors.";
 		}
 	},
 	"xzanfar": {},

@@ -23,6 +23,8 @@ let previousObj = null;
 let previousRoom = null;
 let totalScore = 0;
 let turns = 0;
+let history = ["help"];
+let historyCarat = 0;
 
 // Game state variables
 const flags = {
@@ -101,7 +103,7 @@ function getExtraDescription(roomObject) {
 		if (flags.inBoat) {
 			output += `You are in the boat.`;
 		} else {
-			output += `There is a boat here.`;
+			output += `There's a boat here.`;
 		}
 	}
 	if (output === "") output = false;
@@ -256,6 +258,9 @@ function parseInput(myInput) {
 	// Candle power
 	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 11) {
 		message += `<br>Your candle is waning!`;
+	}
+	if (flags.candleLit && flags.lightLevel > 8 && flags.lightLevel < 11) {
+		message += ` <em>Extinguish</em> it if you want to save it for later.`;
 	}
 	if (flags.lightLevel == 1) {
 		message += `<br>Your candle has gone out!`;
@@ -556,11 +561,41 @@ $inputForm.addEventListener('submit', function(evt){
 	evt.preventDefault();
 
 	if ($userInput.value.length > 0) {
+		history.push($userInput.value);
+		if (history.length > 15) {
+			history.shift();
+		}
 		parseInput($userInput.value);
 	}
 
+	historyCarat = 0;
 	$userInput.value = '';
 });
+
+
+
+/**
+ * Read input history
+ */
+document.onkeydown = checkKey;
+function checkKey(evt) {
+	evt = evt || window.event;
+
+	if (evt.keyCode == '38') {
+		if 	(++historyCarat > history.length) {
+			historyCarat = history.length;
+		}
+		$userInput.value = history[history.length - historyCarat];
+	}
+
+	if (evt.keyCode == '40') {
+		if 	(--historyCarat < 1) {
+			historyCarat = 1;
+		}
+		$userInput.value = history[history.length - historyCarat];
+	}
+}
+
 
 /**
  * Reset button event
@@ -650,4 +685,6 @@ function init(startRoom,carrying,inRoom) {
 
 // INITIALIZE GAME
 let debug = false;
-init("pathThroughIronGate",[],[]);
+verbs["help"].action();
+init("pathThroughIronGate",["candle","matches","candlestick"],[]);
+//init("clifftop",[],[]);
