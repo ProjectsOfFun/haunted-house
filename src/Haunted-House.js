@@ -155,6 +155,15 @@ function displayOverlay(text) {
 	$container.classList.add('overlay');
 }
 
+/**
+ * Hide the overlay
+ */
+function hideOverlay() {
+	$container.classList.remove('overlay');
+	$userInput.focus();
+	$userInput.select();
+}
+
 
 /**
  * Renders a room's exits as a comma separated list
@@ -561,7 +570,9 @@ $inputForm.addEventListener('submit', function(evt){
 	evt.preventDefault();
 
 	if ($userInput.value.length > 0) {
-		history.push($userInput.value);
+		if (history[history.length - 1] != $userInput.value) {
+			history.push($userInput.value);
+		}
 		if (history.length > 15) {
 			history.shift();
 		}
@@ -581,14 +592,21 @@ document.onkeydown = checkKey;
 function checkKey(evt) {
 	evt = evt || window.event;
 
-	if (evt.keyCode == '38') {
+	if ($container.classList.contains('overlay')) {
+		if ((evt.keyCode == '27' || evt.keyCode == '13')) { // Down arrow
+			hideOverlay();
+		}
+		return;
+	}
+
+	if (evt.keyCode == '38') { // Up arrow
 		if 	(++historyCarat > history.length) {
 			historyCarat = history.length;
 		}
 		$userInput.value = history[history.length - historyCarat];
 	}
 
-	if (evt.keyCode == '40') {
+	if (evt.keyCode == '40') { // Down arrow
 		if 	(--historyCarat < 1) {
 			historyCarat = 1;
 		}
@@ -609,9 +627,7 @@ $restartBtn.addEventListener('click', function(evt){
  * Overlay close button
  */
 $continueBtn.addEventListener('click', function(evt){
-	$container.classList.remove('overlay');
-	$userInput.focus();
-	$userInput.select();
+	hideOverlay();
 });
 
 
