@@ -1,9 +1,11 @@
 //@prepros-prepend objects.js
 //@prepros-prepend rooms.js
 //@prepros-prepend verbs.js
-//@prepros-append interface.js
+//@prepros-prepend sounds.js
+//@prepros-prepend interface.js
 
-import snd from './sounds.js';
+// Eventually all these prepends will be imports (if I can learn ES6)
+//import snd from './sounds.js';
 
 
 // Initialize DOM items as JS variables
@@ -32,6 +34,7 @@ const flags = {
 	batsAttacking: true, // flags[26]
 	candleLit: false, // flags[0]
 	encroachingDarkness: 0,
+	ghoulProgress: 0,
 	frontDoorOpen: true, // flags[23]
 	ghostsAttacking: true, // flags[27]
 	hallDoorLocked: true,
@@ -265,10 +268,10 @@ function parseInput(myInput) {
 	// POST VERB MESSAGES
 
 	// Candle power
-	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 11) {
+	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 13) {
 		message += `<br>Your candle is waning!`;
 	}
-	if (flags.candleLit && flags.lightLevel > 8 && flags.lightLevel < 11) {
+	if (flags.candleLit && flags.lightLevel > 9 && flags.lightLevel < 13) {
 		message += ` <em>Extinguish</em> it if you want to save it for later.`;
 	}
 	if (flags.lightLevel == 1) {
@@ -285,7 +288,8 @@ function parseInput(myInput) {
 			message += `<br>You hear something in the darkness!`;
 		}
 		if (flags.encroachingDarkness >= 4 && flags.encroachingDarkness < 6) {
-			message += `<br>You hear a terrifying growl. There is definitely something in the room with you!`;
+			message += `<br>You hear a terrifying groan. There is definitely something in the room with you!`;
+			snd.groan.play();
 		}
 		if (flags.encroachingDarkness >= 6) {
 			death(`A slimy appendage grabs you from out of the darkness and wraps itself around your neck!<br><br>You are helpless and filled with a sense of unspeakable terror as the creature squeezes the life out of you.`);
@@ -302,9 +306,33 @@ function parseInput(myInput) {
 		message += `<br>You are sinking in the bog!`;
 		if (flags.sinking > 3) {
 			death(`Flailing and struggling, you sink deeper and deeper into the sticky bog. Despite your efforts, the water envelops you.`);
-			return
+			return;
 		} if (flags.sinking === 3) {
 			message += ` Do something, quick!`;
+		}
+	}
+
+	// Ghoul Effects
+	if (currentRoom.rid === "finalRoom") {
+		flags.ghoulProgress++;
+
+		switch (flags.ghoulProgress) {
+			case 4:
+				message += `<br>The ghoul lumbers towards you!`;
+				break;
+			case 5:
+				message += `<br>The ghoul continues to move towards you!`;
+				break;
+			case 6:
+				message += `<br>The ghoul hisses and takes a swipe at your face!`;
+				break;
+			case 7:
+				message += `<br>The ghoul spits dark spray of ooze towards your face. You dodge it just in the nick of time.`;
+				break;
+			case 8:
+				snd.laugh.play();
+				death(`Moving much quicker than you thought possible, the ghoul tackles you to the ground. You struggle and fight but it's too little, too late. Teeth sink into your flesh and your veins fill with the dark ooze. The last thing you see before your life is completely drained is the ghoulish child stumbling away carrying all your treasures with him back into the mansion.`);
+				return;
 		}
 	}
 
@@ -515,6 +543,9 @@ function getMaxScore() {
  */
 function triggerEndGame() {
 	rooms["pathThroughIronGate"].endingTrigger();
+	rooms["frontPorch"].exits.s = "finalRoom";
+	rooms["twistedRailings"].exits.e = "finalRoom";
+	rooms["pathByRailings"].exits.w = "finalRoom";
 }
 
 /**
@@ -646,12 +677,12 @@ function cl(msg) {
 function debugInfo() {
 	if (!debug) return;
 	//console.clear();
-	//console.log(currentRoom);
-	//cl("Turns: " + turns);
-	// cl("flags.lightLevel: " + flags.lightLevel);
-	//cl("score: " + totalScore);
-	// cl("sinking: " + flags.sinking);
-	//cl("Terror: " + flags.encroachingDarkness);
+	console.log(currentRoom);
+	cl("Turns: " + turns);
+	cl("flags.lightLevel: " + flags.lightLevel);
+	cl("score: " + totalScore);
+	cl("sinking: " + flags.sinking);
+	cl("Terror: " + flags.encroachingDarkness);
 }
 
 /**

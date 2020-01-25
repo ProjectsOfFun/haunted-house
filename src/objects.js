@@ -10,7 +10,8 @@ const objects = {
 	},
 	"air": {
 		"description": "It can't be seen.",
-		"omnipresence": true
+		"omnipresence": true,
+		"smellMessage": "The air smells of fear."
 	},
 	"axe": {
 		"name": "an axe",
@@ -18,10 +19,16 @@ const objects = {
 		"location": "byWoodpile",
 		"portable": true
 	},
+	"ax": {
+		"synonym": "axe"
+	},
 	"barrier": {
 		"name": "the magical barrier",
 		"description": "It is a glowing wall of energy. Shocking to the touch and thoroughly impassable.",
 		"location": "coldChamber"
+	},
+	"basin": {
+		"synonym": "washbasin"
 	},
 	"bats": {
 		"location": "mustyRoom",
@@ -29,13 +36,18 @@ const objects = {
 		"batsKilled": function() {
 			this.description = "The bat carcasses lie motionless on the ground in tiny puddles of their own filth and blood.";
 		},
-		"takeMessage": "No way, you'll get bit!"
+		"takeMessage": "No way, you'll get bit!",
+		"listenMessage": "The hear the bats' wings flapping amidst the incessant squeaking.",
+		"smellMessage": "They smell of disease and filth."
 	},
 	"batteries": {
 		"name": "some batteries",
 		"description": "They are heavy duty power cells. Perfect for small appliances.",
 		"location": "smallDarkRoom",
 		"portable": true
+	},
+	"bins": {
+		"synonym": "rubbish"
 	},
 	"boat": {
 		"name": "a boat",
@@ -49,6 +61,9 @@ const objects = {
 		"location": "library",
 		"takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone."
 	},
+	"box": {
+		"synonym": "matches"
+	},
 	"can": {
 		"synonym": "aerosol"
 	},
@@ -56,7 +71,8 @@ const objects = {
 		"name": "a candle",
 		"description": "It's a normal wax candle.",
 		"location": "drawer",
-		"portable": true
+		"portable": true,
+		"smellMessage": "It smells waxy."
 	},
 	"candlestick": {
 		"name": "a golden candlestick",
@@ -100,11 +116,16 @@ const objects = {
 	},
 	"desk": {
 		"location": "study",
-		"description": "Most of the desks a littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
+		"description": "Most of the desks are littered with paper scraps and other unimportant items. However, one has conspicuous drawer.",
 		"takeMessage": "Your job is finding treasure, not moving furniture!"
 	},
 	"desks": {
 		"synonym": "desk"
+	},
+	"dishes": {
+		"location": "entranceToKitchen",
+		"description": `They crunch under your feet.`,
+		"takeMessage": "You might cut yourself."
 	},
 	"door": {
 		"location": "hallWithLockedDoor",
@@ -154,7 +175,15 @@ const objects = {
 	"ghosts": {
 		"description": "The ghosts whirl about the room like so many clouds of dust!",
 		"location": "upperGallery",
-		"takeMessage": "You try to grab the ghosts, but your hands pass through their ephemeral bodies."
+		"takeMessage": "You try to grab the ghosts, but your hands pass through their ephemeral bodies.",
+		"listenMessage": `The ghosts howls and cry as they zing around the room.`
+	},
+	"ghoul": {
+		"location": "finalRoom",
+		"description": "The ghoul is the size of a child. Worms and maggots slither over its flesh as a dark ooze dribbles from its mouth.",
+		"smellMessage": "It smells of rotting death.",
+		"takeMessage": "The ghoul scratches and claws at you. Best to stay clear of it.",
+		"listenMessage": "The ghoul chuckles a sinister child-like laugh."
 	},
 	"goblet": {
 		"name": "a jeweled goblet",
@@ -174,7 +203,7 @@ const objects = {
 	"magic spells": {
 		"name": "a tome of magic spells",
 		"description": "There is something written on it.",
-		"readableText": `The text reads: Use this word with care, "Xzanfar."`,
+		"readableText": `The text reads: Say this word with care, "Xzanfar."`,
 		"location": "secretRoom",
 		"readable": true,
 		"portable": true,
@@ -187,7 +216,7 @@ const objects = {
 	"matches": {
 		"name": "a box of matches",
 		"location": "kitchen",
-		"description": "The matches rattle around in the box.",
+		"description": "A large number of matches rattle around in the box.",
 		"portable": true
 	},
 	"message": {
@@ -198,7 +227,7 @@ const objects = {
 	},
 	"painting": {
 		"name": "a beautiful painting",
-		"description": "It depicts a smiling, golden-haired child.",
+		"description": "It depicts a smiling, golden-haired child. He is grasping a tiny animal skull.",
 		"location": "spookyRoom",
 		"portable": true,
 		"score": 1,
@@ -207,11 +236,17 @@ const objects = {
 	"pocket": {
 		"synonym": "coat"
 	},
+	"pots": {
+		"location": "kitchen",
+		"description": "They are rusty and covered in muck.",
+		"takeMessage": "They are rusty and covered in muck."
+	},
 	"remains": {
 		"name": "skeletal remains",
 		"location": "diningRoom",
 		"description": "They look to be the remains of a small mammal. A dog perhaps?",
-		"takeMessage": "The idea of carrying around those bones disgusts you."
+		"takeMessage": "The idea of carrying around those bones disgusts you.",
+		"smellMessage": "You consider sniffing the bones and then stop yourself."
 	},
 	"ring": {
 		"name": "a golden ring",
@@ -239,9 +274,11 @@ const objects = {
 	"rubbish": {
 		"location": "yard",
 		"description": "The garbage has decomposed into a heap of goo. That's very disgusting!",
-		"takeMessage": "I know you miss your youthful days of dumpster diving, but let's not mess with the rubbish heap."
+		"takeMessage": "I know you miss your youthful days of dumpster diving, but let's not mess with the rubbish heap.",
+		"smellMessage": `The rubbish smells as if it were the first day of spring and it just so happens that the World Vomit Championship was being held on that day.`
 	},
 	"scroll": {
+		"name": "a scroll",
 		"location": "rearTurretRoom",
 		"portable": true,
 		"readable": true,
@@ -255,6 +292,9 @@ const objects = {
 		"location": "weedPatch",
 		"portable": true
 	},
+	"skeleton": {
+		"synonym": "remains"
+	},
 	"spells": {
 		"synonym": "magic spells"
 	},
@@ -267,6 +307,9 @@ const objects = {
 	},
 	"tome" : {
 		"synonym": "magic spells"
+	},
+	"trash": {
+		"synonym": "rubbish"
 	},
 	"vacuum": {
 		"name": "a tiny vacuum",

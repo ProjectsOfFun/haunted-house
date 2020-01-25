@@ -120,8 +120,17 @@ const rooms = {
 		},
 		"scenery":{
 			"table":"The surface is scarred with knife marks and reddish brown stains, as though a large carcass was butchered here.",
-			"dishes": "They crunch under your feet.",
-			"stains":"Blood? Let's hope it's just ketchup. Unless they were preparing hotdogs, because only a monster would put ketchup on a hotdog."
+			"stains":"Blood? Let's hope it's just ketchup. Unless they were preparing hotdogs, because only a monster would put ketchup on a hotdog.",
+			"gore": "It has vanished leaving only the dried stains on the table.",
+			"son": "The apparition has vanished.",
+			"father": "The apparition has vanished.",
+			"mother": "The apparition has vanished.",
+			"family": "The apparitions have vanished."
+		},
+		"onEnter": function() {
+			message = `The translucent glowing forms of a family of three stand around the table. The mother cries while the father and son stare at a pile of gore festering on the table. Moments later the vision fades away.`;
+			snd.ghost.play();
+			delete this.onEnter;
 		}
 	},
 	"kitchen": {
@@ -133,14 +142,13 @@ const rooms = {
 		},
 		"scenery": {
 			"cooker": "It is unusable. Covered in grime and rust from years of neglect.",
-			"pots": "They are rusty and covered in muck.",
 			"grime": "Yuck!",
 			"muck": "Gross!"
 		}
 	},
 	"sculleryDoor": {
 		"name": "Scullery Door",
-		"description": "A dented old washbasin is all that remains here in the scullery. to the north an exit leads to the backyard.",
+		"description": "A dented old washbasin is all that remains here in the scullery. To the north an exit leads to the backyard.",
 		"exits": {
 			"n": "yard",
 			"w": "kitchen"
@@ -170,7 +178,19 @@ const rooms = {
 			"bench": `Upon closer inspection, you realize that this is "bench" is actually a torture device complete with locks and chains.`,
 			"device": `It's what they called "The Rack" back in the dark ages.`,
 			"locks": "They hold a victim's arms and legs in place.",
-			"chains": "Heavy enough to bruise and cut flesh."
+			"chains": "Heavy enough to bruise and cut flesh.",
+			"form": "It has vanished.",
+			"forms": "They have vanished. All that remains is the bench.",
+			"ghosts": "They have vanished. All that remains is the bench.",
+			"man": "He looked older and had a roughly cut beard. But he's gone now.",
+			"child": "It was a young boy from what you could tell. But he's gone now.",
+			"windows": "They overlook the forest below.",
+			"window": "The windows overlook the forest below."
+		},
+		"onEnter": function() {
+			message = `You see the ghostly form of a screaming child chained to the bench! A man holds a scroll and is reciting demonic incantations to the child. As the screams crescendo, both forms dissipate to nothingness.`;
+			snd.ghost.play();
+			delete this.onEnter;
 		}
 	},
 	"clearing": {
@@ -221,7 +241,8 @@ const rooms = {
 			"eyes": "They seem to follow you around the room.",
 			"tree": "The tree is barren and looks like there is a rope tied to one of the branches.",
 			"rope": "Maybe it's just a vine? The artist was not that keen on details.",
-			"dress": "It's a lacy number like they used to wear in the nineteenth century."
+			"dress": "It's a lacy number like they used to wear in the nineteenth century.",
+			"vine": "No, maybe it's a rope after all?"
 		}
 	},
 	"darkAlcove": {
@@ -235,7 +256,7 @@ const rooms = {
 	},
 	"smallDarkRoom": {
 		"name": "Small Dark Room",
-		"description": "Shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
+		"description": "Using your candle, you see that shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
 		"exits": {
 			"w": "darkAlcove",
 			"e": "spiralStaircase"
@@ -245,20 +266,26 @@ const rooms = {
 			"shelves": "A one time they were filled with tools. Now it's mostly empty jars and a few nails and bolts.",
 			"nails": "They are small, rusty and not very useful.",
 			"bolts": "They are small, rusty and not very useful.",
-			"jars": "Probably for organizing loose items."
+			"jars": "Probably for organizing loose items.",
+			"wall": "They are mostly covered with shelves."
 		}
 	},
 	"spiralStaircase": {
 		"name": "Spiral Staircase",
-		"description": "The spiral staircase winds its way up to the mansion's rear turret room.",
+		"description": "A round skylight illuminates this spiral staircase as it winds its way up to the mansion's rear turret room.",
 		"exits": {
 			"u": "mustyRoom",
 			"d": "smallDarkRoom"
+		},
+		"scenery": {
+			"skylight": "It floods the stairwell with moonlight.",
+			"moonlight": "It's kinda like sunlight, but more moonish.",
+			"stairs": "Like any spiral staircase, the steps near the center can be pretty treacherous."
 		}
 	},
 	"widePassage": {
 		"name": "Wide Passage",
-		"description": "The corridor widens into large passage at the top of the cellar stairs to the east.",
+		"description": "The corridor widens into large passage. There is enough light here to see without the aid of your candle. To the east are the cellar stairs.",
 		"exits": {
 			"s": "trophyRoom",
 			"e": "slipperySteps"
@@ -315,7 +342,7 @@ const rooms = {
 	},
 	"vaultedHall": {
 		"name": "Impressive Vaulted Hallway",
-		"description": "This hallway boasts an impressive vaulted ceiling.",
+		"description": "Your candle reveals that this hallway boasts an impressive vaulted ceiling.",
 		"exits": {
 			"w": "poolOfLight",
 			"e": "hallWithLockedDoor"	
@@ -327,20 +354,20 @@ const rooms = {
 	},
 	"hallWithLockedDoor": {
 		"name": "Hall by Thick Wooden Door",
-		"description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south.",
+		"description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south. Your candle is illuminating this room.",
 		"exits": {
 			"w": "vaultedHall",
 			"e": "trophyRoom"
 		},
 		"darkness": true,
 		"doorUnlocked": function() {
-			this.description = `The vaulted hall ends here with an archway to the east and a thick wooden door to the south. Behind which a staircase is leading up.`;
+			this.description = `The vaulted hall ends here with an archway to the east and a thick wooden door to the south behind which a staircase is leading up. Your candle is illuminating this room.`;
 			this.exits.s = "steepMarbleStairs";
 		}
 	},
 	"trophyRoom": {
 		"name": "Trophy Room",
-		"description": "As you hold your candle up you can see various hunting trophies adorning the walls.",
+		"description": "As you hold your candle up, what little light it provides illuminates various hunting trophies adorning the walls.",
 		"exits": {
 			"n": "widePassage",
 			"s": "diningRoom",
@@ -424,8 +451,14 @@ const rooms = {
 		},
 		"scenery": {
 			"chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
+			"chairs": "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here.",
 			"sofa": "The stuffing is bursting through the seams.",
 			"stuffing": "You think it's horse hair."
+		},
+		"onEnter": function(){
+			message = `A ghostly apparition drifts by you muttering what sounds like, "The boy must hang! The boy must hang!" It fades away as quickly as it appeared.`;
+			snd.ghost.play();
+			delete this.onEnter;
 		}
 	},
 	"secretRoom": {
@@ -451,24 +484,36 @@ const rooms = {
 	},
 	"diningRoom": {
 		"name": "Dining Room",
-		"description": "A large dining table fills the room surrounded by its matching accoutrement of chairs. In the center of the table are the skeletal remains of some poor creature.",
+		"description": "From out of the darkness you enter a room in which a large dining table fills the space. It is surrounded by a matching accoutrement of chairs. In the center of the table are the skeletal remains of some poor creature.",
 		"exits": {
 			"n": "trophyRoom"
 		},
 		"scenery": {
 			"table": "Inscribed below the remains is the circled pentagram of satan.",
 			"pentagram": "The symbol of evil. Horrible rites must have taken place here.",
-			"chairs": "They seat six. An appropriate number."
+			"chairs": "They seat six. An appropriate number.",
+			"creature": "It's a set of long decomposed skeletal remains."
 		}
 	},
 	"deepCellar": {
 		"name": "Deep Cellar with Coffin",
-		"description": "This is the deepest, darkest corner of the cellar. A decrepit coffin rests in the center of the room upon a stone pedestal.",
+		"description": "This is the deepest, darkest corner of the cellar. There is enough light to make out s decrepit coffin resting in the center of the room upon a stone pedestal.",
 		"exits": {
 			"n": "cellar"
 		},
 		"scenery": {
-			"pedestal": "It's made of stone. There once was writing on it but text has been chiseled off."
+			"pedestal": "It's made of stone. There once was writing on it but text has been chiseled off.",
+			"ghosts": "They are no longer here.",
+			"ghost": "It has vanished.",
+			"child": "You recall it the twisted look of hatred on its face.",
+			"body": "It appeared to be a older, bearded man.",
+			"specter": "It appeared to be a older, bearded man.",
+			"neck": "Blood oozed from it as the blade penetrated."
+		},
+		"onEnter": function() {
+			message = `Horrors! You see two ghostly forms. A child is violently stabbing another specter in the neck then dragging the body away! Moments later, the apparitions vanish.`;
+			snd.laugh.play();
+			delete this.onEnter;
 		}
 	},
 	"cliffPath": {
@@ -523,7 +568,7 @@ const rooms = {
 		"exits": {
 			"w": "library"
 		},
-		"description": "This is where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
+		"description": "This is where mansion's owner spent hours sitting at one of the many desks researching the dark arts. In addition to the desks you notice a small hole in the wall.",
 		"scenery": {
 			"wall" : "It seems brittle. You may be able to chop your way through.",
 			"hole" : "There's something beyond..."	
@@ -531,7 +576,7 @@ const rooms = {
 		"wallBreak": function() {
 			this.exits.n = "secretRoom";
 			this.name = "Study with Secret Room";
-			this.description = "This must be where mansion's owner spent many hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+			this.description = "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
 			this.scenery.hole = "The hole is much bigger now.";
 			this.scenery.wall = "The wall is no more. A secret room lies to the north.";
 			this.scenery.passage ="It leads north to a secret room.";
@@ -584,6 +629,10 @@ const rooms = {
 			"drawings": "They are child-like representations of tiny figures, each surrounded by menacing dark shapes.",
 			"shapes": "They are monstrous shadows with tentacles and teeth.",
 			"clothing": "Barely recognizable, but it's clear that these garments were made for a child."
+		},
+		"onEnter": function() {
+			snd.laugh.play();
+			delete this.onEnter;
 		}
 	},
 	"cliffPathByMarsh": {
@@ -628,8 +677,17 @@ const rooms = {
 		},
 		"scenery": {
 			"windows": "It was rumored they heiress plunged to her death from here.",
+			"window": "It was rumored they heiress plunged to her death from here.",
 			"bars": "They look like they were meant to keep things in.",
-			"nails": "Bars AND nails. They needed to be sure no one was getting out."
+			"nails": "Bars AND nails. They needed to be sure no one was getting out.",
+			"woman": "It was just an apparition.",
+			"form": "It was just an apparition.",
+			"specter": "You must be seeing things."
+		},
+		"onEnter": function() {
+			message = `As you enter you see the spectral form of a woman throwing herself out the window. She lets out a blood curdling scream as she falls to her doom.`;
+			snd.falling.play();
+			delete this.onEnter;
 		}
 	},
 	"slopingCorridor": {
@@ -652,6 +710,10 @@ const rooms = {
 		},
 		"ghostsDispelled": function() {
 			this.description = "The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling.";
+		},
+		"onEnter": function() {
+			snd.ghost.play();
+			delete this.onEnter;
 		}
 	},
 	"marshByWall": {
@@ -706,7 +768,7 @@ const rooms = {
 	},
 	"pathThroughIronGate": {
 		"name": "Path Through Iron Gate",
-		"description": "The wind howls as you make your way to the entrance of the property. The old mansion looms ahead of you silhouetted against a full moon.",
+		"description": "The wind howls as you make your way to the entrance of the property. To the north the old mansion looms, silhouetted against a full moon.",
 		"exits": {
 			"n": "frontPorch",
 			"w": "twistedRailings",
@@ -723,7 +785,7 @@ const rooms = {
 		},
 		"endingTrigger": function() {
 			this.exits.s = "exit";
-			this.description = `The old mansion looms ahead of you silhouetted against a full moon. Now's you chance to make your escape through the gate to the south!`;
+			this.description = `The old mansion looms ahead of you silhouetted against a full moon. Now's your chance to make your escape through the gate to the south!`;
 			this.scenery.gate = `Hurry, head south to win the game!`;
 		}
 	},
@@ -816,5 +878,22 @@ const rooms = {
 	},
 	"exit": {
 		"name": "The Winner's Circle"
+	},
+	"finalRoom": {
+		"name": "Path Through Iron Gate",
+		"description": `As you reach the iron gate a rotting ghoul hobbles onto the path! It is blocking all exits except your escape route to the south.`,
+		"exits": {
+			"s": "exit"
+		},
+		"scenery": {
+			"ooze": "It's thick and black.",
+			"maggots": "The tiny white creatures writhe and squirm.",
+			"worms": "The worms crawl in and out of every hole on the ghoul's rotting body.",
+			"mouth": "The ooze dribbles out over sharp, tiny teeth.",
+			"teeth": "Don't let it bite you!"
+		},
+		"onEnter": function() {
+			snd.groan.play();
+		}
 	}
 };

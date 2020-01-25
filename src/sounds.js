@@ -31,5 +31,9 @@ snd.key = new Sound("audio/key.mp3");
 snd.pickup = new Sound("audio/treasure_pickup.mp3");
 snd.shock = new Sound("audio/shock.mp3");
 snd.splash = new Sound("audio/splash.mp3");
+snd.ghost = new Sound("audio/ghost.mp3");
+snd.falling = new Sound("audio/falling.mp3");
+snd.laugh = new Sound("audio/laugh.mp3");
+snd.groan = new Sound("audio/groan.mp3");
 
-export default snd;
+//export default snd;

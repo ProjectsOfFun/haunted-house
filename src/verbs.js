@@ -7,6 +7,14 @@ const verbs = {
 		},
 		"singleWord": true
 	},
+	"approach": {
+		"action": function(noun,obj) {
+			if (noun === "wall" && isRoom("crumblingWall")) {
+				message = `Despite my warnings, you inch towards the wall. FOOOMP! A block of cement just flew past your head! If this was a Sierra game you'd be dead.`;
+				return;
+			}
+		}
+	},
 	"blow": {
 		"action": function(noun,obj) {
 			message = "You let out a puff of air.";
@@ -390,6 +398,7 @@ const verbs = {
 			// Ghosts in upper gallery
 			if (flags.ghostsAttacking && isRoom("upperGallery") && direction === "w") {
 				message = `The ghosts won't let you pass!`;
+				snd.ghost.play();
 				return;
 			}
 
@@ -403,6 +412,12 @@ const verbs = {
 			// Water in room
 			if (currentRoom.water && !flags.inBoat) {
 				message = `The marshy ground prevents any movement.`;
+				return;
+			}
+
+			if (isRoom("finalRoom") && direction !== "s") {
+				message = `The ghoul blocks your exit in that direction!`;
+				snd.laugh.play();
 				return;
 			}
 
@@ -504,7 +519,7 @@ const verbs = {
 				let verblist = "";
 	
 				for (let verb in verbs) {
-					if (verb.length > 1) {
+					if (verb.length > 1 && verbs[verb].hiddenVerb !== true) {
 						verb_array.push(verb.toUpperCase());
 					}
 				}
@@ -533,7 +548,7 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = "You jump up and down like an idiot.";
 
-			if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "cliffTop")) {
+			if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "clifftop")) {
 				message = "Then the story would end in a cliffhanger.";
 				return;
 			}
@@ -560,6 +575,11 @@ const verbs = {
 
 			if (obj.id === "ghosts" && objectInRange("ghosts") && flags.ghostsAttacking) {
 				message = `You can't kill the undead!`;
+				return;
+			}
+
+			if (obj.id === "ghoul" && objectInRange("ghoul") && flags.ghostsAttacking) {
+				message = `You can't kill the undead! Your only chance for survival is to make your escape through the gate to the south!`;
 				return;
 			}
 
@@ -618,6 +638,20 @@ const verbs = {
 
 		}
 	},
+	"listen": {
+		"action": function(noun,obj) {
+			if (noun === "owl" && isRoom("darkCorner")) {
+				message = `Yup, that's an owl alright.`;
+				snd.owl.play();
+				return;
+			}
+			if (obj.id === "ghoul") {
+				snd.laugh.play();
+			}
+			message = (obj.listenMessage && objectInRange(obj)) ? obj.listenMessage : `You don't hear anything unusual.`;
+		},
+		"singleWord": true
+	},
 	"look": {
 		"action": function(noun,obj) {
 			message = "You see nothing special.";
@@ -627,6 +661,12 @@ const verbs = {
 				message = "As you search through the old coat you find a key in the pocket.";
 				objects["key"].location = currentRoom.rid;
 				snd.key.play();
+				return;
+			}
+
+			// Weird exception so painting can be looked at further
+			if (noun === "skull" && objectInRange("painting")) {
+				message = `It's from a small animal with sharp fangs. Despite the frightening appearance, the boy is holding it lovingly.`;
 				return;
 			}
 
@@ -776,10 +816,17 @@ const verbs = {
 				message += " You need to find some treasure!"
 			}
 			if (checkScore() === getMaxScore()) {
-				message += " That's all the treasure. Hurry, find your way back to the front gate to claim that final point!";
+				message += ` That's all the treasure. Hurry, find your way back to the front gate to claim that <em>final point!</em>`;
 			}
 		},
 		"singleWord": true
+	},
+	"smell": {
+		"action": function(noun,obj) {
+			if (objectInRange(obj)) {
+				message = (obj.smellMessage) ? obj.smellMessage : `You don't smell anything.`;
+			}
+		}
 	},
 	"south": {
 		"synonym": "s"
@@ -826,6 +873,22 @@ const verbs = {
 
 			if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
 				message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
+				return;
+			}
+
+			if (obj.id === "axe" && isCarrying("axe") && isRoom("mustyRoom") && flags.batsAttacking) {
+				message = `You swing the axe but he bats are just too quick for you.`;
+				return;
+			}
+
+			if (obj.id === "axe" && isCarrying("axe") && isRoom("finalRoom")) {
+				message = `The axe embeds itself in the chest of the ghoul! Within seconds the axe vaporizes into dust searing your hands in the process!`;
+				obj.location = null;
+				return;
+			}
+
+			if (obj.id === "candlestick" && isCarrying("candlestick")) {
+				message = "You awkwardly swing the candlestick.";
 				return;
 			}
 
@@ -941,7 +1004,7 @@ const verbs = {
 				return;
 			}
 
-			if (obj.id === "vacuum" && isCarrying("vacuum") && !isCarrying("batteries")) {
+			if (obj.id === "vacuum" && isCarrying("vacuum") && !flags.vacuumHasPower) {
 				message = `This vacuum requires batteries.`;
 				return;
 			}
@@ -953,10 +1016,29 @@ const verbs = {
 
 		}
 	},
+	"vacuum": {
+		"action": function(noun,obj) {
+			if (noun === "books" && currentRoom.rid === "library") {
+				message = `They are "musty" not "dusty!"`;
+				return;
+			}
+			verbs["use"].action("vacuum",objects["vacuum"]);
+			return;
+		}
+	},
 	"w": {
 		"action": function(noun,obj) {
 			if (noun) return;
 			verbs["go"].action("west");
+		},
+		"singleWord": true
+	},
+	"wait": {
+		"action": function(noun,obj) {
+			if (!noun) {
+				message = "Time passes...";
+				return;
+			}
 		},
 		"singleWord": true
 	},
@@ -994,5 +1076,72 @@ const verbs = {
 	},
 	"x": {
 		"synonym": "look"
+	},
+	"debug_get": {
+		"action": function(noun,obj){
+			debug = true;
+
+			if (noun === "treasure") {
+				for (let key in objects) {
+					if (objects[key].score) {
+						objects[key].location = "player";
+					};
+				}
+				message = `You cheat and collect all the treasure.`;
+				return;
+			}
+
+			if (noun === "all") {
+				for (let key in objects) {
+					if (objects[key].portable) {
+						objects[key].location = "player";
+					};
+				}
+				message = `You cheat and collect all the objects you filthy hoarder.`;
+				return;
+			}
+
+			if (obj) {
+				obj.location = "player";
+				message = `You cheat and ${obj.name} appears in your inventory.`;
+				return;
+			}
+		},
+		"singleWord": true,
+		"hiddenVerb": true
+	},
+	"debug_go": {
+		"action": function(noun,obj) {
+			debug = true;
+
+			if (noun === "list") {
+				const room_array = [];
+				let roomlist = "";
+	
+				for (let room in rooms) {
+					room_array.push(room);
+				}
+				room_array.sort();
+
+				for (let room in room_array) {
+					roomlist += room_array[room] + ", ";
+				}
+				myHelp = `Here are the rooms: ${roomlist.substring(0,roomlist.length - 2)}`;
+				displayOverlay(myHelp);
+				message = '';
+				return;
+			}
+
+			if (noun) {
+				for (let key in rooms) {
+					if (noun === rooms[key].rid.toLowerCase()) {
+						currentRoom = rooms[key];
+					}
+				}
+				message = `You cheat and are teleported to ${currentRoom.name}`
+			}
+		},
+		"singleWord": true,
+		"hiddenVerb": true
 	}
 };
