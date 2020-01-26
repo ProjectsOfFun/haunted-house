@@ -86,6 +86,11 @@ const verbs = {
 				message = `It isn't attached to anything!`;
 				return;
 			}
+
+			if (isRoom("slipperySteps") && nounCheck(noun,["stairs","steps","down","staircase"])) {
+				message = `The surface is slippery and damp. You would surely fall and hurt yourself.`;
+				return;
+			}
 		}
 	},
 	"close": {
@@ -148,7 +153,7 @@ const verbs = {
 
 			if ((isRoom("cellar") || isRoom("cliffPathByWindow"))&& nounCheck(noun,["bars","window","barred window","brickwork","bricks"])) {
 				if (!flags.barsDug) {
-					message = "After several minutes of work, you manage to dig the bars out.";
+					message = "After several minutes of work, you manage to dig the bars out. You can squeeze through the window now.";
 					flags.barsDug = true;
 					rooms["cellar"].digWindow();
 					rooms["cliffPathByWindow"].digWindow();
@@ -400,13 +405,20 @@ const verbs = {
 				case "boat":
 					verbs["enter"].action("boat",objects["boat"]);
 					return;
+				case "window":
+					if ((isRoom("cliffPathByWindow") || isRoom("cellar")) && !flags.barsDug) {
+						message = "The window is barred, blocking your passage.";
+					return;
+					} else if (isRoom("cliffPathByWindow") && flags.barsDug) {
+						direction = "w";
+					} else if (isRoom("cellar") && flags.barsDug) {
+						direction = "e";
+					} 
+					break;
 				default:
 					message = `You need to specify a direction in which to&nbsp;<em>GO</em>.`;
 					return;
 			}
-
-			// Get the room id of the chosen exit direction
-			const chosenExit = currentRoom.exits[direction.toLowerCase()];
 
 			// THINGS THAT HINDER MOVEMENT
 
@@ -448,11 +460,15 @@ const verbs = {
 				return;
 			}
 
+			// Final "battle"
 			if (isRoom("finalRoom") && direction !== "s") {
 				message = `The ghoul blocks your exit in that direction!`;
 				snd.laugh.play();
 				return;
 			}
+
+			// Get the room id of the chosen exit direction
+			const chosenExit = currentRoom.exits[direction.toLowerCase()];
 
 			// MOVEMENT ALLOWED
 			if (direction && chosenExit) {
@@ -582,13 +598,18 @@ const verbs = {
 		"action": function(noun,obj) {
 			message = "You jump up and down like an idiot.";
 
-			if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "clifftop")) {
+			if (noun === "cliff" && (isRoom("crumblingClifftop") || isRoom("clifftop") || isRoom("cliffPathByWindow"))) {
 				message = "Then the story would end in a cliffhanger.";
 				return;
 			}
 
 			if (obj.id === "candlestick" && objectInRange("candlestick")) {
 				message = "You be nimble, you be quick.";
+				return;
+			}
+
+			if (isRoom("slipperySteps")) {
+				message = `A jump from the top of the stairs would surely result in a broken ankle.`;
 				return;
 			}
 		},

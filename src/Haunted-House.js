@@ -36,8 +36,8 @@ const flags = {
 	candleLit: false, // flags[0]
 	endGame: 0,
 	encroachingDarkness: 0,
-	ghoulProgress: 0,
 	frontDoorOpen: true, // flags[23]
+	ghoulProgress: 0,
 	ghostsAttacking: true, // flags[27]
 	hallDoorLocked: true,
 	inBoat: false,
@@ -781,5 +781,5 @@ function init(startRoom,carrying,inRoom) {
 // INITIALIZE GAME
 let debug = false;
 verbs["help"].action();
-//init("pathThroughIronGate",[],[]);
-init("clearing",[],[]);
+init("pathThroughIronGate",[],[]);
+// init("cellar",["shovel"],[]);

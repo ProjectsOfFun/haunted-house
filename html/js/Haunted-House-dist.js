@@ -764,10 +764,16 @@ var rooms = {
   },
   "slipperySteps": {
     "name": "Slippery Steps",
-    "description": "The damp and slippery wooden staircase leads down to the mansion's cellar. The stairs creak under your weight.",
+    "description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further decent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
     "exits": {
-      "u": "widePassage",
-      "d": "cellar"
+      "u": "widePassage" //"d": "cellar"
+
+    },
+    "scenery": {
+      "window": "It's barred, but from this angle you can see that the bars could easily be dug out from the other side with the right tool.",
+      "bars": "They block the window and are embedded in the decaying brickwork of the foundation.",
+      "brickwork": "The foundation is mostly solid, but here it looks particularly decayed.",
+      "foundation": "The foundation is mostly solid, but here it looks particularly decayed."
     }
   },
   "clifftop": {
@@ -775,7 +781,7 @@ var rooms = {
     "description": "Here the path continues along the edge of a steep cliff.",
     "exits": {
       "n": "path",
-      "s": "cliffPath"
+      "s": "cliffPathByWindow"
     },
     "scenery": {
       "cliff": "This is the highest point of the cliff. A fall will surely result in your demise."
@@ -872,7 +878,7 @@ var rooms = {
     "digWindow": function digWindow() {
       this.exits.e = "cliffPathByWindow";
       this.name = "Cellar with Hole in the Wall";
-      this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.";
+      this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.", this.scenery.window = "The window is no longer blocked. You can squeeze through it to the east.", this.scenery.bars = "The bars have been dug out allowing passage to the east.";
     }
   },
   "cliffPathByWindow": {
@@ -883,14 +889,16 @@ var rooms = {
       "s": "cliffPath"
     },
     "scenery": {
-      "window": "You can see the cellar through it.",
-      "bars": "With a tool you may be able to dig them out.",
-      "cliff": "It drops into nothingness."
+      "window": "It's large enough to squeeze through. You can see the cellar on the other side.",
+      "bars": "They block your way through the window.",
+      "cliff": "It drops into nothingness.",
+      "cellar": "Peering through the window you can see that there are more rooms to explore down there."
     },
     "digWindow": function digWindow() {
       this.exits.w = "cellar";
       this.name = "Cliff Path by Opened Window";
-      this.description = "The cliff path runs north and south here. To the west you see a window that has been dug out and leads to the mansion's cellar.";
+      this.description = "The cliff path runs north and south here. To the west you see a window with its bars dug out. It leads to the mansion's cellar.";
+      this.scenery.window = "The bars have been dug out and it's large enough to squeeze through. You can see the cellar on the other side.", this.scenery.bars = "You've dug them out, clearing your passage to the west.";
     }
   },
   "cupboard": {
@@ -1345,7 +1353,7 @@ var rooms = {
       "forest": "Despite the barren branches, you can't see very far beyond the trees.",
       "mansion": "It's the largest feature in view and yet it is hard to make out any details. It is as though the structure is veiled in an unnatural darkness.",
       "path": "It leads south into a dense thicket.",
-      "tree": "The knotty surface gives the tree almost face-like features",
+      "tree": "The knotty surface gives the tree almost face-like features.",
       "surface": "The bark is cracked and rough."
     }
   },
@@ -1461,6 +1469,11 @@ var verbs = {
         message = "It isn't attached to anything!";
         return;
       }
+
+      if (isRoom("slipperySteps") && nounCheck(noun, ["stairs", "steps", "down", "staircase"])) {
+        message = "The surface is slippery and damp. You would surely fall and hurt yourself.";
+        return;
+      }
     }
   },
   "close": {
@@ -1526,7 +1539,7 @@ var verbs = {
 
       if ((isRoom("cellar") || isRoom("cliffPathByWindow")) && nounCheck(noun, ["bars", "window", "barred window", "brickwork", "bricks"])) {
         if (!flags.barsDug) {
-          message = "After several minutes of work, you manage to dig the bars out.";
+          message = "After several minutes of work, you manage to dig the bars out. You can squeeze through the window now.";
           flags.barsDug = true;
           rooms["cellar"].digWindow();
           rooms["cliffPathByWindow"].digWindow();
@@ -1794,14 +1807,24 @@ var verbs = {
           verbs["enter"].action("boat", objects["boat"]);
           return;
 
+        case "window":
+          if ((isRoom("cliffPathByWindow") || isRoom("cellar")) && !flags.barsDug) {
+            message = "The window is barred, blocking your passage.";
+            return;
+          } else if (isRoom("cliffPathByWindow") && flags.barsDug) {
+            direction = "w";
+          } else if (isRoom("cellar") && flags.barsDug) {
+            direction = "e";
+          }
+
+          break;
+
         default:
           message = "You need to specify a direction in which to&nbsp;<em>GO</em>.";
           return;
-      } // Get the room id of the chosen exit direction
-
-
-      var chosenExit = currentRoom.exits[direction.toLowerCase()]; // THINGS THAT HINDER MOVEMENT
+      } // THINGS THAT HINDER MOVEMENT
       // Darkness
+
 
       if (currentRoom.darkness && !flags.candleLit) {
         message = "It's too dark to move!";
@@ -1838,14 +1861,17 @@ var verbs = {
       if (isRoom("path") && direction === "s" && !flags.thicketSurveyed) {
         message = "You try to squeeze through the thicket but keep ending up where you started. Perhaps if you could get a birdseye view you could better navigate a route.";
         return;
-      }
+      } // Final "battle"
+
 
       if (isRoom("finalRoom") && direction !== "s") {
         message = "The ghoul blocks your exit in that direction!";
         snd.laugh.play();
         return;
-      } // MOVEMENT ALLOWED
+      } // Get the room id of the chosen exit direction
 
+
+      var chosenExit = currentRoom.exits[direction.toLowerCase()]; // MOVEMENT ALLOWED
 
       if (direction && chosenExit) {
         var tempRoomHolder = previousRoom; //message = "OK";
@@ -1971,13 +1997,18 @@ var verbs = {
     "action": function action(noun, obj) {
       message = "You jump up and down like an idiot.";
 
-      if (noun === "cliff" && (currentRoom.rid === "crumblingClifftop" || currentRoom.rid === "clifftop")) {
+      if (noun === "cliff" && (isRoom("crumblingClifftop") || isRoom("clifftop") || isRoom("cliffPathByWindow"))) {
         message = "Then the story would end in a cliffhanger.";
         return;
       }
 
       if (obj.id === "candlestick" && objectInRange("candlestick")) {
         message = "You be nimble, you be quick.";
+        return;
+      }
+
+      if (isRoom("slipperySteps")) {
+        message = "A jump from the top of the stairs would surely result in a broken ankle.";
         return;
       }
     },
@@ -2734,9 +2765,9 @@ var flags = {
   // flags[0]
   endGame: 0,
   encroachingDarkness: 0,
-  ghoulProgress: 0,
   frontDoorOpen: true,
   // flags[23]
+  ghoulProgress: 0,
   ghostsAttacking: true,
   // flags[27]
   hallDoorLocked: true,
@@ -3513,9 +3544,8 @@ function init(startRoom, carrying, inRoom) {
 
 
 var debug = false;
-verbs["help"].action(); //init("pathThroughIronGate",[],[]);
-
-init("clearing", [], []);
+verbs["help"].action();
+init("pathThroughIronGate", [], []); // init("cellar",["shovel"],[]);
 
 /***/ })
 /******/ ]);

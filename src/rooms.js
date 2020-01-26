@@ -304,10 +304,16 @@ const rooms = {
 	},
 	"slipperySteps": {
 		"name": "Slippery Steps",
-		"description": "The damp and slippery wooden staircase leads down to the mansion's cellar. The stairs creak under your weight.",
+		"description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further decent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
 		"exits": {
 			"u": "widePassage",
-			"d": "cellar"
+			//"d": "cellar"
+		},
+		"scenery": {
+			"window": "It's barred, but from this angle you can see that the bars could easily be dug out from the other side with the right tool.",
+			"bars": "They block the window and are embedded in the decaying brickwork of the foundation.",
+			"brickwork": "The foundation is mostly solid, but here it looks particularly decayed.",
+			"foundation": "The foundation is mostly solid, but here it looks particularly decayed."
 		}
 	},
 	"clifftop": {
@@ -315,7 +321,7 @@ const rooms = {
 		"description": "Here the path continues along the edge of a steep cliff.",
 		"exits": {
 			"n": "path",
-			"s": "cliffPath"
+			"s": "cliffPathByWindow"
 		},
 		"scenery": {
 			"cliff": "This is the highest point of the cliff. A fall will surely result in your demise."
@@ -412,7 +418,9 @@ const rooms = {
 		"digWindow": function() {
 			this.exits.e = "cliffPathByWindow";
 			this.name = "Cellar with Hole in the Wall";
-			this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through."
+			this.description = "The air in this cellar is damp with moisture. To the east, what once was a barred window is now a hole large enough to pass through.",
+			this.scenery.window = "The window is no longer blocked. You can squeeze through it to the east.",
+			this.scenery.bars = "The bars have been dug out allowing passage to the east."
 		}
 	},
 	"cliffPathByWindow": {
@@ -423,14 +431,17 @@ const rooms = {
 			"s": "cliffPath"
 		},
 		"scenery": {
-			"window": "You can see the cellar through it.",
-			"bars": "With a tool you may be able to dig them out.",
-			"cliff": "It drops into nothingness."
+			"window": "It's large enough to squeeze through. You can see the cellar on the other side.",
+			"bars": "They block your way through the window.",
+			"cliff": "It drops into nothingness.",
+			"cellar": "Peering through the window you can see that there are more rooms to explore down there."
 		},
 		"digWindow": function() {
 			this.exits.w = "cellar";
 			this.name = "Cliff Path by Opened Window";
-			this.description = "The cliff path runs north and south here. To the west you see a window that has been dug out and leads to the mansion's cellar.";
+			this.description = "The cliff path runs north and south here. To the west you see a window with its bars dug out. It leads to the mansion's cellar.";
+			this.scenery.window = "The bars have been dug out and it's large enough to squeeze through. You can see the cellar on the other side.",
+			this.scenery.bars = "You've dug them out, clearing your passage to the west."
 		}
 	},
 	"cupboard": {
@@ -889,7 +900,7 @@ const rooms = {
 			"forest": "Despite the barren branches, you can't see very far beyond the trees.",
 			"mansion": "It's the largest feature in view and yet it is hard to make out any details. It is as though the structure is veiled in an unnatural darkness.",
 			"path": "It leads south into a dense thicket.",
-			"tree": "The knotty surface gives the tree almost face-like features",
+			"tree": "The knotty surface gives the tree almost face-like features.",
 			"surface": "The bark is cracked and rough."
 		}
 	},
