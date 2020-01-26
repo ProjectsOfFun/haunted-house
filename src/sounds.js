@@ -37,5 +37,6 @@ snd.laugh = new Sound("audio/laugh.mp3");
 snd.groan = new Sound("audio/groan.mp3");
 snd.scream = new Sound("audio/scream.mp3");
 snd.fanfare = new Sound("audio/fanfare.mp3");
+snd.dog = new Sound("audio/dog.mp3");
 
 //export default snd;
