@@ -102,10 +102,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var objects = {
   "aerosol": {
     "name": "a can of aerosol",
-    "description": "The can reads, \"For the highest hair. Warning: do not spray on small animals.\"",
-    "location": "debris",
+    "description": "The can reads, \"For the highest, most colorful hair. Warning: do not spray on small animals.\"",
+    "location": "frontPorch",
     "portable": true,
     "flamable": true
+  },
+  "spray paint": {
+    "synonym": "aerosol"
+  },
+  "paint": {
+    "synonym": "aerosol"
   },
   "air": {
     "description": "It can't be seen.",
@@ -116,6 +122,7 @@ var objects = {
     "name": "an axe",
     "description": "Although a bit rusty, the blade is sharp. Looks like one <em>swing</em> could do some serious damage.",
     "location": "byWoodpile",
+    "takeMessage": "As you pick up the axe you notice that there is dried blood on the handle.",
     "portable": true
   },
   "ax": {
@@ -158,7 +165,8 @@ var objects = {
     "readable": true,
     "readableText": "You are unable to make sense of the ancient writings.",
     "location": "library",
-    "takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone."
+    "takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone.",
+    "smellMessage": "Odd, they reek of burning hair."
   },
   "box": {
     "synonym": "matches"
@@ -168,7 +176,7 @@ var objects = {
   },
   "candle": {
     "name": "a candle",
-    "description": "It's a normal wax candle.",
+    "description": "It's a normal wax candle, but thin and tapered so it may  not last long once lit.",
     "location": "drawer",
     "portable": true,
     "smellMessage": "It smells waxy."
@@ -179,7 +187,7 @@ var objects = {
     "location": "library",
     "portable": true,
     "score": 1,
-    "takeMessage": "It's a lot heavier than it looks. Must be solid gold!"
+    "takeMessage": "It's oddly warm to the touch, as if it had been held recently."
   },
   "coat": {
     "name": "a dusty old coat",
@@ -188,15 +196,15 @@ var objects = {
     "portable": true
   },
   "coffin": {
-    "description": "The dark-stained pine box has tarnished brass hinges. The lid is closed.",
+    "description": "It's a child-sized pine box with tarnished brass hinges. The lid is closed.",
     "location": "deepCellar",
     "isOpen": false,
     "openAction": function openAction() {
-      this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
+      this.description = "It's a child-sized pine box with tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
       this.isOpen = true;
     },
     "closeAction": function closeAction() {
-      this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
+      this.description = "It's a child-sized pine box with tarnished brass hinges. The lid is closed.";
       this.isOpen = false;
     },
     "takeMessage": "It's far to heavy to carry."
@@ -206,7 +214,11 @@ var objects = {
     "location": "darkAlcove",
     "portable": true,
     "score": 1,
-    "takeMessage": "You pick up the sack of coins."
+    "takeMessage": "As you pick up the sack of coins a number of tiny roaches emerge from underneath, darting away in all directions."
+  },
+  "roaches": {
+    "location": "darkAlcove",
+    "description": "They have scurried off into the darkness."
   },
   "debris": {
     "location": "debris",
@@ -286,11 +298,12 @@ var objects = {
   },
   "goblet": {
     "name": "a jeweled goblet",
-    "description": "It made of shiny metal and encrusted with sparkling jewels.",
+    "description": "It made of shiny metal and encrusted with sparkling jewels. However, you notice traces of what appears to be nightshade lining the interior.",
     "location": "frontTower",
     "portable": true,
     "score": 1,
-    "takeMessage": "What's an adventure without a goblet?"
+    "takeMessage": "As you pick up the goblet notice an odd smell.",
+    "smellMessage": "You recognize the scent. That's definitely nightshade."
   },
   "key": {
     "name": "a key",
@@ -320,7 +333,7 @@ var objects = {
   },
   "message": {
     "location": "sideOfHouse",
-    "description": "It's written in blood!",
+    "description": "It's written in blood! Do you dare <em>read</em> it?",
     "readable": true,
     "readableText": "It says, \"Seek the word to dispell the barrier.\""
   },
@@ -353,7 +366,8 @@ var objects = {
     "location": "coffin",
     "portable": true,
     "score": 1,
-    "isWorn": false
+    "isWorn": false,
+    "takeMessage": "As you grasp the ring, a devilish voice in your head whispers, \"I am yours, wear me, wear me...\""
   },
   "rope": {
     "name": "a rope tied to a tree",
@@ -402,7 +416,8 @@ var objects = {
     "description": "It looks African in origin and is most likely very valuable.",
     "location": "hallWithLockedDoor",
     "portable": true,
-    "score": 1
+    "score": 1,
+    "takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
   },
   "tome": {
     "synonym": "magic spells"
@@ -451,7 +466,13 @@ var rooms = {
       if (Math.random() > .4) {
         message = "You hear an owl hooting off in the distance.";
         snd.owl.play();
+        this.scenery.owl = "You can't see it in the dusk.";
+      } else {
+        this.scenery.owl = "There is no owl here.";
       }
+    },
+    "scenery": {
+      "owl": "There is no owl here."
     }
   },
   "overgrownGarden": {
@@ -600,8 +621,8 @@ var rooms = {
     "name": "Musty Room",
     "description": "There is a nasty swarm of bats attacking you! Their fluttering wings stir up a putrid, musty stench.",
     "exits": {
-      "s": "spiralStaircase",
-      "e": "rearTurretRoom"
+      "e": "rearTurretRoom",
+      "d": "spiralStaircase"
     },
     "batsKilled": function batsKilled() {
       this.description = "This quiet corner room is filled with the musty stench of rabid, wild animals. The floor is covered with bat carcasses.";
@@ -675,6 +696,7 @@ var rooms = {
     },
     "scenery": {
       "portrait": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
+      "picture": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
       "tapestry": "It depicts an elderly woman in a black dress. She stands aside an old tree.",
       "woman": "I think her eyes just moved!",
       "eyes": "They seem to follow you around the room.",
@@ -686,7 +708,7 @@ var rooms = {
   },
   "darkAlcove": {
     "name": "Dark Alcove",
-    "description": "You candle's light is just enough to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
+    "description": "<em>You candle's light is just enough</em> to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
     "exits": {
       "s": "poolOfLight",
       "e": "smallDarkRoom"
@@ -695,10 +717,10 @@ var rooms = {
   },
   "smallDarkRoom": {
     "name": "Small Dark Room",
-    "description": "Using your candle, you see that shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
+    "description": "<em>Using your candle</em>, you see that shelves line the walls of this tiny utility room. A stairway leads up to the upper rooms at the back of the house.",
     "exits": {
       "w": "darkAlcove",
-      "e": "spiralStaircase"
+      "u": "spiralStaircase"
     },
     "darkness": true,
     "scenery": {
@@ -724,10 +746,10 @@ var rooms = {
   },
   "widePassage": {
     "name": "Wide Passage",
-    "description": "The corridor widens into large passage. There is enough light here to see without the aid of your candle. To the east are the cellar stairs.",
+    "description": "The corridor widens into large passage. There is enough light here to see without the aid of your candle. Downwards from here are the cellar stairs.",
     "exits": {
       "s": "trophyRoom",
-      "e": "slipperySteps"
+      "d": "slipperySteps"
     }
   },
   "slipperySteps": {
@@ -781,7 +803,7 @@ var rooms = {
   },
   "vaultedHall": {
     "name": "Impressive Vaulted Hallway",
-    "description": "Your candle reveals that this hallway boasts an impressive vaulted ceiling.",
+    "description": "This magnificent hallway boasts an impressive vaulted ceiling. <em>Your candle lights the way.</em>",
     "exits": {
       "w": "poolOfLight",
       "e": "hallWithLockedDoor"
@@ -793,20 +815,20 @@ var rooms = {
   },
   "hallWithLockedDoor": {
     "name": "Hall by Thick Wooden Door",
-    "description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south. Your candle is illuminating this room.",
+    "description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south. <em>Your candle is illuminating the room.</em>",
     "exits": {
       "w": "vaultedHall",
       "e": "trophyRoom"
     },
     "darkness": true,
     "doorUnlocked": function doorUnlocked() {
-      this.description = "The vaulted hall ends here with an archway to the east and a thick wooden door to the south behind which a staircase is leading up. Your candle is illuminating this room.";
-      this.exits.s = "steepMarbleStairs";
+      this.description = "The vaulted hall ends here with an archway to the east and a thick wooden door to the south behind which a staircase is leading up. <em>Your candle is illuminating the room.</em>";
+      this.exits.u = "steepMarbleStairs";
     }
   },
   "trophyRoom": {
     "name": "Trophy Room",
-    "description": "As you hold your candle up, what little light it provides illuminates various hunting trophies adorning the walls.",
+    "description": "<em>You hold your candle out in front of you.</em> What little light it provides illuminates various hunting trophies adorning the walls.",
     "exits": {
       "n": "widePassage",
       "s": "diningRoom",
@@ -890,7 +912,7 @@ var rooms = {
     },
     "scenery": (_scenery = {
       "chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here."
-    }, _defineProperty(_scenery, "chairs", "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here."), _defineProperty(_scenery, "sofa", "The stuffing is bursting through the seams."), _defineProperty(_scenery, "stuffing", "You think it's horse hair."), _scenery),
+    }, _defineProperty(_scenery, "chairs", "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here."), _defineProperty(_scenery, "sofa", "The stuffing is bursting through the seams."), _defineProperty(_scenery, "stuffing", "You think it's horse hair."), _defineProperty(_scenery, "apparition", "It has vanished into thin air!"), _scenery),
     "onEnter": function onEnter() {
       message = "A ghostly apparition drifts by you muttering what sounds like, \"The boy must hang! The boy must hang!\" It fades away as quickly as it appeared.";
       snd.ghost.play();
@@ -1012,7 +1034,7 @@ var rooms = {
     "wallBreak": function wallBreak() {
       this.exits.n = "secretRoom";
       this.name = "Study with Secret Room";
-      this.description = "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+      this.description = "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room.";
       this.scenery.hole = "The hole is much bigger now.";
       this.scenery.wall = "The wall is no more. A secret room lies to the north.";
       this.scenery.passage = "It leads north to a secret room.";
@@ -1022,7 +1044,7 @@ var rooms = {
     "name": "Weird Cobwebby Room",
     "description": "The angles of this room seem off kilter. The design may not be to your liking but the spiders seem to enjoy it. As such, the room is filled with cobwebs.",
     "exits": {
-      "n": "steepMarbleStairs",
+      "d": "steepMarbleStairs",
       "e": "coldChamber",
       "s": "upperGallery"
     },
@@ -1653,7 +1675,9 @@ var verbs = {
 
           if (obj.score > 0) {
             if (checkScore() === getMaxScore()) {
-              message += " You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!";
+              message += " You feel the house shake and hear an angry howl in the distance. I think you've found all of the treasure.  Hurry, find your way back to the front gate to escape the mansion!";
+              shakeDisplay();
+              snd.scream.play();
             } else {
               message += " You've found treasure!";
             }
@@ -1722,6 +1746,30 @@ var verbs = {
           direction = "d";
           break;
 
+        case "n":
+          direction = "n";
+          break;
+
+        case "s":
+          direction = "s";
+          break;
+
+        case "w":
+          direction = "w";
+          break;
+
+        case "e":
+          direction = "e";
+          break;
+
+        case "u":
+          direction = "u";
+          break;
+
+        case "d":
+          direction = "d";
+          break;
+
         case "boat":
           verbs["enter"].action("boat", objects["boat"]);
           return;
@@ -1774,8 +1822,9 @@ var verbs = {
 
 
       if (direction && chosenExit) {
-        var tempRoomHolder = previousRoom;
-        message = "OK";
+        var tempRoomHolder = previousRoom; //message = "OK";
+
+        message = "";
         previousRoom = currentRoom;
         currentRoom = getRoom(chosenExit); // THINGS THAT BLOCK NEW ROOM, MOVEMENT NOT ALLOWED
 
@@ -1969,6 +2018,15 @@ var verbs = {
         return;
       }
 
+      if (obj.id === "aerosol" && isCarrying("aerosol") && flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
+        flags.batsAttacking = false;
+        message = "Whoosh! A fireball erupts towards the bats. They spiral to the ground in a smattering of thuds. They now lie motionless, smoldering on the ground.";
+        rooms["mustyRoom"].batsKilled();
+        objects["bats"].batsKilled();
+        flags.batsAttacking = false;
+        return;
+      }
+
       if (obj.id === "aerosol" && isCarrying("aerosol")) {
         message = "An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.";
         return;
@@ -2003,7 +2061,14 @@ var verbs = {
   },
   "look": {
     "action": function action(noun, obj) {
-      message = "You see nothing special."; // Key in coat pocket
+      //message = "You see nothing special.";
+      message = "<em>".concat(noun.toUpperCase(), "?</em> You see nothing special.");
+
+      if (noun === "nothing special") {
+        message = "You stare blankly into space.";
+        return;
+      } // Key in coat pocket
+
 
       if (obj.id === "coat" && objectInRange(obj) && objects["key"].location === "coat") {
         message = "As you search through the old coat you find a key in the pocket.";
@@ -2032,9 +2097,6 @@ var verbs = {
       if (obj.description && objectInRange(obj)) {
         message = obj.description;
         return;
-      } else if (obj.description) {
-        message = "You do see that here.";
-        return;
       }
     }
   },
@@ -2051,6 +2113,11 @@ var verbs = {
   "open": {
     "action": function action(noun, obj) {
       message = "You can't open that.";
+
+      if (obj.id === "matches" && objectInRange(obj)) {
+        message = "It contains plenty of matches to last you the entire night.";
+        return;
+      }
 
       if (obj.id === "drawer" && objectInRange(obj) && !obj.isOpen && objects["candle"].location === "drawer") {
         message = "You slide the drawer open, revealing a candle.";
@@ -2121,7 +2188,7 @@ var verbs = {
       }
 
       if (obj.id === "ring" && obj.isWorn) {
-        message = "You pull and twist, but the ring wont come off.";
+        message = "You pull and twist, but the ring wont come off!";
         return;
       }
     }
@@ -2135,7 +2202,7 @@ var verbs = {
   },
   "say": {
     "action": function action(noun, obj) {
-      message = "You say, \"".concat(noun.toUpperCase(), "!\""); // Saying the magic word to dispel the field
+      message = "You say, \"".concat(noun.toUpperCase(), "! No one can hear you.\""); // Saying the magic word to dispel the field
 
       if (obj.id === "xzanfar" && isCarrying("magic spells")) {
         if (isRoom("coldChamber") && flags.magicalBarrier) {
@@ -2164,7 +2231,7 @@ var verbs = {
   },
   "score": {
     "action": function action(noun, obj) {
-      message = "Your score is ".concat(checkScore(), "/").concat(getMaxScore() + 1, ".");
+      message = "Your score is <em>".concat(checkScore(), "/").concat(getMaxScore() + 1, "</em>.");
 
       if (checkScore() === 0) {
         message += " You need to find some treasure!";
@@ -2173,6 +2240,8 @@ var verbs = {
       if (checkScore() === getMaxScore()) {
         message += " That's all the treasure. Hurry, find your way back to the front gate to claim that <em>final point!</em>";
       }
+
+      message += "<br><br>So far you have taken <em>".concat(turns, " turns</em>.");
     },
     "singleWord": true
   },
@@ -2443,6 +2512,7 @@ var verbs = {
           ;
         }
 
+        objects["candlestick"].location = currentRoom.rid;
         message = "You cheat and collect all the treasure.";
         return;
       }
@@ -2456,7 +2526,7 @@ var verbs = {
           ;
         }
 
-        message = "You cheat and collect all the objects you filthy hoarder.";
+        message = "You cheat and collect all the objects, you filthy hoarder.";
         return;
       }
 
@@ -2551,7 +2621,9 @@ snd.splash = new Sound("audio/splash.mp3");
 snd.ghost = new Sound("audio/ghost.mp3");
 snd.falling = new Sound("audio/falling.mp3");
 snd.laugh = new Sound("audio/laugh.mp3");
-snd.groan = new Sound("audio/groan.mp3"); //export default snd;
+snd.groan = new Sound("audio/groan.mp3");
+snd.scream = new Sound("audio/scream.mp3");
+snd.fanfare = new Sound("audio/fanfare.mp3"); //export default snd;
 
 /**
  * This file contains scripts that enhance the layout display.
@@ -2590,6 +2662,7 @@ $btnFontToggle.addEventListener('click', function (evt) {
 // Initialize DOM items as JS variables
 
 var $container = document.getElementById('hh-container');
+var $screen = document.getElementById('hh-display');
 var $display = document.getElementById('hh-output');
 var $inputZone = document.getElementById('hh-input');
 var $inputForm = document.getElementById('hh-input-form');
@@ -2615,6 +2688,7 @@ var flags = {
   // flags[26]
   candleLit: false,
   // flags[0]
+  endGame: 0,
   encroachingDarkness: 0,
   ghoulProgress: 0,
   frontDoorOpen: true,
@@ -2627,6 +2701,7 @@ var flags = {
   magicalBarrier: true,
   //flags[34]
   ropeTiedToTree: true,
+  screamVolume: .25,
   sinking: 0,
   studyWallBroken: false,
   vacuumHasPower: false,
@@ -2859,6 +2934,10 @@ function parseInput(myInput) {
   // Candle power
 
 
+  if (flags.candleLit && flags.lightLevel === 30) {
+    message += "<br>Your candle is melted down to half its original size.";
+  }
+
   if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 13) {
     message += "<br>Your candle is waning!";
   }
@@ -2910,6 +2989,21 @@ function parseInput(myInput) {
     if (flags.sinking === 3) {
       message += " Do something, quick!";
     }
+  } // House is in endGame mode
+
+
+  if (flags.endGame > 0 && !isRoom("finalRoom") && !isRoom("exit")) {
+    flags.endGame = flags.endGame + 1;
+
+    if (flags.endGame % 7 === 0) {
+      shakeDisplay();
+      flags.screamVolume = flags.screamVolume + .07 < 1 ? flags.screamVolume + .07 : 1;
+      snd.scream.sound.volume = flags.screamVolume;
+      snd.scream.play();
+      var endGameMessages = ["Anger emanates from the mansion.", "You think you are being followed!", "You feel a sinister presence."];
+      var endGameMessage = endGameMessages[Math.floor(Math.random() * endGameMessages.length)];
+      message += " ".concat(endGameMessage);
+    }
   } // Ghoul Effects
 
 
@@ -2918,19 +3012,19 @@ function parseInput(myInput) {
 
     switch (flags.ghoulProgress) {
       case 4:
-        message += "<br>The ghoul lumbers towards you!";
+        message += "<br><br>The ghoul lumbers towards you!";
         break;
 
       case 5:
-        message += "<br>The ghoul continues to move towards you!";
+        message += "<br><br>The ghoul continues to move towards you!";
         break;
 
       case 6:
-        message += "<br>The ghoul hisses and takes a swipe at your face!";
+        message += "<br><br>The ghoul hisses and takes a swipe at your face!";
         break;
 
       case 7:
-        message += "<br>The ghoul spits dark spray of ooze towards your face. You dodge it just in the nick of time.";
+        message += "<br><br>The ghoul spits a dark spray of ooze towards your face. You dodge it just in the nick of time. That was too close, get out of here, quick!!";
         break;
 
       case 8:
@@ -2943,7 +3037,7 @@ function parseInput(myInput) {
 
   turns++;
 
-  if (getMaxScore() === checkScore()) {
+  if (getMaxScore() === checkScore() && flags.endGame === 0) {
     triggerEndGame();
   } // Fade the helper placeholder text after a few turns
 
@@ -3142,6 +3236,13 @@ function getMaxScore() {
   }
 
   return maxScore;
+}
+
+function introText() {
+  var myIntro = "They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>\"Howls and blood curdling screams.\" Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...";
+  displayOverlay(myIntro);
+  $continueBtn.classList.remove('is-first-screen');
+  $continueBtn.innerHTML = "[ Click to Continue ]";
 } // ===== END GAME FUNCTIONS ======
 
 /**
@@ -3155,6 +3256,7 @@ function triggerEndGame() {
   rooms["frontPorch"].exits.s = "finalRoom";
   rooms["twistedRailings"].exits.e = "finalRoom";
   rooms["pathByRailings"].exits.w = "finalRoom";
+  flags.endGame = 1;
 }
 /**
  * Player death, game ending routine
@@ -3192,6 +3294,7 @@ function victory() {
   prnt("<br>---------------------------------------------<br>");
   prnt("You took <em>".concat(turns, "</em> turns to complete the adventure.<br>"));
   prnt("<span class=\"message\">This \"remastered\" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.</span>");
+  snd.fanfare.play();
   $restartBtn.classList.remove('is-hidden');
 } // ===== EVENT LISTENERS =====
 
@@ -3219,8 +3322,21 @@ $inputForm.addEventListener('submit', function (evt) {
   $userInput.value = '';
 });
 /**
+ * Shake display
+ */
+
+function shakeDisplay() {
+  $screen.classList.add('shake'); // void $screen.offsetWidth is a hack to reset CSS animation
+
+  setTimeout(function () {
+    $screen.classList.remove('shake');
+    void $screen.offsetWidth;
+  }, 1000);
+}
+/**
  * Read input history
  */
+
 
 document.onkeydown = checkKey;
 
@@ -3229,7 +3345,12 @@ function checkKey(evt) {
 
   if ($container.classList.contains('overlay')) {
     if (evt.keyCode == '27' || evt.keyCode == '13') {
-      // Down arrow
+      // ESC or Return
+      if ($continueBtn.classList.contains('is-first-screen')) {
+        introText();
+        return;
+      }
+
       hideOverlay();
     }
 
@@ -3268,6 +3389,11 @@ $restartBtn.addEventListener('click', function (evt) {
  */
 
 $continueBtn.addEventListener('click', function (evt) {
+  if ($continueBtn.classList.contains('is-first-screen')) {
+    introText();
+    return;
+  }
+
   hideOverlay();
 });
 /**
@@ -3292,6 +3418,7 @@ function debugInfo() {
   cl("score: " + totalScore);
   cl("sinking: " + flags.sinking);
   cl("Terror: " + flags.encroachingDarkness);
+  cl("endGame: ".concat(flags.endGame));
 }
 /**
  * Initialize the game
