@@ -762,7 +762,15 @@ const rooms = {
 			"marsh": "The water is dark and you can't see the bottom.",
 			"muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
 		},
-		"water": true
+		"water": true,
+		"onEnter": function() {
+			if (flags.endGame) {
+				objects["statue"].droppedInMarsh();
+				message = "All of the sudden there is loud ZAP! Beams of energy shoot out of the ebony statue causing you to drop it overboard!";
+				flags.sinkingStatue++;
+				snd.shock.play();
+			}
+		}
 	},
 	"soggyPath": {
 		"name": "Soggy Path",

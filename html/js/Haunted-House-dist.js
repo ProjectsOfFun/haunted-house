@@ -418,7 +418,13 @@ var objects = {
     "location": "hallWithLockedDoor",
     "portable": true,
     "score": 1,
-    "takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
+    "takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips.",
+    "droppedInMarsh": function droppedInMarsh() {
+      this.location = "marsh", this.name = "a sinking ebony statue", this.description = "Oh no! The statue is slowly sinking in the bog!", this.takeMessage = "With a loud \"schloop!\" pull the statue out of the bog. It no longer emits energy.";
+    },
+    "takenFromMarsh": function takenFromMarsh() {
+      this.location = "player", this.name = "an ebony statue", this.description = "It looks African in origin and is most likely very valuable.";
+    }
   },
   "thicket": {
     "location": "path",
@@ -448,9 +454,10 @@ var objects = {
   "vase": {
     "name": "a vase in the muck",
     "description": "It's mostly submerged in the muck, but it looks like a valuable antique.",
-    "location": "marsh",
+    "location": null,
+    //"marsh",
     "portable": true,
-    "score": 1,
+    //"score": 1,
     "takeMessage": "With a loud \"schloop!\" pull the vase out of the bog.",
     "takeVase": function takeVase() {
       this.name = "an antique Chinese vase";
@@ -1215,7 +1222,15 @@ var rooms = {
       "marsh": "The water is dark and you can't see the bottom.",
       "muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
     },
-    "water": true
+    "water": true,
+    "onEnter": function onEnter() {
+      if (flags.endGame) {
+        objects["statue"].droppedInMarsh();
+        message = "All of the sudden there is loud ZAP! Beams of energy shoot out of the ebony statue causing you to drop it overboard!";
+        flags.sinkingStatue++;
+        snd.shock.play();
+      }
+    }
   },
   "soggyPath": {
     "name": "Soggy Path",
@@ -1561,11 +1576,18 @@ var verbs = {
   },
   "drop": {
     "action": function action(noun, obj) {
-      // Don't allow treasure to be dropped
+      // Don't allow dropping in marsh
+      if (obj.location === "player" && (isRoom("marsh") || isRoom("soggyPath"))) {
+        message = "You best not drop things into the marsh. They'll be lost forever.";
+        return;
+      } // Don't allow treasure to be dropped
+
+
       if (obj.score > 0 && isCarrying(obj)) {
         message = "The ".concat(noun, " is too valuable to drop.");
         return;
-      }
+      } // Unlight candle when dropped
+
 
       if (obj.id === "candle" && flags.candleLit && currentRoom.darkness === true) {
         message = "You drop the candle. It extinguishes itself as it rolls off into the darkness! That probably wasn't a good idea.";
@@ -1683,22 +1705,20 @@ var verbs = {
       if (obj.id === "bats" && !flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
         message = "Ew! You don't want to touch the filthy bat carcasses!";
         return;
-      } // if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
-      // 	message = "You untie the rope from the tree.";
-      // 	obj.location = "player";
-      // 	obj.removeFromTree();
-      // 	flags.ropeTiedToTree = false;
-      // 	return;
-      // }
+      } // Statue zapped into marsh
 
 
-      if (obj.id === "vase" && flags.inBoat && objectInRange("vase")) {
+      if (isRoom("marsh") && obj.id === "statue" && flags.inBoat && objectInRange("statue")) {
         message = "It's stuck in the muck. You're going to have to exit the boat to get to it.";
         return;
       }
 
-      if (obj.id === "vase" && !flags.inBoat && objectInRange("vase")) {
-        obj.takeVase();
+      if (isRoom("marsh") && obj.id === "statue" && !flags.inBoat && objectInRange("statue")) {
+        message = obj.takeMessage;
+        obj.takenFromMarsh();
+        flags.sinkingStatue = 0;
+        delete rooms["marsh"].onEnter;
+        return;
       }
 
       if (obj.portable && objectInRange(obj)) {
@@ -1707,7 +1727,7 @@ var verbs = {
           obj.location = "player";
 
           if (obj.score > 0) {
-            if (checkScore() === getMaxScore()) {
+            if (checkScore() === getMaxScore() && flags.endGame === 0) {
               message += " You feel the house shake and hear an angry howl in the distance. I think you've found all of the treasure.  Hurry, find your way back to the front gate to escape the mansion!";
               shakeDisplay();
               snd.scream.play();
@@ -1861,6 +1881,12 @@ var verbs = {
       if (isRoom("path") && direction === "s" && !flags.thicketSurveyed) {
         message = "You try to squeeze through the thicket but keep ending up where you started. Perhaps if you could get a birdseye view you could better navigate a route.";
         return;
+      } // Statue is sinking
+
+
+      if (isRoom("marsh") && flags.sinkingStatue) {
+        message = "You've come this far and you're not going leave without ALL the treasure. Get that statue before it's lost forever!";
+        return;
       } // Final "battle"
 
 
@@ -1889,7 +1915,7 @@ var verbs = {
 
         if ((currentRoom.water || currentRoom.shore) && flags.inBoat) {
           objects["boat"].location = currentRoom.rid;
-          message = "Aye aye captain";
+          message = "Aye aye captain!";
         }
 
         if (currentRoom.water && !flags.inBoat) {
@@ -2778,6 +2804,7 @@ var flags = {
   ropeTiedToTree: true,
   screamVolume: .25,
   sinking: 0,
+  sinkingStatue: 0,
   studyWallBroken: false,
   thicketSurveyed: false,
   vacuumHasPower: false,
@@ -3065,6 +3092,20 @@ function parseInput(myInput) {
     if (flags.sinking === 3) {
       message += " Do something, quick!";
     }
+  } // Sinking statue
+
+
+  if (flags.sinkingStatue) {
+    flags.sinkingStatue++;
+  }
+
+  if (flags.sinkingStatue < 8 && flags.sinkingStatue > 5) {
+    message += " Hurry, get the statue!";
+  }
+
+  if (flags.sinkingStatue >= 8) {
+    death("The statue finally sinks below the surface. Moments later a huge blast of energy from deep under the water overturns the boat. During the ruckus, something hard slams you in the head. You regain consciousness only to find yourself pinned under the water by a sinister ghoul.");
+    return;
   } // House is in endGame mode
 
 
@@ -3545,7 +3586,7 @@ function init(startRoom, carrying, inRoom) {
 
 var debug = false;
 verbs["help"].action();
-init("pathThroughIronGate", [], []); // init("cellar",["shovel"],[]);
+init("pathThroughIronGate", [], []);
 
 /***/ })
 /******/ ]);

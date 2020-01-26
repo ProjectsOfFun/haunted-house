@@ -46,6 +46,7 @@ const flags = {
 	ropeTiedToTree: true,
 	screamVolume: .25,
 	sinking: 0,
+	sinkingStatue: 0,
 	studyWallBroken: false,
 	thicketSurveyed: false,
 	vacuumHasPower: false,
@@ -317,6 +318,18 @@ function parseInput(myInput) {
 		} if (flags.sinking === 3) {
 			message += ` Do something, quick!`;
 		}
+	}
+
+	// Sinking statue
+	if (flags.sinkingStatue) {
+		flags.sinkingStatue++;
+	}
+	if (flags.sinkingStatue < 8 && flags.sinkingStatue > 5) {
+		message += ` Hurry, get the statue!`;
+	}
+	if (flags.sinkingStatue >= 8) {
+		death(`The statue finally sinks below the surface. Moments later a huge blast of energy from deep under the water overturns the boat. During the ruckus, something hard slams you in the head. You regain consciousness only to find yourself pinned under the water by a sinister ghoul.`);
+		return;
 	}
 
 	// House is in endGame mode
@@ -782,4 +795,3 @@ function init(startRoom,carrying,inRoom) {
 let debug = false;
 verbs["help"].action();
 init("pathThroughIronGate",[],[]);
-// init("cellar",["shovel"],[]);

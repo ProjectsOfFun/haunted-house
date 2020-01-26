@@ -174,12 +174,20 @@ const verbs = {
 	},
 	"drop": {
 		"action": function(noun,obj) {
+
+			// Don't allow dropping in marsh
+			if (obj.location === "player" && ( isRoom("marsh") || isRoom("soggyPath") )) {
+				message = "You best not drop things into the marsh. They'll be lost forever.";
+				return;
+			}
+
 			// Don't allow treasure to be dropped
 			if (obj.score > 0 && isCarrying(obj)) {
 				message = `The ${noun} is too valuable to drop.`;
 				return;
 			}
 
+			// Unlight candle when dropped
 			if (obj.id === "candle" && flags.candleLit && currentRoom.darkness === true) {
 				message = `You drop the candle. It extinguishes itself as it rolls off into the darkness! That probably wasn't a good idea.`;
 				flags.candleLit = false;
@@ -295,21 +303,18 @@ const verbs = {
 				return;
 			}
 
-			// if (obj.id === "rope" && objectInRange(obj) && flags.ropeTiedToTree) {
-			// 	message = "You untie the rope from the tree.";
-			// 	obj.location = "player";
-			// 	obj.removeFromTree();
-			// 	flags.ropeTiedToTree = false;
-			// 	return;
-			// }
-
-			if (obj.id === "vase" && flags.inBoat && objectInRange("vase")) {
+			// Statue zapped into marsh
+			if (isRoom("marsh") && obj.id === "statue" && flags.inBoat && objectInRange("statue")) {
 				message = `It's stuck in the muck. You're going to have to exit the boat to get to it.`;
 				return;
 			}
 
-			if (obj.id === "vase" && !flags.inBoat && objectInRange("vase")) {
-				obj.takeVase();
+			if (isRoom("marsh") && obj.id === "statue" && !flags.inBoat && objectInRange("statue")) {
+				message = obj.takeMessage;
+				obj.takenFromMarsh();
+				flags.sinkingStatue = 0;
+				delete rooms["marsh"].onEnter;
+				return;
 			}
 
 			if (obj.portable && objectInRange(obj)) {
@@ -318,7 +323,7 @@ const verbs = {
 					obj.location = "player";
 
 					if (obj.score > 0) {
-						if (checkScore() === getMaxScore()) {
+						if (checkScore() === getMaxScore() && flags.endGame === 0) {
 							message += ` You feel the house shake and hear an angry howl in the distance. I think you've found all of the treasure.  Hurry, find your way back to the front gate to escape the mansion!`;
 							shakeDisplay();
 							snd.scream.play();
@@ -460,6 +465,12 @@ const verbs = {
 				return;
 			}
 
+			// Statue is sinking
+			if (isRoom("marsh") && flags.sinkingStatue) {
+				message = `You've come this far and you're not going leave without ALL the treasure. Get that statue before it's lost forever!`;
+				return;
+			}
+
 			// Final "battle"
 			if (isRoom("finalRoom") && direction !== "s") {
 				message = `The ghoul blocks your exit in that direction!`;
@@ -489,7 +500,7 @@ const verbs = {
 
 				if ((currentRoom.water || currentRoom.shore) && flags.inBoat) {
 					objects["boat"].location = currentRoom.rid;
-					message = "Aye aye captain";
+					message = "Aye aye captain!";
 				}
 
 				if (currentRoom.water && !flags.inBoat) {

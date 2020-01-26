@@ -318,7 +318,18 @@ const objects = {
 		"location": "hallWithLockedDoor",
 		"portable": true,
 		"score": 1,
-		"takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
+		"takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips.",
+		"droppedInMarsh": function() {
+			this.location = "marsh",
+			this.name = "a sinking ebony statue",
+			this.description = "Oh no! The statue is slowly sinking in the bog!",
+			this.takeMessage = `With a loud "schloop!" pull the statue out of the bog. It no longer emits energy.`
+		},
+		"takenFromMarsh": function() {
+			this.location = "player",
+			this.name = "an ebony statue",
+			this.description = "It looks African in origin and is most likely very valuable."
+		}
 	},
 	"thicket": {
 		"location": "path",
@@ -348,9 +359,9 @@ const objects = {
 	"vase": {
 		"name": "a vase in the muck",
 		"description": "It's mostly submerged in the muck, but it looks like a valuable antique.",
-		"location": "marsh",
+		"location": null, //"marsh",
 		"portable": true,
-		"score": 1,
+		//"score": 1,
 		"takeMessage": `With a loud "schloop!" pull the vase out of the bog.`,
 		"takeVase": function() {
 			this.name = "an antique Chinese vase";
