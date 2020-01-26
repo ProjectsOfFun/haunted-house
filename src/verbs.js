@@ -140,10 +140,12 @@ const verbs = {
 				message = "You have nothing to dig with.";
 				return;
 			}
+
 			if (!noun) {
 				message = "Where do you want to dig?";
 				return;
 			}
+
 			if ((isRoom("cellar") || isRoom("cliffPathByWindow"))&& nounCheck(noun,["bars","window","barred window","brickwork","bricks"])) {
 				if (!flags.barsDug) {
 					message = "After several minutes of work, you manage to dig the bars out.";
@@ -153,6 +155,11 @@ const verbs = {
 				} else {
 					message = "You've already cleared the bars away from the window.";
 				}
+				return;
+			}
+
+			if (obj.id === "thicket" && objectInRange("thicket")) {
+				message = `The roots are too deep. That would take days.`;
 				return;
 			}
 		}
@@ -435,6 +442,12 @@ const verbs = {
 				return;
 			}
 
+			// Thicket not surveyed
+			if (isRoom("path") && direction === "s" && !flags.thicketSurveyed) {
+				message = `You try to squeeze through the thicket but keep ending up where you started. Perhaps if you could get a birdseye view you could better navigate a route.`;
+				return;
+			}
+
 			if (isRoom("finalRoom") && direction !== "s") {
 				message = `The ghoul blocks your exit in that direction!`;
 				snd.laugh.play();
@@ -666,6 +679,11 @@ const verbs = {
 				return;
 			}
 
+			if (obj.id === "thicket" && objectInRange("thicket")) {
+				message = `It's too damp to ignite.`;
+				return;
+			}
+
 		}
 	},
 	"listen": {
@@ -703,6 +721,14 @@ const verbs = {
 			// Weird exception so painting can be looked at further
 			if (noun === "skull" && objectInRange("painting")) {
 				message = `It's from a small animal with sharp fangs. Despite the frightening appearance, the boy is holding it lovingly.`;
+				return;
+			}
+
+			// In the tree thicket is viewed
+			if (isRoom("inTheTree") && obj.id === "thicket") {
+				message = `From up here you are able visualize a clear path through the thicket. You should be able to wind your way through it now.`;
+				rooms["path"].clearThicket();
+				flags.thicketSurveyed = true;
 				return;
 			}
 
@@ -912,6 +938,11 @@ const verbs = {
 
 			if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
 				message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
+				return;
+			}
+
+			if (obj.id === "axe" && isCarrying("axe") && isRoom("path")) {
+				message = "There isn't enough room to take a proper swing at the thicket.";
 				return;
 			}
 

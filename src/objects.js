@@ -177,9 +177,9 @@ const objects = {
 	"egg": {
 		"name": "a jewel encrusted egg",
 		"description": "It's a finely crafted jeweled egg. You get the feeling that you've seen it before.",
-		"location": "inTheTree",
+		"location": null, //"inTheTree",
 		"portable": true,
-		"score": 1
+		//"score": 1
 	},
 	"ghost": {
 		"synonym": "ghosts"
@@ -319,6 +319,11 @@ const objects = {
 		"portable": true,
 		"score": 1,
 		"takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
+	},
+	"thicket": {
+		"location": "path",
+		"description": "It's a maze of densely packed vegetation.",
+		"smellMessage": "It smells shrubby."
 	},
 	"tome" : {
 		"synonym": "magic spells"

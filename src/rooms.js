@@ -209,7 +209,7 @@ const rooms = {
 	},
 	"path": {
 		"name": "Path",
-		"description": "A path leads south along the clifftop. In the distance to the north you see the forboding outline of a large blasted tree.",
+		"description": "A path leads south along the clifftop but it is blocked by an overgrown thicket. In the distance to the north you see the forboding outline of a large blasted tree.",
 		"exits": {
 			"n": "blastedTree",
 			"s": "clifftop",
@@ -219,6 +219,10 @@ const rooms = {
 			"tree": "If you head north you can get a closer look.",
 			"path": "It's composed of loose gravel. Watch your step as you traverse along the edge of the cliff.",
 			"clifftop": "You are just high enough to cause some serious injury should you fall."
+		},
+		"clearThicket": function() {
+			//this.exits.s = "clifftop";
+			this.description = "A path leads south along the clifftop but it is hindered by an overgrown thicket. Having surveyed the area, you are confident that you can navigate it. In the distance to the north you see the forboding outline of a large blasted tree."
 		}
 	},
 	"sideOfHouse": {
@@ -870,7 +874,7 @@ const rooms = {
 	},
 	"inTheTree": {
 		"name": "In the Blasted Tree",
-		"description": "From up in the tree you see a thick forest and a cliff to the south.",
+		"description": "From up in the tree you see a dense forest west. To the southwest looms the mansion in all its sinister glory. Directly south you see a path which appears to be blocked by a thicket.",
 		"exits": {
 			"d":"blastedTree"
 		},
@@ -881,7 +885,12 @@ const rooms = {
 			"rope": "From up here you can see what appear to be fingernails wedged in the fibers of the rope.",
 			"fingernails": "Someone was desperately trying to untie this.",
 			"nails": "Someone was desperately trying to untie this.",
-			"fibers": "It's made of a very strong material."
+			"fibers": "It's made of a very strong material.",
+			"forest": "Despite the barren branches, you can't see very far beyond the trees.",
+			"mansion": "It's the largest feature in view and yet it is hard to make out any details. It is as though the structure is veiled in an unnatural darkness.",
+			"path": "It leads south into a dense thicket.",
+			"tree": "The knotty surface gives the tree almost face-like features",
+			"surface": "The bark is cracked and rough."
 		}
 	},
 	"exit": {

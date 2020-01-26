@@ -47,6 +47,7 @@ const flags = {
 	screamVolume: .25,
 	sinking: 0,
 	studyWallBroken: false,
+	thicketSurveyed: false,
 	vacuumHasPower: false,
 	vacuumSwitchedOn: false, // flags[24]
 	wearingCoat: false,
@@ -780,4 +781,5 @@ function init(startRoom,carrying,inRoom) {
 // INITIALIZE GAME
 let debug = false;
 verbs["help"].action();
-init("pathThroughIronGate",[],[]);
+//init("pathThroughIronGate",[],[]);
+init("clearing",[],[]);
