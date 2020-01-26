@@ -12,7 +12,13 @@ const rooms = {
 			if (Math.random() > .4) {
 				message = "You hear an owl hooting off in the distance.";
 				snd.owl.play();
+				this.scenery.owl = "You can't see it in the dusk."
+			} else {
+				this.scenery.owl = "There is no owl here."
 			}
+		},
+		"scenery": {
+			"owl": "There is no owl here."
 		}
 	},
 	"overgrownGarden": {
@@ -161,8 +167,8 @@ const rooms = {
 		"name": "Musty Room",
 		"description": "There is a nasty swarm of bats attacking you! Their fluttering wings stir up a putrid, musty stench.",
 		"exits": {
-			"s": "spiralStaircase",
-			"e": "rearTurretRoom"
+			"e": "rearTurretRoom",
+			"d": "spiralStaircase"
 		},
 		"batsKilled": function(){
 			this.description = "This quiet corner room is filled with the musty stench of rabid, wild animals. The floor is covered with bat carcasses."
@@ -236,6 +242,7 @@ const rooms = {
 		},
 		"scenery": {
 			"portrait": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
+			"picture": "The tapestry depicts an elderly woman in a black dress. She stands aside an old tree.",
 			"tapestry": "It depicts an elderly woman in a black dress. She stands aside an old tree.",
 			"woman": "I think her eyes just moved!",
 			"eyes": "They seem to follow you around the room.",
@@ -247,7 +254,7 @@ const rooms = {
 	},
 	"darkAlcove": {
 		"name": "Dark Alcove",
-		"description": "You candle's light is just enough to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
+		"description": "<em>You candle's light is just enough</em> to make out the darkened alcove here at the end of the hallway. There is another shadowy room to the east.",
 		"exits": {
 			"s": "poolOfLight",
 			"e": "smallDarkRoom"
@@ -256,10 +263,10 @@ const rooms = {
 	},
 	"smallDarkRoom": {
 		"name": "Small Dark Room",
-		"description": "Using your candle, you see that shelves line the walls of this tiny utility room. To the east a stairway leads to the upper rooms at the back of the house.",
+		"description": "<em>Using your candle</em>, you see that shelves line the walls of this tiny utility room. A stairway leads up to the upper rooms at the back of the house.",
 		"exits": {
 			"w": "darkAlcove",
-			"e": "spiralStaircase"
+			"u": "spiralStaircase"
 		},
 		"darkness" : true,
 		"scenery": {
@@ -285,10 +292,10 @@ const rooms = {
 	},
 	"widePassage": {
 		"name": "Wide Passage",
-		"description": "The corridor widens into large passage. There is enough light here to see without the aid of your candle. To the east are the cellar stairs.",
+		"description": "The corridor widens into large passage. There is enough light here to see without the aid of your candle. Downwards from here are the cellar stairs.",
 		"exits": {
 			"s": "trophyRoom",
-			"e": "slipperySteps"
+			"d": "slipperySteps"
 		}
 	},
 	"slipperySteps": {
@@ -342,7 +349,7 @@ const rooms = {
 	},
 	"vaultedHall": {
 		"name": "Impressive Vaulted Hallway",
-		"description": "Your candle reveals that this hallway boasts an impressive vaulted ceiling.",
+		"description": "This magnificent hallway boasts an impressive vaulted ceiling. <em>Your candle lights the way.</em>",
 		"exits": {
 			"w": "poolOfLight",
 			"e": "hallWithLockedDoor"	
@@ -354,20 +361,20 @@ const rooms = {
 	},
 	"hallWithLockedDoor": {
 		"name": "Hall by Thick Wooden Door",
-		"description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south. Your candle is illuminating this room.",
+		"description": "The vaulted hall ends here with an archway to the east and a large, locked door to the south. <em>Your candle is illuminating the room.</em>",
 		"exits": {
 			"w": "vaultedHall",
 			"e": "trophyRoom"
 		},
 		"darkness": true,
 		"doorUnlocked": function() {
-			this.description = `The vaulted hall ends here with an archway to the east and a thick wooden door to the south behind which a staircase is leading up. Your candle is illuminating this room.`;
-			this.exits.s = "steepMarbleStairs";
+			this.description = `The vaulted hall ends here with an archway to the east and a thick wooden door to the south behind which a staircase is leading up. <em>Your candle is illuminating the room.</em>`;
+			this.exits.u = "steepMarbleStairs";
 		}
 	},
 	"trophyRoom": {
 		"name": "Trophy Room",
-		"description": "As you hold your candle up, what little light it provides illuminates various hunting trophies adorning the walls.",
+		"description": "<em>You hold your candle out in front of you.</em> What little light it provides illuminates various hunting trophies adorning the walls.",
 		"exits": {
 			"n": "widePassage",
 			"s": "diningRoom",
@@ -453,7 +460,8 @@ const rooms = {
 			"chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
 			"chairs": "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here.",
 			"sofa": "The stuffing is bursting through the seams.",
-			"stuffing": "You think it's horse hair."
+			"stuffing": "You think it's horse hair.",
+			"apparition": "It has vanished into thin air!"
 		},
 		"onEnter": function(){
 			message = `A ghostly apparition drifts by you muttering what sounds like, "The boy must hang! The boy must hang!" It fades away as quickly as it appeared.`;
@@ -576,7 +584,7 @@ const rooms = {
 		"wallBreak": function() {
 			this.exits.n = "secretRoom";
 			this.name = "Study with Secret Room";
-			this.description = "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room";
+			this.description = "This must be where mansion's owner spent hours sitting at a one of the many desks researching the dark arts. In addition to the desks, to the north there is a passage leading to a secret room.";
 			this.scenery.hole = "The hole is much bigger now.";
 			this.scenery.wall = "The wall is no more. A secret room lies to the north.";
 			this.scenery.passage ="It leads north to a secret room.";
@@ -586,7 +594,7 @@ const rooms = {
 		"name": "Weird Cobwebby Room",
 		"description": "The angles of this room seem off kilter. The design may not be to your liking but the spiders seem to enjoy it. As such, the room is filled with cobwebs.",
 		"exits": {
-			"n": "steepMarbleStairs",
+			"d": "steepMarbleStairs",
 			"e": "coldChamber",
 			"s": "upperGallery"
 		},

@@ -3,10 +3,16 @@
 const objects = {
 	"aerosol": {
 		"name": "a can of aerosol",
-		"description": `The can reads, "For the highest hair. Warning: do not spray on small animals."`,
-		"location": "debris",
+		"description": `The can reads, "For the highest, most colorful hair. Warning: do not spray on small animals."`,
+		"location": "frontPorch",
 		"portable": true,
 		"flamable": true
+	},
+	"spray paint": {
+		"synonym": "aerosol"
+	},
+	"paint": {
+		"synonym": "aerosol"
 	},
 	"air": {
 		"description": "It can't be seen.",
@@ -17,6 +23,7 @@ const objects = {
 		"name": "an axe",
 		"description": "Although a bit rusty, the blade is sharp. Looks like one <em>swing</em> could do some serious damage.",
 		"location": "byWoodpile",
+		"takeMessage": "As you pick up the axe you notice that there is dried blood on the handle.",
 		"portable": true
 	},
 	"ax": {
@@ -59,7 +66,8 @@ const objects = {
 		"readable": true,
 		"readableText": "You are unable to make sense of the ancient writings.",
 		"location": "library",
-		"takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone."
+		"takeMessage": "Cursed books are not your idea of a fun read. Just leave them alone.",
+		"smellMessage": "Odd, they reek of burning hair."
 	},
 	"box": {
 		"synonym": "matches"
@@ -69,7 +77,7 @@ const objects = {
 	},
 	"candle": {
 		"name": "a candle",
-		"description": "It's a normal wax candle.",
+		"description": "It's a normal wax candle, but thin and tapered so it may  not last long once lit.",
 		"location": "drawer",
 		"portable": true,
 		"smellMessage": "It smells waxy."
@@ -80,7 +88,7 @@ const objects = {
 		"location": "library",
 		"portable": true,
 		"score": 1,
-		"takeMessage": "It's a lot heavier than it looks. Must be solid gold!"
+		"takeMessage": "It's oddly warm to the touch, as if it had been held recently."
 	},
 	"coat": {
 		"name": "a dusty old coat",
@@ -89,15 +97,15 @@ const objects = {
 		"portable": true
 	},
 	"coffin": {
-		"description": "The dark-stained pine box has tarnished brass hinges. The lid is closed.",
+		"description": "It's a child-sized pine box with tarnished brass hinges. The lid is closed.",
 		"location": "deepCellar",
 		"isOpen": false,
 		"openAction": function() {
-			this.description = "The dark-stained pine box has tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
+			this.description = "It's a child-sized pine box with tarnished brass hinges. The coffin's lid is open, revealing its velvety, padded interior... but no body!";
 			this.isOpen = true;
 		},
 		"closeAction": function() {
-			this.description = "The dark-stained pine box has tarnished brass hinges. The lid is closed.";
+			this.description = "It's a child-sized pine box with tarnished brass hinges. The lid is closed.";
 			this.isOpen = false;
 		},
 		"takeMessage": "It's far to heavy to carry."
@@ -107,7 +115,11 @@ const objects = {
 		"location": "darkAlcove",
 		"portable": true,
 		"score": 1,
-		"takeMessage": "You pick up the sack of coins."
+		"takeMessage": "As you pick up the sack of coins a number of tiny roaches emerge from underneath, darting away in all directions."
+	},
+	"roaches": {
+		"location": "darkAlcove",
+		"description": "They have scurried off into the darkness."
 	},
 	"debris": {
 		"location": "debris",
@@ -187,11 +199,12 @@ const objects = {
 	},
 	"goblet": {
 		"name": "a jeweled goblet",
-		"description": "It made of shiny metal and encrusted with sparkling jewels.",
+		"description": "It made of shiny metal and encrusted with sparkling jewels. However, you notice traces of what appears to be nightshade lining the interior.",
 		"location": "frontTower",
 		"portable": true,
 		"score": 1,
-		"takeMessage": "What's an adventure without a goblet?"
+		"takeMessage": "As you pick up the goblet notice an odd smell.",
+		"smellMessage": "You recognize the scent. That's definitely nightshade."
 	},
 	"key": {
 		"name": "a key",
@@ -221,7 +234,7 @@ const objects = {
 	},
 	"message": {
 		"location": "sideOfHouse",
-		"description": "It's written in blood!",
+		"description": "It's written in blood! Do you dare <em>read</em> it?",
 		"readable": true,
 		"readableText": `It says, "Seek the word to dispell the barrier."`
 	},
@@ -254,7 +267,8 @@ const objects = {
 		"location": "coffin",
 		"portable": true,
 		"score": 1,
-		"isWorn": false
+		"isWorn": false,
+		"takeMessage": `As you grasp the ring, a devilish voice in your head whispers, "I am yours, wear me, wear me..."`
 	},
 	"rope": {
 		"name": "a rope tied to a tree",
@@ -303,7 +317,8 @@ const objects = {
 		"description": "It looks African in origin and is most likely very valuable.",
 		"location": "hallWithLockedDoor",
 		"portable": true,
-		"score": 1
+		"score": 1,
+		"takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
 	},
 	"tome" : {
 		"synonym": "magic spells"

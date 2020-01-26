@@ -10,6 +10,7 @@
 
 // Initialize DOM items as JS variables
 const $container = document.getElementById('hh-container');
+const $screen = document.getElementById('hh-display');
 const $display = document.getElementById('hh-output');
 const $inputZone = document.getElementById('hh-input');
 const $inputForm = document.getElementById('hh-input-form');
@@ -33,6 +34,7 @@ const flags = {
 	barsDug: false,
 	batsAttacking: true, // flags[26]
 	candleLit: false, // flags[0]
+	endGame: 0,
 	encroachingDarkness: 0,
 	ghoulProgress: 0,
 	frontDoorOpen: true, // flags[23]
@@ -42,6 +44,7 @@ const flags = {
 	lightLevel: 60,
 	magicalBarrier: true, //flags[34]
 	ropeTiedToTree: true,
+	screamVolume: .25,
 	sinking: 0,
 	studyWallBroken: false,
 	vacuumHasPower: false,
@@ -268,6 +271,9 @@ function parseInput(myInput) {
 	// POST VERB MESSAGES
 
 	// Candle power
+	if (flags.candleLit && flags.lightLevel === 30) {
+		message += `<br>Your candle is melted down to half its original size.`;
+	}
 	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 13) {
 		message += `<br>Your candle is waning!`;
 	}
@@ -312,22 +318,36 @@ function parseInput(myInput) {
 		}
 	}
 
+	// House is in endGame mode
+	if (flags.endGame > 0 && !isRoom("finalRoom") && !isRoom("exit")) {
+		flags.endGame = flags.endGame + 1;
+		if (flags.endGame % 7 === 0) {
+			shakeDisplay();
+			flags.screamVolume = (flags.screamVolume + .07 < 1) ? flags.screamVolume + .07 : 1;
+			snd.scream.sound.volume = flags.screamVolume;
+			snd.scream.play();
+			const endGameMessages = ["Anger emanates from the mansion.","You think you are being followed!","You feel a sinister presence."]
+			const endGameMessage = endGameMessages[Math.floor(Math.random() * endGameMessages.length)];
+			message += ` ${endGameMessage}`;
+		}
+	}
+
 	// Ghoul Effects
 	if (currentRoom.rid === "finalRoom") {
 		flags.ghoulProgress++;
 
 		switch (flags.ghoulProgress) {
 			case 4:
-				message += `<br>The ghoul lumbers towards you!`;
+				message += `<br><br>The ghoul lumbers towards you!`;
 				break;
 			case 5:
-				message += `<br>The ghoul continues to move towards you!`;
+				message += `<br><br>The ghoul continues to move towards you!`;
 				break;
 			case 6:
-				message += `<br>The ghoul hisses and takes a swipe at your face!`;
+				message += `<br><br>The ghoul hisses and takes a swipe at your face!`;
 				break;
 			case 7:
-				message += `<br>The ghoul spits dark spray of ooze towards your face. You dodge it just in the nick of time.`;
+				message += `<br><br>The ghoul spits a dark spray of ooze towards your face. You dodge it just in the nick of time. That was too close, get out of here, quick!!`;
 				break;
 			case 8:
 				snd.laugh.play();
@@ -339,7 +359,7 @@ function parseInput(myInput) {
 	// Increment turns
 	turns++;
 	
-	if (getMaxScore() === checkScore()) {
+	if (getMaxScore() === checkScore() && flags.endGame === 0) {
 		triggerEndGame();
 	}
 
@@ -534,6 +554,14 @@ function getMaxScore() {
 }
 
 
+function introText() {
+	let myIntro = `They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>"Howls and blood curdling screams." Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
+	displayOverlay(myIntro);
+	$continueBtn.classList.remove('is-first-screen');
+	$continueBtn.innerHTML = "[ Click to Continue ]";
+}
+
+
 
 // ===== END GAME FUNCTIONS ======
 
@@ -546,6 +574,7 @@ function triggerEndGame() {
 	rooms["frontPorch"].exits.s = "finalRoom";
 	rooms["twistedRailings"].exits.e = "finalRoom";
 	rooms["pathByRailings"].exits.w = "finalRoom";
+	flags.endGame = 1;
 }
 
 /**
@@ -586,7 +615,7 @@ function victory() {
 
 	prnt(`<span class="message">This "remastered" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
 	
-
+	snd.fanfare.play();
 	$restartBtn.classList.remove('is-hidden');
 }
 
@@ -615,6 +644,15 @@ $inputForm.addEventListener('submit', function(evt){
 });
 
 
+/**
+ * Shake display
+ */
+function shakeDisplay() {
+	$screen.classList.add('shake');
+	// void $screen.offsetWidth is a hack to reset CSS animation
+	setTimeout(function() {$screen.classList.remove('shake');void $screen.offsetWidth;},1000)
+}
+
 
 /**
  * Read input history
@@ -624,7 +662,11 @@ function checkKey(evt) {
 	evt = evt || window.event;
 
 	if ($container.classList.contains('overlay')) {
-		if ((evt.keyCode == '27' || evt.keyCode == '13')) { // Down arrow
+		if ((evt.keyCode == '27' || evt.keyCode == '13')) { // ESC or Return
+			if ($continueBtn.classList.contains('is-first-screen')) {
+				introText();
+				return;
+			}
 			hideOverlay();
 		}
 		return;
@@ -658,6 +700,10 @@ $restartBtn.addEventListener('click', function(evt){
  * Overlay close button
  */
 $continueBtn.addEventListener('click', function(evt){
+	if ($continueBtn.classList.contains('is-first-screen')) {
+		introText();
+		return;
+	}
 	hideOverlay();
 });
 
@@ -683,6 +729,7 @@ function debugInfo() {
 	cl("score: " + totalScore);
 	cl("sinking: " + flags.sinking);
 	cl("Terror: " + flags.encroachingDarkness);
+	cl(`endGame: ${flags.endGame}`);
 }
 
 /**

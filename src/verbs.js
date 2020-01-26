@@ -307,7 +307,9 @@ const verbs = {
 
 					if (obj.score > 0) {
 						if (checkScore() === getMaxScore()) {
-							message += ` You've found the last piece of treasure. Hurry, find your way back to the front gate to escape the mansion!`;
+							message += ` You feel the house shake and hear an angry howl in the distance. I think you've found all of the treasure.  Hurry, find your way back to the front gate to escape the mansion!`;
+							shakeDisplay();
+							snd.scream.play();
 						} else {
 							message += " You've found treasure!";
 						}
@@ -370,6 +372,24 @@ const verbs = {
 				case "down":
 					direction = "d";
 					break;
+				case "n":
+					direction = "n";
+					break;
+				case "s":
+					direction = "s";
+					break;
+				case "w":
+					direction = "w";
+					break;
+				case "e":
+					direction = "e";
+					break;
+				case "u":
+					direction = "u";
+					break;
+				case "d":
+					direction = "d";
+					break;
 				case "boat":
 					verbs["enter"].action("boat",objects["boat"]);
 					return;
@@ -425,7 +445,8 @@ const verbs = {
 			if (direction && chosenExit) {
 				let tempRoomHolder = previousRoom;
 
-				message = "OK";
+				//message = "OK";
+				message = "";
 				previousRoom = currentRoom;
 				currentRoom = getRoom(chosenExit);
 
@@ -621,6 +642,15 @@ const verbs = {
 				return;
 			}
 
+			if (obj.id === "aerosol" && isCarrying("aerosol") && flags.batsAttacking && currentRoom.rid === objects["bats"].location) {
+				flags.batsAttacking = false;
+				message = `Whoosh! A fireball erupts towards the bats. They spiral to the ground in a smattering of thuds. They now lie motionless, smoldering on the ground.`;
+				rooms["mustyRoom"].batsKilled();
+				objects["bats"].batsKilled();
+				flags.batsAttacking = false;
+				return;
+			}	
+
 			if (obj.id === "aerosol" && isCarrying("aerosol")) {
 				message = `An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.`;
 				return;
@@ -654,7 +684,13 @@ const verbs = {
 	},
 	"look": {
 		"action": function(noun,obj) {
-			message = "You see nothing special.";
+			//message = "You see nothing special.";
+			message = `<em>${noun.toUpperCase()}?</em> You see nothing special.`
+
+			if (noun === "nothing special") {
+				message = `You stare blankly into space.`;
+				return;
+			}
 
 			// Key in coat pocket
 			if (obj.id === "coat" && objectInRange(obj) && objects["key"].location === "coat") {
@@ -684,9 +720,6 @@ const verbs = {
 			if (obj.description && objectInRange(obj)) {
 				message = obj.description;
 				return;
-			} else if (obj.description) {
-				message = "You do see that here.";
-				return;
 			}
 
 		}
@@ -704,6 +737,11 @@ const verbs = {
 	"open": {
 		"action": function(noun,obj) {
 			message = "You can't open that.";
+
+			if (obj.id === "matches" && objectInRange(obj)) {
+				message = "It contains plenty of matches to last you the entire night.";
+				return;
+			}
 
 			if (obj.id === "drawer" && objectInRange(obj) && !obj.isOpen && objects["candle"].location === "drawer") {
 				message = "You slide the drawer open, revealing a candle.";
@@ -768,7 +806,7 @@ const verbs = {
 				return;
 			}
 			if (obj.id === "ring" && obj.isWorn) {
-				message = `You pull and twist, but the ring wont come off.`;
+				message = `You pull and twist, but the ring wont come off!`;
 				return;
 			}
 		}
@@ -782,7 +820,7 @@ const verbs = {
 	},
 	"say": {
 		"action": function(noun,obj) {
-			message = `You say, "${noun.toUpperCase()}!"`;
+			message = `You say, "${noun.toUpperCase()}! No one can hear you."`;
 
 			// Saying the magic word to dispel the field
 			if (obj.id === "xzanfar" && isCarrying("magic spells")) {
@@ -811,13 +849,14 @@ const verbs = {
 	},
 	"score": {
 		"action": function(noun,obj) {
-			message = `Your score is ${checkScore()}/${getMaxScore() + 1}.`;
+			message = `Your score is <em>${checkScore()}/${getMaxScore() + 1}</em>.`;
 			if (checkScore() === 0) {
 				message += " You need to find some treasure!"
 			}
 			if (checkScore() === getMaxScore()) {
 				message += ` That's all the treasure. Hurry, find your way back to the front gate to claim that <em>final point!</em>`;
 			}
+			message += `<br><br>So far you have taken <em>${turns} turns</em>.`
 		},
 		"singleWord": true
 	},
@@ -1087,6 +1126,7 @@ const verbs = {
 						objects[key].location = "player";
 					};
 				}
+				objects["candlestick"].location = currentRoom.rid;
 				message = `You cheat and collect all the treasure.`;
 				return;
 			}
@@ -1097,7 +1137,7 @@ const verbs = {
 						objects[key].location = "player";
 					};
 				}
-				message = `You cheat and collect all the objects you filthy hoarder.`;
+				message = `You cheat and collect all the objects, you filthy hoarder.`;
 				return;
 			}
 
