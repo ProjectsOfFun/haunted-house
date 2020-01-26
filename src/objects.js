@@ -2,8 +2,8 @@
 
 const objects = {
 	"aerosol": {
-		"name": "a can of aerosol",
-		"description": `The can reads, "For the highest, most colorful hair. Warning: do not spray on small animals."`,
+		"name": "a can of spray paint",
+		"description": `The can reads, "Simply the best paint for all your vandalism needs. Warning: do not spray on small animals."`,
 		"location": "frontPorch",
 		"portable": true,
 		"flamable": true
@@ -297,7 +297,7 @@ const objects = {
 		"portable": true,
 		"readable": true,
 		"description": "It is decorated with gold leaf and medieval illustrations. The text is written is in an alien tongue.",
-		"readableText": `It says "Klatu Borata Nickto."`,
+		"readableText": `It reads, "Klatu Borata Nickto."`,
 		"score": 1
 	},
 	"shovel": {

@@ -697,7 +697,7 @@ const verbs = {
 			}	
 
 			if (obj.id === "aerosol" && isCarrying("aerosol")) {
-				message = `An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.`;
+				message = `An explosive fireball sprays out of the can of paint! You can kiss your eyebrows goodbye.`;
 				return;
 			}
 			
@@ -843,6 +843,15 @@ const verbs = {
 
 		}
 	},
+	"paint": {
+		"action": function(noun,obj) {
+			if (isCarrying("aerosol") && obj.id !== "bats") {
+				message = "You're a thief, not a vandal.";
+				return;
+			}
+			verbs["spray"].action(noun,obj);
+		}
+	},
 	"read": {
 		"action": function(noun,obj) {
 			if (obj.readable && objectInRange(obj)) {
@@ -878,10 +887,12 @@ const verbs = {
 	},
 	"say": {
 		"action": function(noun,obj) {
-			message = `You say, "${noun.toUpperCase()}! No one can hear you."`;
+			message = `You say, "${noun.toUpperCase()}!" Nothing happens.`;
 
 			// Saying the magic word to dispel the field
 			if (obj.id === "xzanfar" && isCarrying("magic spells")) {
+				message = `You say, "${noun.toUpperCase()}!"`;
+
 				if (isRoom("coldChamber") && flags.magicalBarrier) {
 					message += "<br><br>The air sizzles with energy and the magic field dissipates into nothingness.";
 					flags.magicalBarrier = false;
@@ -895,6 +906,12 @@ const verbs = {
 				} else {
 					message += "<br><br>*Magic Occurs*"
 				}
+				return;
+			}
+
+			if (noun === "klatu borata nickto" && isCarrying("scroll")) {
+				message = `You say, "${noun.toUpperCase()}!"`;
+				message += "<br><br>Nothing happens. This incantation must have been part of a larger ritual.";
 				return;
 			}
 
@@ -1003,27 +1020,6 @@ const verbs = {
 	"take": {
 		synonym : "get"
 	},
-	// "tie": {
-	// 	"action": function(noun,obj) {
-	// 		message = "You can't tie that.";
-
-	// 		if (obj.id === "rope" && isCarrying("rope")) {
-
-	// 			if (isRoom("blastedTree")) {
-	// 				message = `You reattach the rope to the branch.`;
-	// 				obj.tieToTree();
-	// 				obj.location = "blastedTree";
-	// 				flags.ropeTiedToTree = true;
-	// 				return;
-	// 			}
-
-	// 			message = `There's no need to tie the rope to anything here.`;
-	// 			return;
-
-	// 		}
-
-	// 	}
-	// },
 	"u": {
 		"action": function(noun,obj) {
 			if (noun) return;
