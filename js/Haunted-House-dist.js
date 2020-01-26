@@ -1348,7 +1348,15 @@ var rooms = {
     },
     "scenery": {
       "cliff": "Your stomach begins to flutter as you peer over the edge.",
-      "wetlands": "You don't want to get caught in there without a boat."
+      "wetlands": "You don't want to et caught in there without a boat.",
+      "child": "The vision is no longer visible.",
+      "ghost": "The vision is no longer visible.",
+      "dog": "The vision is no longer visible."
+    },
+    "onEnter": function onEnter() {
+      message = "For a split second you see a ghostly vision of a small child chasing a dog around the clifftop. In a flash the scene disappears.";
+      snd.dog.play();
+      delete this.onEnter;
     }
   },
   "inTheTree": {
@@ -2726,7 +2734,8 @@ snd.falling = new Sound("audio/falling.mp3");
 snd.laugh = new Sound("audio/laugh.mp3");
 snd.groan = new Sound("audio/groan.mp3");
 snd.scream = new Sound("audio/scream.mp3");
-snd.fanfare = new Sound("audio/fanfare.mp3"); //export default snd;
+snd.fanfare = new Sound("audio/fanfare.mp3");
+snd.dog = new Sound("audio/dog.mp3"); //export default snd;
 
 /**
  * This file contains scripts that enhance the layout display.
