@@ -101,8 +101,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // Define the world's objects here.
 var objects = {
   "aerosol": {
-    "name": "a can of aerosol",
-    "description": "The can reads, \"For the highest, most colorful hair. Warning: do not spray on small animals.\"",
+    "name": "a can of spray paint",
+    "description": "The can reads, \"Simply the best paint for all your vandalism needs. Warning: do not spray on small animals.\"",
     "location": "frontPorch",
     "portable": true,
     "flamable": true
@@ -397,7 +397,7 @@ var objects = {
     "portable": true,
     "readable": true,
     "description": "It is decorated with gold leaf and medieval illustrations. The text is written is in an alien tongue.",
-    "readableText": "It says \"Klatu Borata Nickto.\"",
+    "readableText": "It reads, \"Klatu Borata Nickto.\"",
     "score": 1
   },
   "shovel": {
@@ -2111,7 +2111,7 @@ var verbs = {
       }
 
       if (obj.id === "aerosol" && isCarrying("aerosol")) {
-        message = "An explosive fireball sprays out of the can of aerosol! You can kiss your eyebrows goodbye.";
+        message = "An explosive fireball sprays out of the can of paint! You can kiss your eyebrows goodbye.";
         return;
       }
 
@@ -2260,6 +2260,16 @@ var verbs = {
       }
     }
   },
+  "paint": {
+    "action": function action(noun, obj) {
+      if (isCarrying("aerosol") && obj.id !== "bats") {
+        message = "You're a thief, not a vandal.";
+        return;
+      }
+
+      verbs["spray"].action(noun, obj);
+    }
+  },
   "read": {
     "action": function action(noun, obj) {
       if (obj.readable && objectInRange(obj)) {
@@ -2298,9 +2308,11 @@ var verbs = {
   },
   "say": {
     "action": function action(noun, obj) {
-      message = "You say, \"".concat(noun.toUpperCase(), "! No one can hear you.\""); // Saying the magic word to dispel the field
+      message = "You say, \"".concat(noun.toUpperCase(), "!\" Nothing happens."); // Saying the magic word to dispel the field
 
       if (obj.id === "xzanfar" && isCarrying("magic spells")) {
+        message = "You say, \"".concat(noun.toUpperCase(), "!\"");
+
         if (isRoom("coldChamber") && flags.magicalBarrier) {
           message += "<br><br>The air sizzles with energy and the magic field dissipates into nothingness.";
           flags.magicalBarrier = false;
@@ -2315,6 +2327,12 @@ var verbs = {
           message += "<br><br>*Magic Occurs*";
         }
 
+        return;
+      }
+
+      if (noun === "klatu borata nickto" && isCarrying("scroll")) {
+        message = "You say, \"".concat(noun.toUpperCase(), "!\"");
+        message += "<br><br>Nothing happens. This incantation must have been part of a larger ritual.";
         return;
       } // Saying naughty things
 
@@ -2426,22 +2444,6 @@ var verbs = {
   "take": {
     synonym: "get"
   },
-  // "tie": {
-  // 	"action": function(noun,obj) {
-  // 		message = "You can't tie that.";
-  // 		if (obj.id === "rope" && isCarrying("rope")) {
-  // 			if (isRoom("blastedTree")) {
-  // 				message = `You reattach the rope to the branch.`;
-  // 				obj.tieToTree();
-  // 				obj.location = "blastedTree";
-  // 				flags.ropeTiedToTree = true;
-  // 				return;
-  // 			}
-  // 			message = `There's no need to tie the rope to anything here.`;
-  // 			return;
-  // 		}
-  // 	}
-  // },
   "u": {
     "action": function action(noun, obj) {
       if (noun) return;
