@@ -276,9 +276,10 @@ var objects = {
   "egg": {
     "name": "a jewel encrusted egg",
     "description": "It's a finely crafted jeweled egg. You get the feeling that you've seen it before.",
-    "location": "inTheTree",
-    "portable": true,
-    "score": 1
+    "location": null,
+    //"inTheTree",
+    "portable": true //"score": 1
+
   },
   "ghost": {
     "synonym": "ghosts"
@@ -418,6 +419,11 @@ var objects = {
     "portable": true,
     "score": 1,
     "takeMessage": "As you pick up the statue you feel a prickle of dark energy race through your fingertips."
+  },
+  "thicket": {
+    "location": "path",
+    "description": "It's a maze of densely packed vegetation.",
+    "smellMessage": "It smells shrubby."
   },
   "tome": {
     "synonym": "magic spells"
@@ -663,7 +669,7 @@ var rooms = {
   },
   "path": {
     "name": "Path",
-    "description": "A path leads south along the clifftop. In the distance to the north you see the forboding outline of a large blasted tree.",
+    "description": "A path leads south along the clifftop but it is blocked by an overgrown thicket. In the distance to the north you see the forboding outline of a large blasted tree.",
     "exits": {
       "n": "blastedTree",
       "s": "clifftop",
@@ -673,6 +679,10 @@ var rooms = {
       "tree": "If you head north you can get a closer look.",
       "path": "It's composed of loose gravel. Watch your step as you traverse along the edge of the cliff.",
       "clifftop": "You are just high enough to cause some serious injury should you fall."
+    },
+    "clearThicket": function clearThicket() {
+      //this.exits.s = "clifftop";
+      this.description = "A path leads south along the clifftop but it is hindered by an overgrown thicket. Having surveyed the area, you are confident that you can navigate it. In the distance to the north you see the forboding outline of a large blasted tree.";
     }
   },
   "sideOfHouse": {
@@ -1320,7 +1330,7 @@ var rooms = {
   },
   "inTheTree": {
     "name": "In the Blasted Tree",
-    "description": "From up in the tree you see a thick forest and a cliff to the south.",
+    "description": "From up in the tree you see a dense forest west. To the southwest looms the mansion in all its sinister glory. Directly south you see a path which appears to be blocked by a thicket.",
     "exits": {
       "d": "blastedTree"
     },
@@ -1331,7 +1341,12 @@ var rooms = {
       "rope": "From up here you can see what appear to be fingernails wedged in the fibers of the rope.",
       "fingernails": "Someone was desperately trying to untie this.",
       "nails": "Someone was desperately trying to untie this.",
-      "fibers": "It's made of a very strong material."
+      "fibers": "It's made of a very strong material.",
+      "forest": "Despite the barren branches, you can't see very far beyond the trees.",
+      "mansion": "It's the largest feature in view and yet it is hard to make out any details. It is as though the structure is veiled in an unnatural darkness.",
+      "path": "It leads south into a dense thicket.",
+      "tree": "The knotty surface gives the tree almost face-like features",
+      "surface": "The bark is cracked and rough."
     }
   },
   "exit": {
@@ -1519,6 +1534,11 @@ var verbs = {
           message = "You've already cleared the bars away from the window.";
         }
 
+        return;
+      }
+
+      if (obj.id === "thicket" && objectInRange("thicket")) {
+        message = "The roots are too deep. That would take days.";
         return;
       }
     }
@@ -1812,6 +1832,12 @@ var verbs = {
       if (currentRoom.water && !flags.inBoat) {
         message = "The marshy ground prevents any movement.";
         return;
+      } // Thicket not surveyed
+
+
+      if (isRoom("path") && direction === "s" && !flags.thicketSurveyed) {
+        message = "You try to squeeze through the thicket but keep ending up where you started. Perhaps if you could get a birdseye view you could better navigate a route.";
+        return;
       }
 
       if (isRoom("finalRoom") && direction !== "s") {
@@ -2041,6 +2067,11 @@ var verbs = {
         message = "It's too damp to light.";
         return;
       }
+
+      if (obj.id === "thicket" && objectInRange("thicket")) {
+        message = "It's too damp to ignite.";
+        return;
+      }
     }
   },
   "listen": {
@@ -2080,6 +2111,14 @@ var verbs = {
 
       if (noun === "skull" && objectInRange("painting")) {
         message = "It's from a small animal with sharp fangs. Despite the frightening appearance, the boy is holding it lovingly.";
+        return;
+      } // In the tree thicket is viewed
+
+
+      if (isRoom("inTheTree") && obj.id === "thicket") {
+        message = "From up here you are able visualize a clear path through the thicket. You should be able to wind your way through it now.";
+        rooms["path"].clearThicket();
+        flags.thicketSurveyed = true;
         return;
       } // Default action if noun is scenery in room
 
@@ -2297,6 +2336,11 @@ var verbs = {
 
       if (obj.id === "axe" && isCarrying("axe") && (isRoom("forest") || isRoom("thickForest") || isRoom("blastedTree"))) {
         message = "Don't chop the trees. You get the feeling it would anger the woodland spirits.";
+        return;
+      }
+
+      if (obj.id === "axe" && isCarrying("axe") && isRoom("path")) {
+        message = "There isn't enough room to take a proper swing at the thicket.";
         return;
       }
 
@@ -2704,6 +2748,7 @@ var flags = {
   screamVolume: .25,
   sinking: 0,
   studyWallBroken: false,
+  thicketSurveyed: false,
   vacuumHasPower: false,
   vacuumSwitchedOn: false,
   // flags[24]
@@ -3468,8 +3513,9 @@ function init(startRoom, carrying, inRoom) {
 
 
 var debug = false;
-verbs["help"].action();
-init("pathThroughIronGate", [], []);
+verbs["help"].action(); //init("pathThroughIronGate",[],[]);
+
+init("clearing", [], []);
 
 /***/ })
 /******/ ]);
