@@ -88,15 +88,11 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var _scenery;
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 // Define the world's objects here.
 var objects = {
@@ -546,7 +542,8 @@ var rooms = {
       "e": "thickForest"
     },
     "scenery": {
-      "trees": "They are tall and barren."
+      "trees": "They are tall and barren.",
+      "branches": "All the leaves are gone."
     }
   },
   "thickForest": {
@@ -781,6 +778,10 @@ var rooms = {
       "bars": "They block the window and are embedded in the decaying brickwork of the foundation.",
       "brickwork": "The foundation is mostly solid, but here it looks particularly decayed.",
       "foundation": "The foundation is mostly solid, but here it looks particularly decayed."
+    },
+    "digWindow": function digWindow() {
+      this.scenery.window = "The bars are gone and it looks like you could pass through from the other side.";
+      this.scenery.bars = "You've dug them out.";
     }
   },
   "clifftop": {
@@ -935,9 +936,13 @@ var rooms = {
       "w": "frontHall",
       "s": "library"
     },
-    "scenery": (_scenery = {
-      "chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here."
-    }, _defineProperty(_scenery, "chairs", "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here."), _defineProperty(_scenery, "sofa", "The stuffing is bursting through the seams."), _defineProperty(_scenery, "stuffing", "You think it's horse hair."), _defineProperty(_scenery, "apparition", "It has vanished into thin air!"), _scenery),
+    "scenery": {
+      "chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
+      "chair": "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here.",
+      "sofa": "The stuffing is bursting through the seams.",
+      "stuffing": "You think it's horse hair.",
+      "apparition": "It has vanished into thin air!"
+    },
     "onEnter": function onEnter() {
       message = "A ghostly apparition drifts by you muttering what sounds like, \"The boy must hang! The boy must hang!\" It fades away as quickly as it appeared.";
       snd.ghost.play();
@@ -1234,7 +1239,7 @@ var rooms = {
   },
   "soggyPath": {
     "name": "Soggy Path",
-    "description": "The path here has been flooded by the ever-encroaching marshlands to the west. Steep cliff blocks your passage to the south.",
+    "description": "The path here has been flooded by the ever-encroaching marshlands to the west. A steep cliff blocks your passage to the south.",
     "exits": {
       "n": "cliffPathByMarsh",
       "w": "marsh"
@@ -1324,7 +1329,9 @@ var rooms = {
       "e": "stoneArch"
     },
     "scenery": {
-      "brickwork": "The nineteenth century masonry could not withstand this stormy climate."
+      "brickwork": "The nineteenth century masonry could not withstand this stormy climate.",
+      "bricks": "The nineteenth century masonry could not withstand this stormy climate.",
+      "ground": "The ground starts to become muddy and wet to the north."
     }
   },
   "stoneArch": {
@@ -1348,7 +1355,7 @@ var rooms = {
     },
     "scenery": {
       "cliff": "Your stomach begins to flutter as you peer over the edge.",
-      "wetlands": "You don't want to et caught in there without a boat.",
+      "wetlands": "You don't want to get caught in there without a boat.",
       "child": "The vision is no longer visible.",
       "ghost": "The vision is no longer visible.",
       "dog": "The vision is no longer visible."
@@ -1566,6 +1573,7 @@ var verbs = {
           flags.barsDug = true;
           rooms["cellar"].digWindow();
           rooms["cliffPathByWindow"].digWindow();
+          rooms["slipperySteps"].digWindow();
         } else {
           message = "You've already cleared the bars away from the window.";
         }
@@ -2089,7 +2097,7 @@ var verbs = {
       }
 
       if (obj.id === "matches" || noun === "match") {
-        message = "For a brief moment tha match casts a tiny amount of light then fizzles out.";
+        message = "For a brief moment the match casts a tiny amount of light then fizzles out.";
         return;
       }
 
@@ -2158,7 +2166,7 @@ var verbs = {
   "look": {
     "action": function action(noun, obj) {
       //message = "You see nothing special.";
-      message = "<em>".concat(noun.toUpperCase(), "?</em> You see nothing special.");
+      message = "".concat(noun.toUpperCase(), "? You see nothing special.");
 
       if (noun === "nothing special") {
         message = "You stare blankly into space.";
@@ -3049,7 +3057,7 @@ function parseInput(myInput) {
 
 
   if (flags.candleLit && flags.lightLevel === 30) {
-    message += "<br>Your candle is melted down to half its original size.";
+    message += "<br>Your candle has melted down to half its original size.";
   }
 
   if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 13) {
@@ -3367,7 +3375,7 @@ function getMaxScore() {
 }
 
 function introText() {
-  var myIntro = "They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>\"Howls and blood curdling screams.\" Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...";
+  var myIntro = "\"Howls and blood curdling screams.\" Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...";
   displayOverlay(myIntro);
   $continueBtn.classList.remove('is-first-screen');
   $continueBtn.innerHTML = "[ Click to Continue ]";
@@ -3501,6 +3509,16 @@ function checkKey(evt) {
     }
 
     $userInput.value = history[history.length - historyCarat];
+  }
+
+  if (evt.keyCode == '107') {
+    $btnBigger.click();
+    return false;
+  }
+
+  if (evt.keyCode == '109') {
+    $btnSmaller.click();
+    return false;
   }
 }
 /**
