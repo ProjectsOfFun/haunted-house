@@ -56,7 +56,7 @@ body.alt-font {
   margin: 0 auto;
   padding: 1rem;
   text-align: left;
-  width: 40rem;
+  width: 39.5rem;
   -webkit-box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
           box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
 }
@@ -105,7 +105,7 @@ body.alt-font {
   margin-left: -0.75rem;
   padding: 0.5rem 0;
   outline: none;
-  width: 35rem;
+  width: 34.5rem;
 }
 .alt-font #hh-userInput {
   font-family: "Press Start 2P", courier, monospace;
@@ -336,6 +336,52 @@ button:active, button:hover {
   100% {
     -webkit-transform: translate(1px, -2px) rotate(-1deg);
             transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+@media screen and (max-width: 767px) {
+  html {
+    height: inherit;
+    font-size: inherit;
+  }
+
+  body {
+    display: inherit;
+    height: inherit;
+  }
+
+  .hh-divider {
+    overflow: hidden;
+    display: block;
+    height: 1rem;
+  }
+
+  #hh-container {
+    display: block;
+    margin: 0;
+  }
+
+  #hh-display,
+#hh-display-overlay {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+    border-radius: 0;
+    margin: 0;
+    min-height: inherit;
+  }
+
+  #hh-input {
+    margin: 0;
+    width: 100% !important;
+  }
+
+  #hh-userInput {
+    width: 90%;
+    border: solid 1px #002200 !important;
+  }
+
+  #hh-screensize {
+    display: none;
   }
 }
 /*# sourceMappingURL=hh-screen.css.map */

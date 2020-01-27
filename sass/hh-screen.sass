@@ -12,7 +12,7 @@ $text-lighter: #9f9
 $font-family-alt: 'Press Start 2P', courier, monospace
 $font-family: 'Print Char 21', courier, monospace
 $screen-width-alt: 45rem
-$screen-width: 40rem
+$screen-width: 39.5rem
 
 html
 	font-size: 16px
@@ -191,3 +191,41 @@ button
 		transform: translate(1px, 2px) rotate(0deg)
 	100%
 		transform: translate(1px, -2px) rotate(-1deg)
+
+@media screen and ( max-width: 767px )
+	html
+		height: inherit
+		font-size: inherit
+
+	body
+		display: inherit
+		height: inherit
+
+	.hh-divider
+		overflow: hidden
+		display: block
+		height: 1rem
+	#hh-container
+		display: block
+		margin: 0
+		//overflow: hidden
+	
+	#hh-display,
+	#hh-display-overlay
+		width: 100%
+		box-sizing: border-box
+		border-radius: 0
+		margin: 0
+		min-height: inherit
+	
+	#hh-input
+		margin: 0
+		width: 100% !important
+
+	#hh-userInput
+		width: 90%
+		border: solid 1px #002200 !important
+	
+	#hh-screensize
+		display: none
+	

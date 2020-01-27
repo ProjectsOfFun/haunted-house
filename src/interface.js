@@ -9,7 +9,7 @@ const $btnFontToggle = document.getElementById('btnFonts');
 const $html = document.querySelector('html');
 let htmlFontSize = 16;
 
-$html.style.fontSize = htmlFontSize + "px";
+//$html.style.fontSize = htmlFontSize + "px";
 
 $btnSmaller.addEventListener('click', function(evt){
 	evt.preventDefault();

@@ -67,7 +67,7 @@ function display() {
 	cls(); // Clear the screen
 
 	prnt(`HAUNTED HOUSE`);
-	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="room-name">${currentRoom.name}</span>`);
 
 	if (currentRoom.darkness && !flags.candleLit) {
@@ -86,7 +86,7 @@ function display() {
 	}
 
 
-	prnt(`<br>---------------------------------------------`);
+	prnt(`<span class="hh-divider"><br>---------------------------------------------</span>`);
 	if (message.length > 0) {
 		prnt(`<br><span class="message">${message}</span>`);
 	}
@@ -599,10 +599,10 @@ function death(message) {
 	$inputZone.remove();
 	cls();
 	prnt(`HAUNTED HOUSE`);
-	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="message">${message}</span>`);
 	prnt(`<br><span class="room-name">You Have Died!</span>`);
-	prnt(`<br>---------------------------------------------<br>`);
+	prnt(`<br><span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`You took <em>${turns}</em> turns before meeting your demise.<br>`);
 	prnt(`Your final score is: <em>${checkScore()}/${getMaxScore() + 1}</em>`);
 
@@ -617,7 +617,7 @@ function victory() {
 	$inputZone.remove();
 	cls();
 	prnt(`HAUNTED HOUSE`);
-	prnt(`---------------------------------------------<br>`);
+	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="message">Congratulations, you've won the game!</span><br>`);
 	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);
 	
