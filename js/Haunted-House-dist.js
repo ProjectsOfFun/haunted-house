@@ -2754,8 +2754,8 @@ var $btnSmaller = document.getElementById('btnSmaller');
 var $btnBigger = document.getElementById('btnBigger');
 var $btnFontToggle = document.getElementById('btnFonts');
 var $html = document.querySelector('html');
-var htmlFontSize = 16;
-$html.style.fontSize = htmlFontSize + "px";
+var htmlFontSize = 16; //$html.style.fontSize = htmlFontSize + "px";
+
 $btnSmaller.addEventListener('click', function (evt) {
   evt.preventDefault();
 
@@ -2842,7 +2842,7 @@ function display() {
   cls(); // Clear the screen
 
   prnt("HAUNTED HOUSE");
-  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"room-name\">".concat(currentRoom.name, "</span>"));
 
   if (currentRoom.darkness && !flags.candleLit) {
@@ -2860,7 +2860,7 @@ function display() {
     if (roomItems) prnt(roomItems);
   }
 
-  prnt("<br>---------------------------------------------");
+  prnt("<span class=\"hh-divider\"><br>---------------------------------------------</span>");
 
   if (message.length > 0) {
     prnt("<br><span class=\"message\">".concat(message, "</span>"));
@@ -3404,10 +3404,10 @@ function death(message) {
   $inputZone.remove();
   cls();
   prnt("HAUNTED HOUSE");
-  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"message\">".concat(message, "</span>"));
   prnt("<br><span class=\"room-name\">You Have Died!</span>");
-  prnt("<br>---------------------------------------------<br>");
+  prnt("<br><span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("You took <em>".concat(turns, "</em> turns before meeting your demise.<br>"));
   prnt("Your final score is: <em>".concat(checkScore(), "/").concat(getMaxScore() + 1, "</em>"));
   $restartBtn.classList.remove('is-hidden');
@@ -3421,7 +3421,7 @@ function victory() {
   $inputZone.remove();
   cls();
   prnt("HAUNTED HOUSE");
-  prnt("---------------------------------------------<br>");
+  prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"message\">Congratulations, you've won the game!</span><br>");
   prnt("Your final score is: <em>".concat(checkScore() + 1, "/").concat(getMaxScore() + 1, "</em><br>"));
   var messages = ["Bask in the glory of your victory, you've earned it!", "Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.", "So many points! Don't spend them all in one place.", "As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!"];
