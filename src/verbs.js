@@ -645,7 +645,7 @@ const verbs = {
 				return;
 			}
 
-			if (obj.id === "ghoul" && objectInRange("ghoul") && flags.ghostsAttacking) {
+			if (obj.id === "ghoul" && objectInRange("ghoul")) {
 				message = `You can't kill the undead! Your only chance for survival is to make your escape through the gate to the south!`;
 				return;
 			}
