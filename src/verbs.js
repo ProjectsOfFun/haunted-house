@@ -157,6 +157,7 @@ const verbs = {
 					flags.barsDug = true;
 					rooms["cellar"].digWindow();
 					rooms["cliffPathByWindow"].digWindow();
+					rooms["slipperySteps"].digWindow();
 				} else {
 					message = "You've already cleared the bars away from the window.";
 				}
@@ -668,7 +669,7 @@ const verbs = {
 			}
 
 			if (obj.id === "matches" || noun === "match") {
-				message = `For a brief moment tha match casts a tiny amount of light then fizzles out.`;
+				message = `For a brief moment the match casts a tiny amount of light then fizzles out.`;
 				return;
 			}
 
@@ -735,7 +736,7 @@ const verbs = {
 	"look": {
 		"action": function(noun,obj) {
 			//message = "You see nothing special.";
-			message = `<em>${noun.toUpperCase()}?</em> You see nothing special.`
+			message = `${noun.toUpperCase()}? You see nothing special.`
 
 			if (noun === "nothing special") {
 				message = `You stare blankly into space.`;

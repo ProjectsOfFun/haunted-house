@@ -274,7 +274,7 @@ function parseInput(myInput) {
 
 	// Candle power
 	if (flags.candleLit && flags.lightLevel === 30) {
-		message += `<br>Your candle is melted down to half its original size.`;
+		message += `<br>Your candle has melted down to half its original size.`;
 	}
 	if (flags.candleLit && flags.lightLevel > 1 && flags.lightLevel < 13) {
 		message += `<br>Your candle is waning!`;
@@ -569,7 +569,7 @@ function getMaxScore() {
 
 
 function introText() {
-	let myIntro = `They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>"Howls and blood curdling screams." Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
+	let myIntro = `"Howls and blood curdling screams." Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
 	displayOverlay(myIntro);
 	$continueBtn.classList.remove('is-first-screen');
 	$continueBtn.innerHTML = "[ Click to Continue ]";
@@ -698,6 +698,15 @@ function checkKey(evt) {
 			historyCarat = 1;
 		}
 		$userInput.value = history[history.length - historyCarat];
+	}
+
+	if (evt.keyCode == '107') {
+		$btnBigger.click();
+		return false;
+	}
+	if (evt.keyCode == '109') {
+		$btnSmaller.click();
+		return false;
 	}
 }
 

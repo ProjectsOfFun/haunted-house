@@ -79,7 +79,8 @@ const rooms = {
 			"e": "thickForest"
 		},
 		"scenery": {
-			"trees": "They are tall and barren."
+			"trees": "They are tall and barren.",
+			"branches": "All the leaves are gone."
 		}
 	},
 	"thickForest": {
@@ -314,6 +315,10 @@ const rooms = {
 			"bars": "They block the window and are embedded in the decaying brickwork of the foundation.",
 			"brickwork": "The foundation is mostly solid, but here it looks particularly decayed.",
 			"foundation": "The foundation is mostly solid, but here it looks particularly decayed."
+		},
+		"digWindow": function() {
+			this.scenery.window = "The bars are gone and it looks like you could pass through from the other side.";
+			this.scenery.bars = "You've dug them out.";
 		}
 	},
 	"clifftop": {
@@ -473,7 +478,7 @@ const rooms = {
 		},
 		"scenery": {
 			"chairs": "I think these hard wooden chairs were far from the most uncomfortable thing during the conversations held here.",
-			"chairs": "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here.",
+			"chair": "I think the hard wooden chair was far from the most uncomfortable thing during the conversations held here.",
 			"sofa": "The stuffing is bursting through the seams.",
 			"stuffing": "You think it's horse hair.",
 			"apparition": "It has vanished into thin air!"
@@ -774,7 +779,7 @@ const rooms = {
 	},
 	"soggyPath": {
 		"name": "Soggy Path",
-		"description": "The path here has been flooded by the ever-encroaching marshlands to the west. Steep cliff blocks your passage to the south.",
+		"description": "The path here has been flooded by the ever-encroaching marshlands to the west. A steep cliff blocks your passage to the south.",
 		"exits": {
 			"n": "cliffPathByMarsh",
 			"w": "marsh"
@@ -864,7 +869,9 @@ const rooms = {
 			"e": "stoneArch"
 		},
 		"scenery": {
-			"brickwork" : "The nineteenth century masonry could not withstand this stormy climate."	
+			"brickwork" : "The nineteenth century masonry could not withstand this stormy climate.",
+			"bricks" : "The nineteenth century masonry could not withstand this stormy climate.",
+			"ground": "The ground starts to become muddy and wet to the north."
 		}
 	},
 	"stoneArch": {
@@ -888,7 +895,7 @@ const rooms = {
 		},
 		"scenery": {
 			"cliff" : "Your stomach begins to flutter as you peer over the edge.",
-			"wetlands" : "You don't want to et caught in there without a boat.",
+			"wetlands" : "You don't want to get caught in there without a boat.",
 			"child": "The vision is no longer visible.",
 			"ghost": "The vision is no longer visible.",
 			"dog": "The vision is no longer visible."
