@@ -33,6 +33,50 @@ body
 
 	&.alt-font
 		font-family: $font-family-alt
+	
+	&.intro-page
+		background-color: #010
+		display: inherit
+		height: inherit
+		align-items: inherit
+		justify-content: inherit
+		color: $text-color
+
+		img
+			max-width: 100%
+			display: block
+
+		hr
+			color: $text-color
+			border-color: $text-color
+
+		h1
+			margin-top: 1.3rem
+
+		p,h2
+			margin: 1.3rem 0
+			line-height: 1.6
+		
+		h1 + h2
+			margin-top: .3rem
+
+		a
+			color: $text-color
+		
+			&:hover
+				color: #fff
+
+.text-center
+	text-align: center
+
+.container
+	max-width: 700px
+	width: 90%
+	margin: 1rem auto
+	padding-bottom: 3rem
+
+h1
+	font-size: 2rem
 
 #hh-container
 	font-size: 1rem

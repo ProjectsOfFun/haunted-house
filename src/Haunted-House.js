@@ -569,7 +569,7 @@ function getMaxScore() {
 
 
 function introText() {
-	let myIntro = `"Howls and blood curdling screams." Yeah, right. You don't know what it actually was that frightened them away, but you were more interested in what they had to say about the shiny things they spied through the windows.<br><br>They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
+	let myIntro = `"Ghastly cries and blood curdling screams." Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
 	displayOverlay(myIntro);
 	$continueBtn.classList.remove('is-first-screen');
 	$continueBtn.innerHTML = "[ Click to Continue ]";
