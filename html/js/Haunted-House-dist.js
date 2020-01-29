@@ -1392,19 +1392,22 @@ var rooms = {
   },
   "finalRoom": {
     "name": "Path Through Iron Gate",
-    "description": "As you reach the iron gate a rotting ghoul hobbles onto the path! It is blocking all exits except your escape route to the south.",
-    "exits": {
-      "s": "exit"
+    "description": "As you reach the iron gate, a rotting, child-sized ghoul hobbles onto the path. Its sunken eyes immediately focus on you and it starts to amble forward. You stumble and your heart races with terror. The ghoul is blocking all your possible exits.",
+    "exits": {//"s": "exit"
     },
     "scenery": {
       "ooze": "It's thick and black.",
       "maggots": "The tiny white creatures writhe and squirm.",
       "worms": "The worms crawl in and out of every hole on the ghoul's rotting body.",
       "mouth": "The ooze dribbles out over sharp, tiny teeth.",
-      "teeth": "Don't let it bite you!"
+      "teeth": "Don't let it bite you!",
+      "gate": "It is your way out!",
+      "iron gate": "It is your way out!",
+      "eyes": "They seem to glow with a sickening yellow hue."
     },
     "onEnter": function onEnter() {
       snd.groan.play();
+      snd.music.play();
     }
   }
 }; // Define your game verbs here.
@@ -1583,6 +1586,11 @@ var verbs = {
 
       if (obj.id === "thicket" && objectInRange("thicket")) {
         message = "The roots are too deep. That would take days.";
+        return;
+      }
+
+      if (obj.id === "ghoul" && objectInRange(obj)) {
+        verbs["swing"].action("shovel", getObject("shovel"));
         return;
       }
     }
@@ -1906,7 +1914,7 @@ var verbs = {
       } // Final "battle"
 
 
-      if (isRoom("finalRoom") && direction !== "s") {
+      if (isRoom("finalRoom") && !currentRoom.exits.s || isRoom("finalRoom") && currentRoom.exits.s && direction !== "s") {
         message = "The ghoul blocks your exit in that direction!";
         snd.laugh.play();
         return;
@@ -1979,6 +1987,7 @@ var verbs = {
         myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.";
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
 
@@ -1986,20 +1995,23 @@ var verbs = {
         myHelp = "You can move around the mansion by typing <em>GO NORTH</em>, <em>GO WEST</em>, <em>GO UP</em>, etc. Save keystrokes by simply entering a single initial of the direction you want to move: <em>N</em>,<em>S</em>,<em>E</em>,<em>W</em>,<em>U</em> and <em>D</em>.<br><br>Available exits are listed below the room description.<br><br>Occasionally you will find that your path is blocked by various obstacles. Your job is to find the right object or action to get past these impediments. Explore everywhere!";
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
 
       if (noun === "commands") {
-        myHelp = "There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.";
+        myHelp = "There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.<br><br>Bonus tips: You can also press the <em>ESC</em> or <em>SPACE</em> to close this screen. Numpad <em>+</em> and <em>-</em> resize the display and numpad <em>/</em> toggles the typeface.";
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
 
       if (noun === "about") {
-        myHelp = "<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This \"remastered\" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.<br><br>Special thanks to <em>John Burgess</em> for beta testing and some helpful suggestions.<br><br>&copy;2020 Robert Wm. Gomez";
+        myHelp = "<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This \"remastered\" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.<br><br>Special thanks to <em>John Burgess</em> for early alpha testing and many helpful suggestions.<br><br>&copy;2020 Robert Wm. Gomez";
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
 
@@ -2022,6 +2034,7 @@ var verbs = {
         myHelp = "Tired of playing \"Guess the verb?\"<br><br><b>Verbs I know:</b>  ".concat(verblist.substring(0, verblist.length - 2));
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
     },
@@ -2143,6 +2156,13 @@ var verbs = {
 
       if (obj.id === "thicket" && objectInRange("thicket")) {
         message = "It's too damp to ignite.";
+        return;
+      }
+
+      if (obj.id === "ghoul" && isRoom("finalRoom")) {
+        message = "The gooey ooze from the ghoul prevents it from igniting. It knocks the matches out of your hands!";
+        objects["matches"].location = null;
+        snd.laugh.play();
         return;
       }
     }
@@ -2278,6 +2298,13 @@ var verbs = {
   },
   "paint": {
     "action": function action(noun, obj) {
+      if (isCarrying("aerosol") && obj.id === "ghoul" && isRoom("finalRoom")) {
+        message = "Now the ghoul is covered in ooze AND paint. It knocks the can out of your hands disintegrating into thin air!";
+        snd.laugh.play();
+        objects["aerosol"].location = null;
+        return;
+      }
+
       if (isCarrying("aerosol") && obj.id !== "bats") {
         message = "You're a thief, not a vandal.";
         return;
@@ -2339,6 +2366,10 @@ var verbs = {
           flags.magicalBarrier = true;
           rooms["coldChamber"].createBarrier();
           objects["barrier"].location = "coldChamber";
+        } else if (isRoom("finalRoom")) {
+          message += " The ghoul's mouth curls into a sinister smile and waves of dark energy crackle over its skin.";
+          snd.laugh.play();
+          return;
         } else {
           message += "<br><br>*Magic Occurs*";
         }
@@ -2372,6 +2403,7 @@ var verbs = {
       }
 
       message += "<br><br>So far you have taken <em>".concat(turns, " turns</em>.");
+      incrementTurn = false;
     },
     "singleWord": true
   },
@@ -2395,6 +2427,11 @@ var verbs = {
         rooms["mustyRoom"].batsKilled();
         objects["bats"].batsKilled();
         flags.batsAttacking = false;
+        return;
+      }
+
+      if (obj.id === "aerosol" && isRoom("finalRoom") && isCarrying("aerosol")) {
+        verbs["paint"].action("ghoul", getObject("ghoul"));
         return;
       }
 
@@ -2443,6 +2480,14 @@ var verbs = {
       if (obj.id === "axe" && isCarrying("axe") && isRoom("finalRoom")) {
         message = "The axe embeds itself in the chest of the ghoul! Within seconds the axe vaporizes into dust searing your hands in the process!";
         obj.location = null;
+        snd.laugh.play();
+        return;
+      }
+
+      if (obj.id === "shovel" && isCarrying("shovel") && isRoom("finalRoom")) {
+        message = "The blade embeds itself in the head of the ghoul! Within seconds the shovel vaporizes into dust searing your hands in the process!";
+        obj.location = null;
+        snd.laugh.play();
         return;
       }
 
@@ -2542,6 +2587,11 @@ var verbs = {
         return;
       }
 
+      if (obj.id === "vacuum" && isCarrying("vacuum") && flags.vacuumHasPower && isRoom("finalRoom")) {
+        verbs["vacuum"].action("ghoul", getObject("ghoul"));
+        return;
+      }
+
       if (obj.id === "vacuum" && isCarrying("vacuum") && !flags.vacuumHasPower) {
         message = "This vacuum requires batteries.";
         return;
@@ -2557,6 +2607,21 @@ var verbs = {
     "action": function action(noun, obj) {
       if (noun === "books" && currentRoom.rid === "library") {
         message = "They are \"musty\" not \"dusty!\"";
+        return;
+      }
+
+      if (obj.id === "ghoul" && isRoom("finalRoom") && isCarrying("vacuum")) {
+        message = "Your attempts to suck the ghoul into the vacuum fail. In the process it smashes the vacuum, releasing the ghosts!";
+        obj.location = null;
+        objects["ghosts"].location = "finalRoom";
+        objects["ghosts"].description = "The ghosts whirl about the ghoul adding to its evil power!", snd.ghost.play();
+        snd.laugh.play();
+        objects["vacuum"].location = null;
+        return;
+      }
+
+      if (obj.id === "ghosts" && isRoom("finalRoom") && isCarrying("vacuum")) {
+        message = "The ghosts are still inside the vacuum.";
         return;
       }
 
@@ -2633,6 +2698,7 @@ var verbs = {
 
         objects["candlestick"].location = currentRoom.rid;
         message = "You cheat and collect all the treasure.";
+        incrementTurn = false;
         return;
       }
 
@@ -2646,12 +2712,14 @@ var verbs = {
         }
 
         message = "You cheat and collect all the objects, you filthy hoarder.";
+        incrementTurn = false;
         return;
       }
 
       if (obj) {
         obj.location = "player";
         message = "You cheat and ".concat(obj.name, " appears in your inventory.");
+        incrementTurn = false;
         return;
       }
     },
@@ -2679,6 +2747,7 @@ var verbs = {
         myHelp = "Here are the rooms: ".concat(roomlist.substring(0, roomlist.length - 2));
         displayOverlay(myHelp);
         message = '';
+        incrementTurn = false;
         return;
       }
 
@@ -2690,6 +2759,8 @@ var verbs = {
         }
 
         message = "You cheat and are teleported to ".concat(currentRoom.name);
+        incrementTurn = false;
+        return;
       }
     },
     "singleWord": true,
@@ -2703,13 +2774,18 @@ var verbs = {
 var Sound =
 /*#__PURE__*/
 function () {
-  function Sound(src) {
+  function Sound(src, loop) {
     _classCallCheck(this, Sound);
 
     this.sound = document.createElement("audio");
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
+
+    if (loop) {
+      this.sound.setAttribute("loop", true);
+    }
+
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
   }
@@ -2743,7 +2819,8 @@ snd.laugh = new Sound("audio/laugh.mp3");
 snd.groan = new Sound("audio/groan.mp3");
 snd.scream = new Sound("audio/scream.mp3");
 snd.fanfare = new Sound("audio/fanfare.mp3");
-snd.dog = new Sound("audio/dog.mp3"); //export default snd;
+snd.dog = new Sound("audio/dog.mp3");
+snd.music = new Sound("audio/plan9.mp3", true); //export default snd;
 
 /**
  * This file contains scripts that enhance the layout display.
@@ -2799,6 +2876,7 @@ var previousObj = null;
 var previousRoom = null;
 var totalScore = 0;
 var turns = 0;
+var incrementTurn = true;
 var history = ["help"];
 var historyCarat = 0; // Game state variables
 
@@ -2841,7 +2919,7 @@ function display() {
   var roomItems = getObjectsInRoom(currentRoom);
   cls(); // Clear the screen
 
-  prnt("HAUNTED HOUSE");
+  prnt("HAUNTED HOUSE: REMASTERED");
   prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"room-name\">".concat(currentRoom.name, "</span>"));
 
@@ -3147,12 +3225,18 @@ function parseInput(myInput) {
     flags.ghoulProgress++;
 
     switch (flags.ghoulProgress) {
-      case 4:
+      case 3:
         message += "<br><br>The ghoul lumbers towards you!";
         break;
 
-      case 5:
+      case 4:
         message += "<br><br>The ghoul continues to move towards you!";
+        break;
+
+      case 5:
+        message += "<br><br>The ghoul attacks but you manage to jump out of the way, positioning yourself between the monster and the gate. <em>The gate is clear!</em>";
+        rooms["finalRoom"].exits.s = "exit";
+        rooms["finalRoom"].description = "As you reach the iron gate, a rotting, child-sized ghoul hobbles onto the path. Its sunken eyes immediately focus on you and it starts to amble forward. You stumble and your heart races with terror. The ghoul is blocking all exits except through the gate to the south!";
         break;
 
       case 6:
@@ -3171,7 +3255,9 @@ function parseInput(myInput) {
   } // Increment turns
 
 
-  turns++;
+  if (incrementTurn) {
+    turns++;
+  }
 
   if (getMaxScore() === checkScore() && flags.endGame === 0) {
     triggerEndGame();
@@ -3201,6 +3287,7 @@ function parseInput(myInput) {
 
   previousObj = ob;
   display();
+  incrementTurn = true;
 }
 /**
  * Searches verb object and returns object of verb if matches.
@@ -3375,7 +3462,7 @@ function getMaxScore() {
 }
 
 function introText() {
-  var myIntro = "\"Ghastly cries and blood curdling screams.\" Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...";
+  var myIntro = "\"Ghastly cries and blood curdling screams.\" Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...";
   displayOverlay(myIntro);
   $continueBtn.classList.remove('is-first-screen');
   $continueBtn.innerHTML = "[ Click to Continue ]";
@@ -3403,7 +3490,7 @@ function triggerEndGame() {
 function death(message) {
   $inputZone.remove();
   cls();
-  prnt("HAUNTED HOUSE");
+  prnt("HAUNTED HOUSE: REMASTERED");
   prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"message\">".concat(message, "</span>"));
   prnt("<br><span class=\"room-name\">You Have Died!</span>");
@@ -3422,14 +3509,15 @@ function victory() {
   cls();
   prnt("HAUNTED HOUSE");
   prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
-  prnt("<span class=\"message\">Congratulations, you've won the game!</span><br>");
+  prnt("<span class=\"message\">You race through the gate and down the path with treasures in hand! The hissing cries of the ghoul fade in the distance and you promise yourself never to return again. Congratulations, you've won the game!</span><br>");
   prnt("Your final score is: <em>".concat(checkScore() + 1, "/").concat(getMaxScore() + 1, "</em><br>"));
-  var messages = ["Bask in the glory of your victory, you've earned it!", "Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.", "So many points! Don't spend them all in one place.", "As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!"];
+  var messages = ["Bask in the glory of your victory, you've earned it!", "Report thy feat to Lord British. After which, Lord British will probably report YOU to the local authorities.", "You've earned so many points! Don't spend them all in one place.", "So many treasures, you can't help but think of all the Antiques Roadshow fame you will soon accrue!", "All in a day's work for a master treasure hunter!"];
   var rnd = Math.floor(Math.random() * messages.length);
   prnt("".concat(messages[rnd]));
   prnt("<br>---------------------------------------------<br>");
   prnt("You took <em>".concat(turns, "</em> turns to complete the adventure.<br>"));
   prnt("<span class=\"message\">This \"remastered\" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href=\"https://twitter.com/robertgomez\" target=\"blank\" rel=\"noopener noreferrer\"><em>@robertgomez</em></a> or visit my website <a href=\"http://robertgomez.org\" target=\"blank\" rel=\"noopener noreferrer\"><em>robertgomez.org</em></a>.</span>");
+  snd.music.stop();
   snd.fanfare.play();
   $restartBtn.classList.remove('is-hidden');
 } // ===== EVENT LISTENERS =====
@@ -3479,18 +3567,33 @@ document.onkeydown = checkKey;
 function checkKey(evt) {
   evt = evt || window.event;
 
+  if (evt.keyCode == '107') {
+    $btnBigger.click();
+    return false;
+  }
+
+  if (evt.keyCode == '109') {
+    $btnSmaller.click();
+    return false;
+  }
+
+  if (evt.keyCode == '111') {
+    $btnFontToggle.click();
+    return false;
+  }
+
   if ($container.classList.contains('overlay')) {
-    if (evt.keyCode == '27' || evt.keyCode == '13') {
+    if (evt.keyCode == '27' || evt.keyCode == '13' || evt.keyCode == '32') {
       // ESC or Return
       if ($continueBtn.classList.contains('is-first-screen')) {
         introText();
-        return;
+        return false;
       }
 
       hideOverlay();
     }
 
-    return;
+    return false;
   }
 
   if (evt.keyCode == '38') {
@@ -3509,16 +3612,6 @@ function checkKey(evt) {
     }
 
     $userInput.value = history[history.length - historyCarat];
-  }
-
-  if (evt.keyCode == '107') {
-    $btnBigger.click();
-    return false;
-  }
-
-  if (evt.keyCode == '109') {
-    $btnSmaller.click();
-    return false;
   }
 }
 /**

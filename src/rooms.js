@@ -932,19 +932,23 @@ const rooms = {
 	},
 	"finalRoom": {
 		"name": "Path Through Iron Gate",
-		"description": `As you reach the iron gate a rotting ghoul hobbles onto the path! It is blocking all exits except your escape route to the south.`,
+		"description": `As you reach the iron gate, a rotting, child-sized ghoul hobbles onto the path. Its sunken eyes immediately focus on you and it starts to amble forward. You stumble and your heart races with terror. The ghoul is blocking all your possible exits.`,
 		"exits": {
-			"s": "exit"
+			//"s": "exit"
 		},
 		"scenery": {
 			"ooze": "It's thick and black.",
 			"maggots": "The tiny white creatures writhe and squirm.",
 			"worms": "The worms crawl in and out of every hole on the ghoul's rotting body.",
 			"mouth": "The ooze dribbles out over sharp, tiny teeth.",
-			"teeth": "Don't let it bite you!"
+			"teeth": "Don't let it bite you!",
+			"gate": "It is your way out!",
+			"iron gate": "It is your way out!",
+			"eyes": "They seem to glow with a sickening yellow hue."
 		},
 		"onEnter": function() {
 			snd.groan.play();
+			snd.music.play();
 		}
 	}
 };

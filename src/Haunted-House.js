@@ -26,6 +26,7 @@ let previousObj = null;
 let previousRoom = null;
 let totalScore = 0;
 let turns = 0;
+let incrementTurn = true;
 let history = ["help"];
 let historyCarat = 0;
 
@@ -66,7 +67,7 @@ function display() {
 
 	cls(); // Clear the screen
 
-	prnt(`HAUNTED HOUSE`);
+	prnt(`HAUNTED HOUSE: REMASTERED`);
 	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="room-name">${currentRoom.name}</span>`);
 
@@ -351,11 +352,16 @@ function parseInput(myInput) {
 		flags.ghoulProgress++;
 
 		switch (flags.ghoulProgress) {
-			case 4:
+			case 3:
 				message += `<br><br>The ghoul lumbers towards you!`;
 				break;
-			case 5:
+			case 4:
 				message += `<br><br>The ghoul continues to move towards you!`;
+				break;
+			case 5:
+				message += `<br><br>The ghoul attacks but you manage to jump out of the way, positioning yourself between the monster and the gate. <em>The gate is clear!</em>`;
+				rooms["finalRoom"].exits.s = "exit";
+				rooms["finalRoom"].description = `As you reach the iron gate, a rotting, child-sized ghoul hobbles onto the path. Its sunken eyes immediately focus on you and it starts to amble forward. You stumble and your heart races with terror. The ghoul is blocking all exits except through the gate to the south!`;
 				break;
 			case 6:
 				message += `<br><br>The ghoul hisses and takes a swipe at your face!`;
@@ -371,7 +377,7 @@ function parseInput(myInput) {
 	}
 
 	// Increment turns
-	turns++;
+	if (incrementTurn) { turns++;}
 	
 	if (getMaxScore() === checkScore() && flags.endGame === 0) {
 		triggerEndGame();
@@ -398,7 +404,7 @@ function parseInput(myInput) {
 
 	previousObj = ob;
 	display();
-
+	incrementTurn = true;
 }
 
 
@@ -569,7 +575,7 @@ function getMaxScore() {
 
 
 function introText() {
-	let myIntro = `"Ghastly cries and blood curdling screams." Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are, under the cover of darkness, making your way up the walkway towards iron gate at the front of the mansion...`
+	let myIntro = `"Ghastly cries and blood curdling screams." Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...`
 	displayOverlay(myIntro);
 	$continueBtn.classList.remove('is-first-screen');
 	$continueBtn.innerHTML = "[ Click to Continue ]";
@@ -598,7 +604,7 @@ function triggerEndGame() {
 function death(message) {
 	$inputZone.remove();
 	cls();
-	prnt(`HAUNTED HOUSE`);
+	prnt(`HAUNTED HOUSE: REMASTERED`);
 	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="message">${message}</span>`);
 	prnt(`<br><span class="room-name">You Have Died!</span>`);
@@ -618,17 +624,18 @@ function victory() {
 	cls();
 	prnt(`HAUNTED HOUSE`);
 	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
-	prnt(`<span class="message">Congratulations, you've won the game!</span><br>`);
+	prnt(`<span class="message">You race through the gate and down the path with treasures in hand! The hissing cries of the ghoul fade in the distance and you promise yourself never to return again. Congratulations, you've won the game!</span><br>`);
 	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);
 	
-	const messages = [`Bask in the glory of your victory, you've earned it!`,`Report thy feat to Lord British. After which, Lord British will probably report you to the local authorities.`,`So many points! Don't spend them all in one place.`,`As you run away from the mansion, treasures in hand, you can't help but think of all the Antique's Roadshow fame you will soon accrue!`];
+	const messages = [`Bask in the glory of your victory, you've earned it!`,`Report thy feat to Lord British. After which, Lord British will probably report YOU to the local authorities.`,`You've earned so many points! Don't spend them all in one place.`,`So many treasures, you can't help but think of all the Antiques Roadshow fame you will soon accrue!`,`All in a day's work for a master treasure hunter!`];
 	let rnd = Math.floor(Math.random() * messages.length);
 	prnt(`${messages[rnd]}`);
 	prnt(`<br>---------------------------------------------<br>`);
 	prnt(`You took <em>${turns}</em> turns to complete the adventure.<br>`);
 
 	prnt(`<span class="message">This "remastered" version of <em>Haunted House</em> was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.</span>`);
-	
+
+	snd.music.stop();
 	snd.fanfare.play();
 	$restartBtn.classList.remove('is-hidden');
 }
@@ -675,15 +682,30 @@ document.onkeydown = checkKey;
 function checkKey(evt) {
 	evt = evt || window.event;
 
+	if (evt.keyCode == '107') {
+		$btnBigger.click();
+		return false;
+	}
+
+	if (evt.keyCode == '109') {
+		$btnSmaller.click();
+		return false;
+	}
+
+	if (evt.keyCode == '111') {
+		$btnFontToggle.click();
+		return false;
+	}
+
 	if ($container.classList.contains('overlay')) {
-		if ((evt.keyCode == '27' || evt.keyCode == '13')) { // ESC or Return
+		if ((evt.keyCode == '27' || evt.keyCode == '13' || evt.keyCode == '32')) { // ESC or Return
 			if ($continueBtn.classList.contains('is-first-screen')) {
 				introText();
-				return;
+				return false;
 			}
 			hideOverlay();
 		}
-		return;
+		return false;
 	}
 
 	if (evt.keyCode == '38') { // Up arrow
@@ -698,15 +720,6 @@ function checkKey(evt) {
 			historyCarat = 1;
 		}
 		$userInput.value = history[history.length - historyCarat];
-	}
-
-	if (evt.keyCode == '107') {
-		$btnBigger.click();
-		return false;
-	}
-	if (evt.keyCode == '109') {
-		$btnSmaller.click();
-		return false;
 	}
 }
 

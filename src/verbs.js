@@ -168,6 +168,11 @@ const verbs = {
 				message = `The roots are too deep. That would take days.`;
 				return;
 			}
+
+			if (obj.id === "ghoul" &&  objectInRange(obj)) {
+				verbs["swing"].action("shovel",getObject("shovel"));
+				return;
+			}
 		}
 	},
 	"down": {
@@ -473,7 +478,7 @@ const verbs = {
 			}
 
 			// Final "battle"
-			if (isRoom("finalRoom") && direction !== "s") {
+			if ((isRoom("finalRoom") && !currentRoom.exits.s) || (isRoom("finalRoom") && currentRoom.exits.s) && direction !== "s") {
 				message = `The ghoul blocks your exit in that direction!`;
 				snd.laugh.play();
 				return;
@@ -552,6 +557,7 @@ const verbs = {
 				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 
@@ -559,20 +565,23 @@ const verbs = {
 				myHelp = `You can move around the mansion by typing <em>GO NORTH</em>, <em>GO WEST</em>, <em>GO UP</em>, etc. Save keystrokes by simply entering a single initial of the direction you want to move: <em>N</em>,<em>S</em>,<em>E</em>,<em>W</em>,<em>U</em> and <em>D</em>.<br><br>Available exits are listed below the room description.<br><br>Occasionally you will find that your path is blocked by various obstacles. Your job is to find the right object or action to get past these impediments. Explore everywhere!`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 
 			if (noun === "commands") {
-				myHelp = `There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.`;
+				myHelp = `There are several special commands in the game. <em>INVENTORY</em> or <em>I</em> will list the objects you are carrying. <em>SCORE</em> will reveal your current score. Some of the most useful verbs are <em>LOOK</em> and <em>TAKE</em>. <em>X</em> is a shortcut for <em>LOOK</em>/<em>EXAMINE</em>.<br><br>Using <em>IT</em> as your noun will reuse the last noun you entered. For example <em>LOOK LAMP</em> then, on your next turn, <em>TAKE IT</em>.<br><br>For a complete list of all the verbs I know type <em>HELP VERBS</em>. But wait until you a really stuck before resorting to that.<br><br>Bonus tips: You can also press the <em>ESC</em> or <em>SPACE</em> to close this screen. Numpad <em>+</em> and <em>-</em> resize the display and numpad <em>/</em> toggles the typeface.`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 
 			if (noun === "about") {
-				myHelp = `<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>Special thanks to <em>John Burgess</em> for beta testing and some helpful suggestions.<br><br>&copy;2020 Robert Wm. Gomez`;
+				myHelp = `<em>Haunted House</em> was originally written by Jenny Tyler and Les Howarth as the example program in their book <em>Write your own Adventure Programs for your Microcomputer</em> (&copy;1983 Usborne Publishing).<br><br>This "remastered" version was written by <em>Robert Wm. Gomez</em>. If you enjoy it drop me a line on Twitter <a href="https://twitter.com/robertgomez" target="blank" rel="noopener noreferrer"><em>@robertgomez</em></a> or visit my website <a href="http://robertgomez.org" target="blank" rel="noopener noreferrer"><em>robertgomez.org</em></a>.<br><br>Special thanks to <em>John Burgess</em> for early alpha testing and many helpful suggestions.<br><br>&copy;2020 Robert Wm. Gomez`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 
@@ -593,6 +602,7 @@ const verbs = {
 				myHelp = `Tired of playing "Guess the verb?"<br><br><b>Verbs I know:</b>  ${verblist.substring(0,verblist.length - 2)}`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 		},
@@ -714,6 +724,13 @@ const verbs = {
 
 			if (obj.id === "thicket" && objectInRange("thicket")) {
 				message = `It's too damp to ignite.`;
+				return;
+			}
+
+			if (obj.id === "ghoul" && isRoom("finalRoom")) {
+				message = `The gooey ooze from the ghoul prevents it from igniting. It knocks the matches out of your hands!`;
+				objects["matches"].location = null;
+				snd.laugh.play();
 				return;
 			}
 
@@ -846,10 +863,19 @@ const verbs = {
 	},
 	"paint": {
 		"action": function(noun,obj) {
+
+			if (isCarrying("aerosol") && obj.id === "ghoul" && isRoom("finalRoom")) {
+				message = "Now the ghoul is covered in ooze AND paint. It knocks the can out of your hands disintegrating into thin air!";
+				snd.laugh.play();
+				objects["aerosol"].location = null;
+				return;
+			}
+
 			if (isCarrying("aerosol") && obj.id !== "bats") {
 				message = "You're a thief, not a vandal.";
 				return;
 			}
+
 			verbs["spray"].action(noun,obj);
 		}
 	},
@@ -904,6 +930,10 @@ const verbs = {
 					flags.magicalBarrier = true;
 					rooms["coldChamber"].createBarrier();
 					objects["barrier"].location = "coldChamber";
+				} else if (isRoom("finalRoom")) {
+					message += ` The ghoul's mouth curls into a sinister smile and waves of dark energy crackle over its skin.`;
+					snd.laugh.play();
+					return;
 				} else {
 					message += "<br><br>*Magic Occurs*"
 				}
@@ -932,7 +962,8 @@ const verbs = {
 			if (checkScore() === getMaxScore()) {
 				message += ` That's all the treasure. Hurry, find your way back to the front gate to claim that <em>final point!</em>`;
 			}
-			message += `<br><br>So far you have taken <em>${turns} turns</em>.`
+			message += `<br><br>So far you have taken <em>${turns} turns</em>.`;
+			incrementTurn = false;
 		},
 		"singleWord": true
 	},
@@ -958,6 +989,11 @@ const verbs = {
 				flags.batsAttacking = false;
 				return;
 			}	
+
+			if (obj.id === "aerosol" && isRoom("finalRoom") && isCarrying("aerosol")) {
+				verbs["paint"].action("ghoul",getObject("ghoul"));
+				return;
+			}
 
 			if (obj.id === "aerosol" && isCarrying("aerosol")) {
 				message = `Hisssss...`;
@@ -1004,6 +1040,14 @@ const verbs = {
 			if (obj.id === "axe" && isCarrying("axe") && isRoom("finalRoom")) {
 				message = `The axe embeds itself in the chest of the ghoul! Within seconds the axe vaporizes into dust searing your hands in the process!`;
 				obj.location = null;
+				snd.laugh.play();
+				return;
+			}
+
+			if (obj.id === "shovel" && isCarrying("shovel") && isRoom("finalRoom")) {
+				message = `The blade embeds itself in the head of the ghoul! Within seconds the shovel vaporizes into dust searing your hands in the process!`;
+				obj.location = null;
+				snd.laugh.play();
 				return;
 			}
 
@@ -1103,6 +1147,11 @@ const verbs = {
 				return;
 			}
 
+			if (obj.id === "vacuum" && isCarrying("vacuum") && flags.vacuumHasPower && isRoom("finalRoom")) {
+				verbs["vacuum"].action("ghoul",getObject("ghoul"));
+				return;
+			}
+
 			if (obj.id === "vacuum" && isCarrying("vacuum") && !flags.vacuumHasPower) {
 				message = `This vacuum requires batteries.`;
 				return;
@@ -1121,6 +1170,23 @@ const verbs = {
 				message = `They are "musty" not "dusty!"`;
 				return;
 			}
+
+			if (obj.id === "ghoul" && isRoom("finalRoom") && isCarrying("vacuum")) {
+				message = `Your attempts to suck the ghoul into the vacuum fail. In the process it smashes the vacuum, releasing the ghosts!`;
+				obj.location = null;
+				objects["ghosts"].location = "finalRoom";
+				objects["ghosts"].description = "The ghosts whirl about the ghoul adding to its evil power!",
+				snd.ghost.play();
+				snd.laugh.play();
+				objects["vacuum"].location = null;
+				return;
+			}
+
+			if (obj.id === "ghosts" && isRoom("finalRoom") && isCarrying("vacuum")) {
+				message = `The ghosts are still inside the vacuum.`;
+				return;
+			}
+
 			verbs["use"].action("vacuum",objects["vacuum"]);
 			return;
 		}
@@ -1188,6 +1254,7 @@ const verbs = {
 				}
 				objects["candlestick"].location = currentRoom.rid;
 				message = `You cheat and collect all the treasure.`;
+				incrementTurn = false;
 				return;
 			}
 
@@ -1198,12 +1265,14 @@ const verbs = {
 					};
 				}
 				message = `You cheat and collect all the objects, you filthy hoarder.`;
+				incrementTurn = false;
 				return;
 			}
 
 			if (obj) {
 				obj.location = "player";
 				message = `You cheat and ${obj.name} appears in your inventory.`;
+				incrementTurn = false;
 				return;
 			}
 		},
@@ -1229,6 +1298,7 @@ const verbs = {
 				myHelp = `Here are the rooms: ${roomlist.substring(0,roomlist.length - 2)}`;
 				displayOverlay(myHelp);
 				message = '';
+				incrementTurn = false;
 				return;
 			}
 
@@ -1238,7 +1308,9 @@ const verbs = {
 						currentRoom = rooms[key];
 					}
 				}
-				message = `You cheat and are teleported to ${currentRoom.name}`
+				message = `You cheat and are teleported to ${currentRoom.name}`;
+				incrementTurn = false;
+				return;
 			}
 		},
 		"singleWord": true,

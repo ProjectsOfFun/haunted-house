@@ -23,34 +23,25 @@ html(lang="en")
 		link(href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap", rel="stylesheet")
 		link(href="css/hh-screen.css", rel="stylesheet")
 
-	body
-		#hh-container
-			#hh-display
-				#hh-output
-				#hh-input
-					form#hh-input-form(onSubmit="return false")
-						br
-						label What will you do now:
-						br
-						span.prompt &gt;
-						input#hh-userInput(type="text", name="userInput", autocomplete="off", placeholder="Type your command here...")
-				button#hh-reload.is-hidden [ Click to Restart ]
+	body.intro-page
+		.container
 
-			#hh-display-overlay
-				| HAUNTED HOUSE<br>
-				span.hh-divider ---------------------------------------------<br><br>
-				#hh-output-overlay
-				br
-				button#hh-continue.is-first-screen [ Click to Start ]
+			h1.text-center Haunted House: Remastered
+			h2.text-center.mt-0 A Text Adventure by Robert&nbsp;Wm.&nbsp;Gomez
+			a(href="haunted-house.html")
+				img(src="images/share-image.jpg", alt="Haunted House: Remastered")
 
-			#hh-help
-				| Type 'HELP' for instructions. (v1.93)
-				#hh-screensize
+			p <em>Haunted House</em> began life as the example program from the book <a href="https://archive.org/details/Write_your_own_Adventure_Programs/mode/2up" target="_blank" rel="noopener noreferrer"><em>Write your own Adventure Programs for your Microcomputer</em></a> by Jenny Tyler and Les Howarth (&copy;1983 Usborne Publishing). Much of what I know about programming on the Apple ][ came from that book.
 
-					button#btnBigger [ Screen + ]
-					| &nbsp;
-					button#btnSmaller [ Screen - ]
-					| &nbsp;
-					button#btnFonts [ Font ]
+			p Several years ago, as programming exercise, I decided to port <em>Haunted House</em> into JavaScript. This rudimentary version of the game is <a href="v1.50/">posted on this site</a>. Writing the port, I released that I could leverage what I had learned to make a more robust (and fair) version of the game. <em><a href="haunted-house.html">Haunted House: Remastered</a></em> is the result of that effort.
 
-		script(src="js/Haunted-House-dist.js")
+			p The remastered version features full room descriptions, story events, a slick retro-styled interface, sound effects, thrills, chills, and puzzles that sorta make sense! So, if you are ready for some intense text adventuring, #[a(href="haunted-house.html") start the game] already!
+			
+			p A note: I try to keep everything fair, but there are a couple of ways in which you can die. You usually will get a few warning messages beforehand, so don't be afraid to experiment.
+
+			P I'll probably regret this, but if you find any bugs or egregious typos, let me know. You can contact me via Twitter #[a(href="https://twitter.com/robertgomez" target="_blank" rel="noopener noreferrer") @robertgomez] and also through the contact form on #[a(href="http://robertgomez.org/contact") robertgomez.org].
+
+			h2.text-center  [ #[a(href="haunted-house.html", style="text-decoration: none;") Start the Game] ]
+
+			p.text-center &copy2020 Robert Wm. Gomez
+		br(style="clear: both;")

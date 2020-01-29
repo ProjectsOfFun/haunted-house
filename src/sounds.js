@@ -3,11 +3,14 @@
  */
 
 class Sound {
-	constructor(src) {
+	constructor(src, loop) {
 		this.sound = document.createElement("audio");
 		this.sound.src = src;
 		this.sound.setAttribute("preload", "auto");
 		this.sound.setAttribute("controls", "none");
+		if (loop) {
+			this.sound.setAttribute("loop", true);
+		}
 		this.sound.style.display = "none";
 		document.body.appendChild(this.sound);
 	}
@@ -38,5 +41,6 @@ snd.groan = new Sound("audio/groan.mp3");
 snd.scream = new Sound("audio/scream.mp3");
 snd.fanfare = new Sound("audio/fanfare.mp3");
 snd.dog = new Sound("audio/dog.mp3");
+snd.music = new Sound("audio/plan9.mp3", true);
 
 //export default snd;
