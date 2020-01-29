@@ -20,30 +20,17 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
     <link href="css/hh-screen.css" rel="stylesheet">
   </head>
-  <body>
-    <div id="hh-container">
-      <div id="hh-display">
-        <div id="hh-output"></div>
-        <div id="hh-input">
-          <form id="hh-input-form" onSubmit="return false"><br>
-            <label>What will you do now:</label><br><span class="prompt">&gt;</span>
-            <input id="hh-userInput" type="text" name="userInput" autocomplete="off" placeholder="Type your command here...">
-          </form>
-        </div>
-        <button class="is-hidden" id="hh-reload">[ Click to Restart ]</button>
-      </div>
-      <div id="hh-display-overlay">HAUNTED HOUSE<br><span class="hh-divider">---------------------------------------------<br><br></span>
-        <div id="hh-output-overlay"></div><br>
-        <button class="is-first-screen" id="hh-continue">[ Click to Start ]</button>
-      </div>
-      <div id="hh-help">Type 'HELP' for instructions. (v1.93)
-        <div id="hh-screensize">
-          <button id="btnBigger">[ Screen + ]</button>&nbsp;
-          <button id="btnSmaller">[ Screen - ]</button>&nbsp;
-          <button id="btnFonts">[ Font ]</button>
-        </div>
-      </div>
-    </div>
-    <script src="js/Haunted-House-dist.js"></script>
+  <body class="intro-page">
+    <div class="container">
+      <h1 class="text-center">Haunted House: Remastered</h1>
+      <h2 class="text-center mt-0">A Text Adventure by Robert&nbsp;Wm.&nbsp;Gomez</h2><a href="haunted-house.html"><img src="images/share-image.jpg" alt="Haunted House: Remastered"></a>
+      <p><em>Haunted House</em> began life as the example program from the book <a href="https://archive.org/details/Write_your_own_Adventure_Programs/mode/2up" target="_blank" rel="noopener noreferrer"><em>Write your own Adventure Programs for your Microcomputer</em></a> by Jenny Tyler and Les Howarth (&copy;1983 Usborne Publishing). Much of what I know about programming on the Apple ][ came from that book.</p>
+      <p>Several years ago, as programming exercise, I decided to port <em>Haunted House</em> into JavaScript. This rudimentary version of the game is <a href="v1.50/">posted on this site</a>. Writing the port, I released that I could leverage what I had learned to make a more robust (and fair) version of the game. <em><a href="haunted-house.html">Haunted House: Remastered</a></em> is the result of that effort.</p>
+      <p>The remastered version features full room descriptions, story events, a slick retro-styled interface, sound effects, thrills, chills, and puzzles that sorta make sense! So, if you are ready for some intense text adventuring, <a href="haunted-house.html">start the game</a> already!</p>
+      <p>A note: I try to keep everything fair, but there are a couple of ways in which you can die. You usually will get a few warning messages beforehand, so don't be afraid to experiment.</p>
+      <P>I'll probably regret this, but if you find any bugs or egregious typos, let me know. You can contact me via Twitter <a href="https://twitter.com/robertgomez" target="_blank" rel="noopener noreferrer">@robertgomez</a> and also through the contact form on <a href="http://robertgomez.org/contact">robertgomez.org</a>.</P>
+      <h2 class="text-center"> [ <a href="haunted-house.html" style="text-decoration: none;">Start the Game</a> ]</h2>
+      <p class="text-center">&copy2020 Robert Wm. Gomez</p>
+    </div><br style="clear: both;">
   </body>
 </html>

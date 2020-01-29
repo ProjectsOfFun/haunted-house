@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Haunted House: Remastered - A Text Adventure by Robert Wm. Gomez</title>
+    <!-- Various browser favicons-->
+    <link rel="icon" href="images/Haunted-House.ico">
+    <link rel="apple-touch-icon" href="images/touch-icon-iphone-60x60.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/touch-icon-ipad-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/touch-icon-iphone-retina-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/touch-icon-ipad-retina-152x152.png">
+    <!-- Facebook meta info because you know you want to share this-->
+    <meta property="og:image" content="http://projects.robertgomez.org/haunted-house/images/share-image.jpg">
+    <meta property="og:title" content="Haunted House: Remastered by Robert Wm. Gomez">
+    <meta property="og:url" content="http://projects.robertgomez.org/haunted-house/index.html">
+    <meta property="og:site_name" content="Robert Wm. Gomez Web Projects">
+    <!-- Load the page styles and Google computer font-->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&amp;display=swap" rel="stylesheet">
+    <link href="css/hh-screen.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="hh-container">
+      <div id="hh-display">
+        <div id="hh-output"></div>
+        <div id="hh-input">
+          <form id="hh-input-form" onSubmit="return false"><br>
+            <label>What will you do now:</label><br><span class="prompt">&gt;</span>
+            <input id="hh-userInput" type="text" name="userInput" autocomplete="off" placeholder="Type your command here...">
+          </form>
+        </div>
+        <button class="is-hidden" id="hh-reload">[ Click to Restart ]</button>
+      </div>
+      <div id="hh-display-overlay">HAUNTED HOUSE: REMASTERED<br><span class="hh-divider">---------------------------------------------<br><br></span>
+        <div id="hh-output-overlay"></div><br>
+        <button class="is-first-screen" id="hh-continue">[ Click to Start ]</button>
+      </div>
+      <div id="hh-help">Type 'HELP' for instructions. (v1.94)
+        <div id="hh-screensize">
+          <button id="btnBigger">[ Screen + ]</button>&nbsp;
+          <button id="btnSmaller">[ Screen - ]</button>&nbsp;
+          <button id="btnFonts">[ Font ]</button>
+        </div>
+      </div>
+    </div>
+    <script src="js/Haunted-House-dist.js"></script>
+  </body>
+</html>
