@@ -3594,6 +3594,12 @@ function checkKey(evt) {
     }
 
     return false;
+  } // Clear input field on ESC
+
+
+  if (evt.keyCode === 27 && $userInput === document.activeElement) {
+    $userInput.value = '';
+    return false;
   }
 
   if (evt.keyCode == '38') {
@@ -3607,11 +3613,12 @@ function checkKey(evt) {
 
   if (evt.keyCode == '40') {
     // Down arrow
-    if (--historyCarat < 1) {
-      historyCarat = 1;
+    if (--historyCarat <= 0) {
+      historyCarat = 0;
+      $userInput.value = '';
+    } else {
+      $userInput.value = history[history.length - historyCarat];
     }
-
-    $userInput.value = history[history.length - historyCarat];
   }
 }
 /**
