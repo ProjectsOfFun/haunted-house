@@ -205,6 +205,9 @@ var objects = {
     },
     "takeMessage": "It's far to heavy to carry."
   },
+  "lid": {
+    "synonym": "coffin"
+  },
   "coins": {
     "description": "It's a sack of Seventeenth Century Spanish doubloons.",
     "location": "darkAlcove",
@@ -434,7 +437,7 @@ var objects = {
     "synonym": "rubbish"
   },
   "vacuum": {
-    "name": "a tiny vacuum",
+    "name": "a tiny vacuum cleaner",
     "description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",
     "location": "gloomyPassage",
     "portable": true,
@@ -446,6 +449,9 @@ var objects = {
       this.name = "a tiny vacuum filled with ghosts";
       this.description = "It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!";
     }
+  },
+  "vacuum cleaner": {
+    "synonym": "vacuum"
   },
   "vase": {
     "name": "a vase in the muck",
@@ -768,7 +774,7 @@ var rooms = {
   },
   "slipperySteps": {
     "name": "Slippery Steps",
-    "description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further decent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
+    "description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further descent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
     "exits": {
       "u": "widePassage" //"d": "cellar"
 
@@ -1478,7 +1484,6 @@ var verbs = {
   "climb": {
     "action": function action(noun, obj) {
       message = "You can't climb that.";
-      cl(obj.id);
 
       if ((noun === "tree" || obj.id === "rope") && flags.ropeTiedToTree && isRoom("blastedTree")) {
         message = "You use the rope to climb the tree.";
@@ -1863,6 +1868,14 @@ var verbs = {
 
           break;
 
+        case "rope":
+          if (isRoom("blastedTree")) {
+            message = "Perhaps you should try to <em>climb</em> the rope.";
+            return;
+          }
+
+          break;
+
         default:
           message = "You need to specify a direction in which to&nbsp;<em>GO</em>.";
           return;
@@ -1898,6 +1911,12 @@ var verbs = {
 
       if (currentRoom.water && !flags.inBoat) {
         message = "The marshy ground prevents any movement.";
+        return;
+      } // Force the player to "climb" because I'm a jerk.
+
+
+      if (isRoom("blastedTree") && direction === "u") {
+        message = "Is there something here you could <em>climb</em>?";
         return;
       } // Thicket not surveyed
 
@@ -2170,7 +2189,7 @@ var verbs = {
   "listen": {
     "action": function action(noun, obj) {
       if (noun === "owl" && isRoom("darkCorner")) {
-        message = "Yup, that's an owl alright.";
+        message = "Yup, that's an owl alright. Owl-right?";
         snd.owl.play();
         return;
       }
@@ -2981,15 +3000,28 @@ function getExtraDescription(roomObject) {
 
 function getObjectsInRoom(roomObject) {
   var output = "";
+  var items = []; // An array of portable objects
 
   for (var obj in objects) {
-    // Look for objects in room
-    if (objects[obj].location == roomObject.rid && objects[obj].portable) {
-      output += "<br/><span class=\"message objects-in-room\">You can see ".concat(objects[obj].name, " here.</span>");
+    if (objects[obj].location === roomObject.rid && objects[obj].portable) {
+      items.push(objects[obj]);
     }
   }
 
-  if (output === "") output = false;
+  if (items.length === 0) return false;
+  output += "<br><div class=\"objects-in-room\">You can see ";
+
+  for (var i = 0; i < items.length; i++) {
+    output += "<em>".concat(items[i].name, "</em>");
+
+    if (items.length > 1 && i < items.length - 2) {
+      output += ", ";
+    } else if (items.length > 1 && i === items.length - 2) {
+      output += " and ";
+    }
+  }
+
+  output += " here.</div>";
   return output;
 }
 /**
@@ -3063,21 +3095,17 @@ function parseInput(myInput) {
   myInput = myInput.trim().toLowerCase();
   var verb = null;
   var noun = null;
+  var input_array = myInput.split(" "); // Convert words to array items
 
-  for (var i = 0; i < myInput.length; i++) {
-    // Parse verb and noun from input
-    if (myInput.substring(i, i + 1) === " " && !verb) {
-      verb = myInput.substring(0, i);
-      noun = myInput.substring(i + 1, myInput.length).trim();
-      break;
-    } else if (myInput.indexOf(' ') < 0) {
-      // One word input
-      verb = myInput.trim();
-      noun = null;
-      break;
-    }
-  } // Check if words exist as objects
+  verb = input_array[0]; // First item is always a verb
 
+  input_array.shift(); // Remove first item (verb)
+
+  input_array = input_array.filter(function (word) {
+    // Get rid of articles
+    return word != "the" && word != "a" && word != "an";
+  });
+  noun = input_array.join(' '); // Check if words exist as objects
 
   var vb = getVerb(verb);
   var ob = getNoun(noun); // If verb has a synonym, change the verb to synonym
@@ -3462,10 +3490,10 @@ function getMaxScore() {
 }
 
 function introText() {
-  var myIntro = "\"Ghastly cries and blood curdling screams.\" Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...";
+  var myIntro = "\"Ghastly cries and blood curdling screams!\" Yeah, right. They were just a couple two-bit vandals bragging about spray painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>All you knew is that they were frightened. By what? You didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion, left untouched for decades, filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...";
   displayOverlay(myIntro);
   $continueBtn.classList.remove('is-first-screen');
-  $continueBtn.innerHTML = "[ Click to Continue ]";
+  $continueBtn.innerHTML = "[ SPACE to Continue ]";
 } // ===== END GAME FUNCTIONS ======
 
 /**
@@ -3507,7 +3535,7 @@ function death(message) {
 function victory() {
   $inputZone.remove();
   cls();
-  prnt("HAUNTED HOUSE");
+  prnt("HAUNTED HOUSE: REMASTERED");
   prnt("<span class=\"hh-divider\">---------------------------------------------<br></span>");
   prnt("<span class=\"message\">You race through the gate and down the path with treasures in hand! The hissing cries of the ghoul fade in the distance and you promise yourself never to return again. Congratulations, you've won the game!</span><br>");
   prnt("Your final score is: <em>".concat(checkScore() + 1, "/").concat(getMaxScore() + 1, "</em><br>"));
