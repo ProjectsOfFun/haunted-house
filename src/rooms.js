@@ -305,7 +305,7 @@ const rooms = {
 	},
 	"slipperySteps": {
 		"name": "Slippery Steps",
-		"description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further decent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
+		"description": "These damp and slippery wooden stairs lead down to the mansion's cellar. The bottom half of the staircase has crumbled and rotted away making your further descent impossible. As you peer downwards, you can see a window in the room below. Another way in?",
 		"exits": {
 			"u": "widePassage",
 			//"d": "cellar"

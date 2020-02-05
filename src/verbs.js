@@ -62,7 +62,6 @@ const verbs = {
 	"climb": {
 		"action": function(noun,obj) {
 			message = "You can't climb that.";
-			cl(obj.id);
 
 			if ((noun === "tree" || obj.id === "rope") && flags.ropeTiedToTree && isRoom("blastedTree")) {
 				message = `You use the rope to climb the tree.`;
@@ -426,6 +425,12 @@ const verbs = {
 						direction = "e";
 					} 
 					break;
+				case "rope":
+					if (isRoom("blastedTree")) {
+						message = `Perhaps you should try to <em>climb</em> the rope.`;
+						return;
+					}
+					break;
 				default:
 					message = `You need to specify a direction in which to&nbsp;<em>GO</em>.`;
 					return;
@@ -462,6 +467,12 @@ const verbs = {
 			// Water in room
 			if (currentRoom.water && !flags.inBoat) {
 				message = `The marshy ground prevents any movement.`;
+				return;
+			}
+
+			// Force the player to "climb" because I'm a jerk.
+			if (isRoom("blastedTree") && direction === "u") {
+				message = `Is there something here you could <em>climb</em>?`;
 				return;
 			}
 
@@ -739,7 +750,7 @@ const verbs = {
 	"listen": {
 		"action": function(noun,obj) {
 			if (noun === "owl" && isRoom("darkCorner")) {
-				message = `Yup, that's an owl alright.`;
+				message = `Yup, that's an owl alright. Owl-right?`;
 				snd.owl.play();
 				return;
 			}

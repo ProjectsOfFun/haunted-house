@@ -127,13 +127,29 @@ function getExtraDescription(roomObject) {
  */
 function getObjectsInRoom(roomObject) {
 	let output = "";
-	for (let obj in objects) { // Look for objects in room
-		if (objects[obj].location == roomObject.rid && objects[obj].portable) {	
-			output += `<br/><span class="message objects-in-room">You can see ${objects[obj].name} here.</span>`;
+	let items = []; // An array of portable objects
+
+	for (let obj in objects) {
+		if (objects[obj].location === roomObject.rid && objects[obj].portable) {	
+			items.push(objects[obj]);
 		}
 	}
-	if (output === "") output = false;
+
+	if (items.length === 0) return false;
+
+	output += `<br><div class="objects-in-room">You can see `;
+	for (let i = 0; i < items.length; i++) {
+		output += `<em>${items[i].name}</em>`;
+		if (items.length > 1 && i < items.length - 2) {
+			output += `, `;
+		} else if (items.length > 1 && i === items.length - 2) {
+			output += ` and `;
+		}
+	}
+	output += ` here.</div>`;
+
 	return output;
+
 }
 
 
@@ -206,17 +222,14 @@ function parseInput(myInput) {
 	let verb = null;
 	let noun = null;
 
-	for (let i = 0; i < myInput.length;i++) { // Parse verb and noun from input
-		if (myInput.substring(i,i+1) === " " && !verb) {
-			verb = myInput.substring(0,i);
-			noun = myInput.substring(i+1,myInput.length).trim();
-			break;
-		} else if (myInput.indexOf(' ') < 0) { // One word input
-			verb = myInput.trim();
-			noun = null;
-			break;
-		}
-	}
+	let input_array = myInput.split(" "); // Convert words to array items
+	verb = input_array[0]; // First item is always a verb
+
+	input_array.shift(); // Remove first item (verb)
+	input_array = input_array.filter(function(word){ // Get rid of articles
+		return (word != "the" && word != "a" && word != "an");
+	});
+	noun = input_array.join(' ');
 
 	// Check if words exist as objects
 	let vb = getVerb(verb);
@@ -575,10 +588,10 @@ function getMaxScore() {
 
 
 function introText() {
-	let myIntro = `"Ghastly cries and blood curdling screams." Yeah, right. They were just a couple two-bit vandals bragging about spraying painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>Whatever it actually was that frightened them away, you didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion left untouched for decades filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...`
+	let myIntro = `"Ghastly cries and blood curdling screams!" Yeah, right. They were just a couple two-bit vandals bragging about spray painting their nonsense on that old abandoned house at the edge of the forest. What would they know about spirits and ghosts?<br><br>All you knew is that they were frightened. By what? You didn't care. You were more interested in what they had to say about the shiny things they spied through the windows.<br><br>A deserted mansion, left untouched for decades, filled with goodness knows how many unclaimed treasures. That was all you needed. So here you are under the cover of darkness, making your way up the walkway towards the iron gate at the front of the mansion...`
 	displayOverlay(myIntro);
 	$continueBtn.classList.remove('is-first-screen');
-	$continueBtn.innerHTML = "[ Click to Continue ]";
+	$continueBtn.innerHTML = "[ SPACE to Continue ]";
 }
 
 
@@ -622,7 +635,7 @@ function death(message) {
 function victory() {
 	$inputZone.remove();
 	cls();
-	prnt(`HAUNTED HOUSE`);
+	prnt(`HAUNTED HOUSE: REMASTERED`);
 	prnt(`<span class="hh-divider">---------------------------------------------<br></span>`);
 	prnt(`<span class="message">You race through the gate and down the path with treasures in hand! The hissing cries of the ghoul fade in the distance and you promise yourself never to return again. Congratulations, you've won the game!</span><br>`);
 	prnt(`Your final score is: <em>${checkScore() + 1}/${getMaxScore() + 1}</em><br>`);

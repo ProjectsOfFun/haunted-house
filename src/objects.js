@@ -110,6 +110,9 @@ const objects = {
 		},
 		"takeMessage": "It's far to heavy to carry."
 	},
+	"lid": {
+		"synonym": "coffin"
+	},
 	"coins": {
 		"description": "It's a sack of Seventeenth Century Spanish doubloons.",
 		"location": "darkAlcove",
@@ -343,7 +346,7 @@ const objects = {
 		"synonym": "rubbish"
 	},
 	"vacuum": {
-		"name": "a tiny vacuum",
+		"name": "a tiny vacuum cleaner",
 		"description": "It's a tiny, battery-powered vacuum cleaner. Perfect for capturing dust and much more!",
 		"location": "gloomyPassage",
 		"portable": true,
@@ -355,6 +358,9 @@ const objects = {
 			this.name = "a tiny vacuum filled with ghosts";
 			this.description = `It's a tiny, battery-powered vacuum cleaner. It's filled with ghosts!`;
 		}
+	},
+	"vacuum cleaner": {
+		"synonym": "vacuum"
 	},
 	"vase": {
 		"name": "a vase in the muck",
