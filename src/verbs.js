@@ -992,6 +992,13 @@ const verbs = {
 		},
 		"singleWord": true
 	},
+	"sit": {
+		"action": function(noun,obj) {
+			message = `This is no time to lounge about.`;
+		},
+		"hiddenVerb": true,
+		"singleWord" : true
+	},
 	"smell": {
 		"action": function(noun,obj) {
 			if (objectInRange(obj)) {

@@ -2442,6 +2442,13 @@ var verbs = {
     },
     "singleWord": true
   },
+  "sit": {
+    "action": function action(noun, obj) {
+      message = "This is no time to lounge about.";
+    },
+    "hiddenVerb": true,
+    "singleWord": true
+  },
   "smell": {
     "action": function action(noun, obj) {
       if (objectInRange(obj)) {
