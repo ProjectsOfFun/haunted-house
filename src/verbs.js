@@ -28,6 +28,20 @@ const verbs = {
 	"board": {
 		"synonym": "enter"
 	},
+	"burn": {
+		"action": function(noun,obj) {
+			message = `How are you going to summon fire?`;
+			let objID = obj.id;
+			if ((isCarrying("matches") || flags.candleLit) && nounCheck(objID,["ghoul","aerosol","thicket","rubbish"])) {
+				verbs["light"].action(noun,obj);
+				return;
+			}
+			if (isCarrying("matches") || flags.candleLit) {
+				message = `You're a thief, not an arsonist.`;
+				return;
+			}
+		}
+	},
 	"carrying": {
 		"action": function(noun,obj) {
 			if (noun) {
