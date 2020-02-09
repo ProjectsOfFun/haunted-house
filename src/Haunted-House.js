@@ -31,7 +31,7 @@ let history = ["help"];
 let historyCarat = 0;
 
 // Game state variables
-const flags = {
+let flags = {
 	barsDug: false,
 	batsAttacking: true, // flags[26]
 	candleLit: false, // flags[0]
@@ -837,4 +837,12 @@ function init(startRoom,carrying,inRoom) {
 // INITIALIZE GAME
 let debug = false;
 verbs["help"].action();
+
+//let savedGame = localStorage.getItem(hhSave);
+
+let savedGame = localStorage.getItem('hhSave');
+if (savedGame) {
+	message = `You have a saved game ready. Type <em>RESTORE</em> to load it.`;
+}
+
 init("pathThroughIronGate",[],[]);

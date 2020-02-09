@@ -332,7 +332,7 @@ const verbs = {
 				message = obj.takeMessage;
 				obj.takenFromMarsh();
 				flags.sinkingStatue = 0;
-				delete rooms["marsh"].onEnter;
+				rooms["marsh"].onEnterTriggered = true;
 				return;
 			}
 
@@ -555,13 +555,13 @@ const verbs = {
 				}
 
 				// Trigger on exit events for last room.
-				if (previousRoom.onExit) {
-					previousRoom.onExit()
+				if (previousRoom.onExit && previousRoom.onExitTriggered === false) {
+					previousRoom.onExit();
 				}
-	
+
 				// Initial room visit events
-				if (currentRoom.onEnter) {
-					currentRoom.onEnter()
+				if (currentRoom.onEnter && currentRoom.onEnterTriggered == false) {
+					currentRoom.onEnter();
 				}
 
 			} else if (direction) {
@@ -579,7 +579,7 @@ const verbs = {
 			let myHelp;
 
 			if (!noun) {
-				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.`;
+				myHelp = `Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>Save your progress by typing <em>SAVE</em> and load it later with <em>RESTORE</em>.<br><br>For more info about this program type <em>ABOUT</em>.`;
 				displayOverlay(myHelp);
 				message = '';
 				incrementTurn = false;
@@ -770,6 +770,11 @@ const verbs = {
 			}
 			if (obj.id === "ghoul") {
 				snd.laugh.play();
+			}
+			if (!noun && flags.endGame > 0) {
+				message = `Deep within the recesses of the house you can hear ghostly cries of anger!`;
+				snd.scream.play();
+				return;
 			}
 			message = (obj.listenMessage && objectInRange(obj)) ? obj.listenMessage : `You don't hear anything unusual.`;
 		},
@@ -1347,5 +1352,92 @@ const verbs = {
 		},
 		"singleWord": true,
 		"hiddenVerb": true
+	},
+	"save": {
+		"action": function(noun) {
+			incrementTurn = false;
+
+			if (!noun || noun == "game") {
+				const saveData = {
+					"currentRoom": currentRoom,
+					"turns": turns,
+					"flags": flags,
+					"objects": objects,
+					"rooms": rooms
+				}
+				const hhSave = JSON.stringify(saveData);
+				localStorage.setItem('hhSave', hhSave);
+				message = `Your game is saved.`;
+				return;
+			}
+		},
+		"singleWord": true
+	},
+	"restore": {
+		"action": function(noun){
+			incrementTurn = false;
+			if (noun && noun != "game") {
+				message = `<em>RESTORE</em> is only used to retrieve a previously saved game.`;
+				return;
+			}
+			const savedGame = JSON.parse(localStorage.getItem('hhSave'));
+			if (!savedGame) {
+				message = `No game to restore.`;
+				return;
+			}
+			currentRoom = rooms[savedGame.currentRoom.rid];
+			turns = savedGame.turns;
+			flags = savedGame.flags;
+			for (let obj in objects) {
+				for (let key in objects[obj]) {
+					if (typeof objects[obj][key] != 'function') {
+						objects[obj][key] = savedGame.objects[obj][key];
+					} else if (typeof objects[obj][key] == 'function') {
+						//
+					} else if (!(key in savedGame.objects[obj])) {
+						delete objects[obj][key];
+					}
+				}
+			}
+			for (let room in rooms) {
+				for (let key in rooms[room]) {
+					if (typeof rooms[room][key] != 'function') {
+						if (key == "exits" || key == "scenery") {
+							delete rooms[room][key];
+						}
+						rooms[room][key] = savedGame.rooms[room][key];
+					} else if ((typeof rooms[room][key] == 'function')) {
+						//
+					} else if (!(key in savedGame.rooms[room])) {
+						delete rooms[room][key];
+					}
+				}
+			}
+			message = `Welcome back.`;
+			return;
+		},
+		"singleWord": true
+	},
+	"delete": {
+		"action": function(noun) {
+			incrementTurn = false;
+			if (noun === "save") {
+				if (!localStorage.getItem('hhSave')) {
+					message = `You don't have game saved.`;
+					return;
+				}
+				if (confirm('Delete your stored save game?')) {
+					localStorage.removeItem('hhSave');
+					savedGame = "";
+					message = `Your saved game is deleted.`
+				} 
+				return;
+			}
+			if (!noun) {
+				message = `To delete a saved game type <em>DELETE SAVE</em>`;
+				return;
+			}
+		},
+		"singleWord": true
 	}
 };

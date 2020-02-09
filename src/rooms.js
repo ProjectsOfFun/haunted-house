@@ -8,6 +8,7 @@ const rooms = {
 			"e": "overgrownGarden",
 			"s": "cornerOfHouse"
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			if (Math.random() > .4) {
 				message = "You hear an owl hooting off in the distance.";
@@ -102,6 +103,7 @@ const rooms = {
 			"w": "thickForest",
 			"s": "path"
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			objects["rope"].omnipresence = false;
 		},
@@ -134,10 +136,11 @@ const rooms = {
 			"mother": "The apparition has vanished.",
 			"family": "The apparitions have vanished."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			message = `The translucent glowing forms of a family of three stand around the table. The mother cries while the father and son stare at a pile of gore festering on the table. Moments later the vision fades away.`;
 			snd.ghost.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"kitchen": {
@@ -194,10 +197,11 @@ const rooms = {
 			"windows": "They overlook the forest below.",
 			"window": "The windows overlook the forest below."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			message = `You see the ghostly form of a screaming child chained to the bench! A man holds a scroll and is reciting demonic incantations to the child. As the screams crescendo, both forms dissipate to nothingness.`;
 			snd.ghost.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"clearing": {
@@ -483,10 +487,11 @@ const rooms = {
 			"stuffing": "You think it's horse hair.",
 			"apparition": "It has vanished into thin air!"
 		},
+		"onEnterTriggered": false,
 		"onEnter": function(){
 			message = `A ghostly apparition drifts by you muttering what sounds like, "The boy must hang! The boy must hang!" It fades away as quickly as it appeared.`;
 			snd.ghost.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"secretRoom": {
@@ -538,10 +543,11 @@ const rooms = {
 			"specter": "It appeared to be a older, bearded man.",
 			"neck": "Blood oozed from it as the blade penetrated."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			message = `Horrors! You see two ghostly forms. A child is violently stabbing another specter in the neck then dragging the body away! Moments later, the apparitions vanish.`;
 			snd.laugh.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"cliffPath": {
@@ -570,6 +576,7 @@ const rooms = {
 			"n": "frontHall",
 			"w": "closet"
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			if (flags.frontDoorOpen) {
 				message = `With a tremendous "BANG!" the door slams shut behind you.`;
@@ -658,9 +665,10 @@ const rooms = {
 			"shapes": "They are monstrous shadows with tentacles and teeth.",
 			"clothing": "Barely recognizable, but it's clear that these garments were made for a child."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			snd.laugh.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"cliffPathByMarsh": {
@@ -712,10 +720,11 @@ const rooms = {
 			"form": "It was just an apparition.",
 			"specter": "You must be seeing things."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			message = `As you enter you see the spectral form of a woman throwing herself out the window. She lets out a blood curdling scream as she falls to her doom.`;
 			snd.falling.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"slopingCorridor": {
@@ -739,9 +748,10 @@ const rooms = {
 		"ghostsDispelled": function() {
 			this.description = "The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling.";
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			snd.ghost.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"marshByWall": {
@@ -768,6 +778,7 @@ const rooms = {
 			"muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
 		},
 		"water": true,
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			if (flags.endGame) {
 				objects["statue"].droppedInMarsh();
@@ -815,9 +826,10 @@ const rooms = {
 			"mansion": "You wonder what treasures await you inside.",
 			"moon": "The moon provides just enough light to make your way visible."
 		},
+		"onExitTriggered": false,
 		"onExit": function() {
 			message = "And so you begin your adventure...";
-			delete this.onExit;
+			this.onExitTriggered = true;
 		},
 		"endingTrigger": function() {
 			this.exits.s = "exit";
@@ -900,10 +912,11 @@ const rooms = {
 			"ghost": "The vision is no longer visible.",
 			"dog": "The vision is no longer visible."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			message = `For a split second you see a ghostly vision of a small child chasing a dog around the clifftop. In a flash the scene disappears.`;
 			snd.dog.play();
-			delete this.onEnter;
+			this.onEnterTriggered = true;
 		}
 	},
 	"inTheTree": {
@@ -912,6 +925,7 @@ const rooms = {
 		"exits": {
 			"d":"blastedTree"
 		},
+		"onEnterTriggered": false,
 		"onEnter": function(){
 			message = `You use the rope to climb the tree.`;
 		},
@@ -946,6 +960,7 @@ const rooms = {
 			"iron gate": "It is your way out!",
 			"eyes": "They seem to glow with a sickening yellow hue."
 		},
+		"onEnterTriggered": false,
 		"onEnter": function() {
 			snd.groan.play();
 			snd.music.play();
