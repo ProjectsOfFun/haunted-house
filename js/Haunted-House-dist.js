@@ -477,6 +477,7 @@ var rooms = {
       "e": "overgrownGarden",
       "s": "cornerOfHouse"
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       if (Math.random() > .4) {
         message = "You hear an owl hooting off in the distance.";
@@ -571,6 +572,7 @@ var rooms = {
       "w": "thickForest",
       "s": "path"
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       objects["rope"].omnipresence = false;
     },
@@ -603,10 +605,11 @@ var rooms = {
       "mother": "The apparition has vanished.",
       "family": "The apparitions have vanished."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "The translucent glowing forms of a family of three stand around the table. The mother cries while the father and son stare at a pile of gore festering on the table. Moments later the vision fades away.";
       snd.ghost.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "kitchen": {
@@ -663,10 +666,11 @@ var rooms = {
       "windows": "They overlook the forest below.",
       "window": "The windows overlook the forest below."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "You see the ghostly form of a screaming child chained to the bench! A man holds a scroll and is reciting demonic incantations to the child. As the screams crescendo, both forms dissipate to nothingness.";
       snd.ghost.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "clearing": {
@@ -949,10 +953,11 @@ var rooms = {
       "stuffing": "You think it's horse hair.",
       "apparition": "It has vanished into thin air!"
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "A ghostly apparition drifts by you muttering what sounds like, \"The boy must hang! The boy must hang!\" It fades away as quickly as it appeared.";
       snd.ghost.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "secretRoom": {
@@ -1004,10 +1009,11 @@ var rooms = {
       "specter": "It appeared to be a older, bearded man.",
       "neck": "Blood oozed from it as the blade penetrated."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "Horrors! You see two ghostly forms. A child is violently stabbing another specter in the neck then dragging the body away! Moments later, the apparitions vanish.";
       snd.laugh.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "cliffPath": {
@@ -1036,6 +1042,7 @@ var rooms = {
       "n": "frontHall",
       "w": "closet"
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       if (flags.frontDoorOpen) {
         message = "With a tremendous \"BANG!\" the door slams shut behind you.";
@@ -1124,9 +1131,10 @@ var rooms = {
       "shapes": "They are monstrous shadows with tentacles and teeth.",
       "clothing": "Barely recognizable, but it's clear that these garments were made for a child."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       snd.laugh.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "cliffPathByMarsh": {
@@ -1178,10 +1186,11 @@ var rooms = {
       "form": "It was just an apparition.",
       "specter": "You must be seeing things."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "As you enter you see the spectral form of a woman throwing herself out the window. She lets out a blood curdling scream as she falls to her doom.";
       snd.falling.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "slopingCorridor": {
@@ -1205,9 +1214,10 @@ var rooms = {
     "ghostsDispelled": function ghostsDispelled() {
       this.description = "The upper gallery is filled with artifacts from many travels abroad. The relative calm of this room is unsettling.";
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       snd.ghost.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "marshByWall": {
@@ -1234,6 +1244,7 @@ var rooms = {
       "muck": "It's sticky and brown but you could probably manage to wade in it for a few minutes."
     },
     "water": true,
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       if (flags.endGame) {
         objects["statue"].droppedInMarsh();
@@ -1281,9 +1292,10 @@ var rooms = {
       "mansion": "You wonder what treasures await you inside.",
       "moon": "The moon provides just enough light to make your way visible."
     },
+    "onExitTriggered": false,
     "onExit": function onExit() {
       message = "And so you begin your adventure...";
-      delete this.onExit;
+      this.onExitTriggered = true;
     },
     "endingTrigger": function endingTrigger() {
       this.exits.s = "exit";
@@ -1366,10 +1378,11 @@ var rooms = {
       "ghost": "The vision is no longer visible.",
       "dog": "The vision is no longer visible."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "For a split second you see a ghostly vision of a small child chasing a dog around the clifftop. In a flash the scene disappears.";
       snd.dog.play();
-      delete this.onEnter;
+      this.onEnterTriggered = true;
     }
   },
   "inTheTree": {
@@ -1378,6 +1391,7 @@ var rooms = {
     "exits": {
       "d": "blastedTree"
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       message = "You use the rope to climb the tree.";
     },
@@ -1411,6 +1425,7 @@ var rooms = {
       "iron gate": "It is your way out!",
       "eyes": "They seem to glow with a sickening yellow hue."
     },
+    "onEnterTriggered": false,
     "onEnter": function onEnter() {
       snd.groan.play();
       snd.music.play();
@@ -1762,7 +1777,7 @@ var verbs = {
         message = obj.takeMessage;
         obj.takenFromMarsh();
         flags.sinkingStatue = 0;
-        delete rooms["marsh"].onEnter;
+        rooms["marsh"].onEnterTriggered = true;
         return;
       }
 
@@ -1998,12 +2013,12 @@ var verbs = {
         } // Trigger on exit events for last room.
 
 
-        if (previousRoom.onExit) {
+        if (previousRoom.onExit && previousRoom.onExitTriggered === false) {
           previousRoom.onExit();
         } // Initial room visit events
 
 
-        if (currentRoom.onEnter) {
+        if (currentRoom.onEnter && currentRoom.onEnterTriggered == false) {
           currentRoom.onEnter();
         }
       } else if (direction) {
@@ -2019,7 +2034,7 @@ var verbs = {
       var myHelp;
 
       if (!noun) {
-        myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>For more info about this program type <em>ABOUT</em>.";
+        myHelp = "Haunted House is a text adventure. You perform actions by typing two word commands such as <em>TAKE RING</em> or <em>LOOK PAINTING</em>. Explore the house and try to find the treasures within. For clues, be sure to <em>LOOK</em> at everything!<br><br>When you've found all the treasure, make your way back to the <em>iron gate</em> to earn that last point and win the game.<br><br>View this screen at any time by typing <em>HELP</em>. For more instructions type the following:<br><em>HELP MOVEMENT</em> or <em>HELP COMMANDS</em><br><br>Save your progress by typing <em>SAVE</em> and load it later with <em>RESTORE</em>.<br><br>For more info about this program type <em>ABOUT</em>.";
         displayOverlay(myHelp);
         message = '';
         incrementTurn = false;
@@ -2212,6 +2227,12 @@ var verbs = {
 
       if (obj.id === "ghoul") {
         snd.laugh.play();
+      }
+
+      if (!noun && flags.endGame > 0) {
+        message = "Deep within the recesses of the house you can hear ghostly cries of anger!";
+        snd.scream.play();
+        return;
       }
 
       message = obj.listenMessage && objectInRange(obj) ? obj.listenMessage : "You don't hear anything unusual.";
@@ -2807,6 +2828,103 @@ var verbs = {
     },
     "singleWord": true,
     "hiddenVerb": true
+  },
+  "save": {
+    "action": function action(noun) {
+      incrementTurn = false;
+
+      if (!noun || noun == "game") {
+        var saveData = {
+          "currentRoom": currentRoom,
+          "turns": turns,
+          "flags": flags,
+          "objects": objects,
+          "rooms": rooms
+        };
+        var hhSave = JSON.stringify(saveData);
+        localStorage.setItem('hhSave', hhSave);
+        message = "Your game is saved.";
+        return;
+      }
+    },
+    "singleWord": true
+  },
+  "restore": {
+    "action": function action(noun) {
+      incrementTurn = false;
+
+      if (noun && noun != "game") {
+        message = "<em>RESTORE</em> is only used to retrieve a previously saved game.";
+        return;
+      }
+
+      var savedGame = JSON.parse(localStorage.getItem('hhSave'));
+
+      if (!savedGame) {
+        message = "No game to restore.";
+        return;
+      }
+
+      currentRoom = rooms[savedGame.currentRoom.rid];
+      turns = savedGame.turns;
+      flags = savedGame.flags;
+
+      for (var obj in objects) {
+        for (var key in objects[obj]) {
+          if (typeof objects[obj][key] != 'function') {
+            objects[obj][key] = savedGame.objects[obj][key];
+          } else if (typeof objects[obj][key] == 'function') {//
+          } else if (!(key in savedGame.objects[obj])) {
+            delete objects[obj][key];
+          }
+        }
+      }
+
+      for (var room in rooms) {
+        for (var _key2 in rooms[room]) {
+          if (typeof rooms[room][_key2] != 'function') {
+            if (_key2 == "exits" || _key2 == "scenery") {
+              delete rooms[room][_key2];
+            }
+
+            rooms[room][_key2] = savedGame.rooms[room][_key2];
+          } else if (typeof rooms[room][_key2] == 'function') {//
+          } else if (!(_key2 in savedGame.rooms[room])) {
+            delete rooms[room][_key2];
+          }
+        }
+      }
+
+      message = "Welcome back.";
+      return;
+    },
+    "singleWord": true
+  },
+  "delete": {
+    "action": function action(noun) {
+      incrementTurn = false;
+
+      if (noun === "save") {
+        if (!localStorage.getItem('hhSave')) {
+          message = "You don't have game saved.";
+          return;
+        }
+
+        if (confirm('Delete your stored save game?')) {
+          localStorage.removeItem('hhSave');
+          savedGame = "";
+          message = "Your saved game is deleted.";
+        }
+
+        return;
+      }
+
+      if (!noun) {
+        message = "To delete a saved game type <em>DELETE SAVE</em>";
+        return;
+      }
+    },
+    "singleWord": true
   }
 };
 /**
@@ -3736,11 +3854,11 @@ function init(startRoom, carrying, inRoom) {
     verbs[key].name = key;
   }
 
-  for (var _key2 in objects) {
-    objects[_key2].id = _key2;
+  for (var _key3 in objects) {
+    objects[_key3].id = _key3;
 
-    if (!objects[_key2].name) {
-      objects[_key2].name = _key2;
+    if (!objects[_key3].name) {
+      objects[_key3].name = _key3;
     }
   }
 
@@ -3765,7 +3883,14 @@ function init(startRoom, carrying, inRoom) {
 
 
 var debug = false;
-verbs["help"].action();
+verbs["help"].action(); //let savedGame = localStorage.getItem(hhSave);
+
+var savedGame = localStorage.getItem('hhSave');
+
+if (savedGame) {
+  message = "You have a saved game ready. Type <em>RESTORE</em> to load it.";
+}
+
 init("pathThroughIronGate", [], []);
 
 /***/ })
